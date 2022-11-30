@@ -171,7 +171,7 @@ public class KafkaBinderTests extends
 
 	private static final int DEFAULT_OPERATION_TIMEOUT = 30;
 
-	private final String CLASS_UNDER_TEST_NAME = KafkaMessageChannelBinder.class
+	private final String classUnderTestName = KafkaMessageChannelBinder.class
 			.getSimpleName();
 
 	private KafkaTestBinder binder;
@@ -320,7 +320,7 @@ public class KafkaBinderTests extends
 
 	@Override
 	protected String getClassUnderTestName() {
-		return CLASS_UNDER_TEST_NAME;
+		return classUnderTestName;
 	}
 
 	@Override
@@ -1770,7 +1770,7 @@ public class KafkaBinderTests extends
 		assertThat(messages).extracting("payload").containsExactlyInAnyOrder(
 				testPayload1.getBytes(), testPayload2.getBytes(), testPayload3.getBytes());
 		Arrays.asList(messages).forEach(message -> {
-			if (new String((byte[]) message.getPayload()).equals("foo1")) {
+			if ("foo1".equals(new String((byte[]) message.getPayload()))) {
 				assertThat(message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo("foo.x");
 			}
 			else {

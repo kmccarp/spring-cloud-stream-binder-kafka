@@ -54,7 +54,7 @@ public class GlobalKTableBinderConfiguration {
 	}
 
 	@Bean
-	public GlobalKTableBinder GlobalKTableBinder(
+	public GlobalKTableBinder globalKTableBinder(
 			KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
 			KafkaTopicProvisioner kafkaTopicProvisioner,
 			KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties,
