@@ -372,8 +372,8 @@ public abstract class AbstractKafkaStreamsBinderProcessor implements Application
 									BindContext context, Object result) {
 				if (!concurrencyExplicitlyProvided[0]) {
 
-					concurrencyExplicitlyProvided[0] = name.getLastElement(ConfigurationPropertyName.Form.UNIFORM)
-							.equals("concurrency") &&
+					concurrencyExplicitlyProvided[0] = "concurrency"
+							.equals(name.getLastElement(ConfigurationPropertyName.Form.UNIFORM)) &&
 					ConfigurationPropertyName.of("spring.cloud.stream.bindings." + inboundName + ".consumer").isAncestorOf(name);
 				}
 				return result;
@@ -468,7 +468,7 @@ public abstract class AbstractKafkaStreamsBinderProcessor implements Application
 
 	private KStream<?, ?> getkStream(BindingProperties bindingProperties, KStream<?, ?> stream, boolean nativeDecoding) {
 		if (!nativeDecoding) {
-			stream = stream.mapValues((value) -> {
+			stream = stream.mapValues(value -> {
 				Object returnValue;
 				String contentType = bindingProperties.getContentType();
 				if (value != null && !StringUtils.isEmpty(contentType)) {
