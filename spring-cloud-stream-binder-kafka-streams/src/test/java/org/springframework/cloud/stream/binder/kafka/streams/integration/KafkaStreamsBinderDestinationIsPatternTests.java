@@ -49,8 +49,8 @@ public class KafkaStreamsBinderDestinationIsPatternTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"in.1", "in.2", "out");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+.getEmbeddedKafka();
 
 	private static org.apache.kafka.clients.consumer.Consumer<Integer, String> consumer;
 
