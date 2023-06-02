@@ -73,24 +73,24 @@ final class KafkaStreamsBinderUtils {
 	}
 
 	static void prepareConsumerBinding(String name, String group,
-									ApplicationContext context, KafkaTopicProvisioner kafkaTopicProvisioner,
-									KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
-									ExtendedConsumerProperties<KafkaStreamsConsumerProperties> properties,
-									RetryTemplate retryTemplate,
-									ConfigurableListableBeanFactory beanFactory, String bindingName,
-									KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
-									StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
+ApplicationContext context, KafkaTopicProvisioner kafkaTopicProvisioner,
+KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
+ExtendedConsumerProperties<KafkaStreamsConsumerProperties> properties,
+RetryTemplate retryTemplate,
+ConfigurableListableBeanFactory beanFactory, String bindingName,
+KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
+StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
 
 		ExtendedConsumerProperties<KafkaConsumerProperties> extendedConsumerProperties =
-				(ExtendedConsumerProperties) properties;
+	(ExtendedConsumerProperties) properties;
 
 		if (binderConfigurationProperties
-				.getDeserializationExceptionHandler() == DeserializationExceptionHandler.sendToDlq) {
+	.getDeserializationExceptionHandler() == DeserializationExceptionHandler.sendToDlq) {
 			extendedConsumerProperties.getExtension().setEnableDlq(true);
 		}
 		// check for deserialization handler at the consumer binding, as that takes precedence.
 		final DeserializationExceptionHandler deserializationExceptionHandler =
-				properties.getExtension().getDeserializationExceptionHandler();
+	properties.getExtension().getDeserializationExceptionHandler();
 		if (deserializationExceptionHandler == DeserializationExceptionHandler.sendToDlq) {
 			extendedConsumerProperties.getExtension().setEnableDlq(true);
 		}
@@ -98,105 +98,105 @@ final class KafkaStreamsBinderUtils {
 		String[] inputTopics = StringUtils.commaDelimitedListToStringArray(name);
 		for (String inputTopic : inputTopics) {
 			kafkaTopicProvisioner.provisionConsumerDestination(inputTopic, group,
-					extendedConsumerProperties);
+		extendedConsumerProperties);
 		}
 
 		if (extendedConsumerProperties.getExtension().isEnableDlq()) {
 
 			Map<String, DlqPartitionFunction> partitionFunctions =
-					context.getBeansOfType(DlqPartitionFunction.class, false, false);
+		context.getBeansOfType(DlqPartitionFunction.class, false, false);
 			boolean oneFunctionPresent = partitionFunctions.size() == 1;
 			Integer dlqPartitions = extendedConsumerProperties.getExtension().getDlqPartitions();
 			DlqPartitionFunction partitionFunction = oneFunctionPresent
-					? partitionFunctions.values().iterator().next()
-					: DlqPartitionFunction.determineFallbackFunction(dlqPartitions, LOGGER);
+		? partitionFunctions.values().iterator().next()
+		: DlqPartitionFunction.determineFallbackFunction(dlqPartitions, LOGGER);
 
 			ProducerFactory<byte[], byte[]> producerFactory = getProducerFactory(
-					new ExtendedProducerProperties<>(
-							extendedConsumerProperties.getExtension().getDlqProducerProperties()),
-					binderConfigurationProperties);
+		new ExtendedProducerProperties<>(
+	extendedConsumerProperties.getExtension().getDlqProducerProperties()),
+		binderConfigurationProperties);
 			kafkaStreamsBindingInformationCatalogue.addDlqProducerFactory(streamsBuilderFactoryBean, producerFactory);
 
 			KafkaOperations<byte[], byte[]> kafkaTemplate = new KafkaTemplate<>(producerFactory);
 
 			Map<String, DlqDestinationResolver> dlqDestinationResolvers =
-					context.getBeansOfType(DlqDestinationResolver.class, false, false);
+		context.getBeansOfType(DlqDestinationResolver.class, false, false);
 
 			BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver =
-					dlqDestinationResolvers.isEmpty() ? (cr, e) -> new TopicPartition(extendedConsumerProperties.getExtension().getDlqName(),
-							partitionFunction.apply(group, cr, e)) :
-							(cr, e) -> new TopicPartition(dlqDestinationResolvers.values().iterator().next().apply(cr, e),
-									partitionFunction.apply(group, cr, e));
+		dlqDestinationResolvers.isEmpty() ? (cr, e) -> new TopicPartition(extendedConsumerProperties.getExtension().getDlqName(),
+	partitionFunction.apply(group, cr, e)) :
+	(cr, e) -> new TopicPartition(dlqDestinationResolvers.values().iterator().next().apply(cr, e),
+partitionFunction.apply(group, cr, e));
 
 			DeadLetterPublishingRecoverer kafkaStreamsBinderDlqRecoverer = !dlqDestinationResolvers.isEmpty() || !StringUtils
-					.isEmpty(extendedConsumerProperties.getExtension().getDlqName())
-					? new DeadLetterPublishingRecoverer(kafkaTemplate, destinationResolver)
-					: null;
+		.isEmpty(extendedConsumerProperties.getExtension().getDlqName())
+		? new DeadLetterPublishingRecoverer(kafkaTemplate, destinationResolver)
+		: null;
 			for (String inputTopic : inputTopics) {
 				if (StringUtils.isEmpty(
-						extendedConsumerProperties.getExtension().getDlqName()) && dlqDestinationResolvers.isEmpty()) {
+			extendedConsumerProperties.getExtension().getDlqName()) && dlqDestinationResolvers.isEmpty()) {
 					destinationResolver = (cr, e) -> new TopicPartition("error." + inputTopic + "." + group,
-									partitionFunction.apply(group, cr, e));
+				partitionFunction.apply(group, cr, e));
 					kafkaStreamsBinderDlqRecoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
-							destinationResolver);
+				destinationResolver);
 				}
 				SendToDlqAndContinue sendToDlqAndContinue = context
-						.getBean(SendToDlqAndContinue.class);
+			.getBean(SendToDlqAndContinue.class);
 				sendToDlqAndContinue.addKStreamDlqDispatch(inputTopic,
-						kafkaStreamsBinderDlqRecoverer);
+			kafkaStreamsBinderDlqRecoverer);
 			}
 		}
 
 		if (!StringUtils.hasText(properties.getRetryTemplateName())) {
 			@SuppressWarnings("unchecked")
 			BeanDefinition retryTemplateBeanDefinition = BeanDefinitionBuilder
-					.genericBeanDefinition(
-							(Class<RetryTemplate>) retryTemplate.getClass(),
-							() -> retryTemplate)
-					.getRawBeanDefinition();
+		.genericBeanDefinition(
+	(Class<RetryTemplate>) retryTemplate.getClass(),
+	() -> retryTemplate)
+		.getRawBeanDefinition();
 			((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(bindingName + "-RetryTemplate", retryTemplateBeanDefinition);
 		}
 	}
 
 	private static DefaultKafkaProducerFactory<byte[], byte[]> getProducerFactory(
-			ExtendedProducerProperties<KafkaProducerProperties> producerProperties,
-			KafkaBinderConfigurationProperties configurationProperties) {
+ExtendedProducerProperties<KafkaProducerProperties> producerProperties,
+KafkaBinderConfigurationProperties configurationProperties) {
 		Map<String, Object> props = new HashMap<>();
 		props.put(ProducerConfig.RETRIES_CONFIG, 0);
 		props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
 		props.put(ProducerConfig.ACKS_CONFIG, configurationProperties.getRequiredAcks());
 		Map<String, Object> mergedConfig = configurationProperties
-				.mergedProducerConfiguration();
+	.mergedProducerConfiguration();
 		if (!ObjectUtils.isEmpty(mergedConfig)) {
 			props.putAll(mergedConfig);
 		}
 		if (ObjectUtils.isEmpty(props.get(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG))) {
 			props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					configurationProperties.getKafkaConnectionString());
+		configurationProperties.getKafkaConnectionString());
 		}
 		if (ObjectUtils.isEmpty(props.get(ProducerConfig.BATCH_SIZE_CONFIG))) {
 			props.put(ProducerConfig.BATCH_SIZE_CONFIG,
-					String.valueOf(producerProperties.getExtension().getBufferSize()));
+		String.valueOf(producerProperties.getExtension().getBufferSize()));
 		}
 		if (ObjectUtils.isEmpty(props.get(ProducerConfig.LINGER_MS_CONFIG))) {
 			props.put(ProducerConfig.LINGER_MS_CONFIG,
-					String.valueOf(producerProperties.getExtension().getBatchTimeout()));
+		String.valueOf(producerProperties.getExtension().getBatchTimeout()));
 		}
 		if (ObjectUtils.isEmpty(props.get(ProducerConfig.COMPRESSION_TYPE_CONFIG))) {
 			props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG,
-					producerProperties.getExtension().getCompressionType().toString());
+		producerProperties.getExtension().getCompressionType().toString());
 		}
 		Map<String, String> configs = producerProperties.getExtension().getConfiguration();
 		Assert.state(!configs.containsKey(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG),
-				ProducerConfig.BOOTSTRAP_SERVERS_CONFIG + " cannot be overridden at the binding level; "
-						+ "use multiple binders instead");
+	ProducerConfig.BOOTSTRAP_SERVERS_CONFIG + " cannot be overridden at the binding level; "
++ "use multiple binders instead");
 		if (!ObjectUtils.isEmpty(configs)) {
 			props.putAll(configs);
 		}
 		// Always send as byte[] on dlq (the same byte[] that the consumer received)
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-				ByteArraySerializer.class);
+	ByteArraySerializer.class);
 
 		return new DefaultKafkaProducerFactory<>(props);
 	}
@@ -204,14 +204,14 @@ final class KafkaStreamsBinderUtils {
 
 	static boolean supportsKStream(MethodParameter methodParameter, Class<?> targetBeanClass) {
 		return KStream.class.isAssignableFrom(targetBeanClass)
-				&& KStream.class.isAssignableFrom(methodParameter.getParameterType());
+	&& KStream.class.isAssignableFrom(methodParameter.getParameterType());
 	}
 
 	static void closeDlqProducerFactories(KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
-										StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
+StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
 
 		final List<ProducerFactory<byte[], byte[]>> dlqProducerFactories =
-				kafkaStreamsBindingInformationCatalogue.getDlqProducerFactory(streamsBuilderFactoryBean);
+	kafkaStreamsBindingInformationCatalogue.getDlqProducerFactory(streamsBuilderFactoryBean);
 
 		if (!CollectionUtils.isEmpty(dlqProducerFactories)) {
 			for (ProducerFactory<byte[], byte[]> producerFactory : dlqProducerFactories) {

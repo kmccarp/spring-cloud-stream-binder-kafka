@@ -31,9 +31,7 @@ import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
  */
 @ConfigurationProperties("spring.cloud.stream.kafka.streams")
 public class KafkaStreamsExtendedBindingProperties
-		// @checkstyle:off
-		extends
-		AbstractExtendedBindingProperties<KafkaStreamsConsumerProperties, KafkaStreamsProducerProperties, KafkaStreamsBindingProperties> {
+		// @checkstyle:offextendsAbstractExtendedBindingProperties<KafkaStreamsConsumerProperties, KafkaStreamsProducerProperties, KafkaStreamsBindingProperties> {
 
 	// @checkstyle:on
 	private static final String DEFAULTS_PREFIX = "spring.cloud.stream.kafka.streams.default";

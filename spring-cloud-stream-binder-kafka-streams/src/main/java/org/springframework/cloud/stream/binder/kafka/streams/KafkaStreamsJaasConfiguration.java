@@ -37,15 +37,15 @@ public class KafkaStreamsJaasConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(KafkaJaasLoginModuleInitializer.class)
 	public KafkaJaasLoginModuleInitializer jaasInitializer(
-			KafkaBinderConfigurationProperties configurationProperties)
-			throws IOException {
+KafkaBinderConfigurationProperties configurationProperties)
+throws IOException {
 		KafkaJaasLoginModuleInitializer kafkaJaasLoginModuleInitializer = new KafkaJaasLoginModuleInitializer();
 		JaasLoginModuleConfiguration jaas = configurationProperties.getJaas();
 		if (jaas != null) {
 			kafkaJaasLoginModuleInitializer.setLoginModule(jaas.getLoginModule());
 
 			KafkaJaasLoginModuleInitializer.ControlFlag controlFlag = jaas
-					.getControlFlag();
+		.getControlFlag();
 
 			if (controlFlag != null) {
 				kafkaJaasLoginModuleInitializer.setControlFlag(controlFlag);

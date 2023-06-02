@@ -34,8 +34,7 @@ import org.springframework.util.backoff.BackOff;
  * @since 3.2
  *
  */
-public interface ListenerContainerWithDlqAndRetryCustomizer
-		extends ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> {
+public interface ListenerContainerWithDlqAndRetryCustomizerextends ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> {
 
 	@Override
 	default void configure(AbstractMessageListenerContainer<?, ?> container, String destinationName, String group) {
@@ -52,8 +51,8 @@ public interface ListenerContainerWithDlqAndRetryCustomizer
 	 * @see #retryAndDlqInBinding(String, String)
 	 */
 	void configure(AbstractMessageListenerContainer<?, ?> container, String destinationName, String group,
-			@Nullable BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> dlqDestinationResolver,
-			@Nullable BackOff backOff);
+@Nullable BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> dlqDestinationResolver,
+@Nullable BackOff backOff);
 
 	/**
 	 * Return false to move retries and DLQ from the binding to a customized error handler

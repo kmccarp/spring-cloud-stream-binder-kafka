@@ -23,8 +23,7 @@ import org.springframework.messaging.Message;
 /**
  * @author Marius Bogoevici
  */
-public class RawKafkaPartitionTestSupport
-		implements PartitionKeyExtractorStrategy, PartitionSelectorStrategy {
+public class RawKafkaPartitionTestSupportimplements PartitionKeyExtractorStrategy, PartitionSelectorStrategy {
 
 	@Override
 	public int selectPartition(Object key, int divisor) {

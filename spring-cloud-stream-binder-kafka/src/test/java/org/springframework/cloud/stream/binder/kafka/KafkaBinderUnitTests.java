@@ -76,63 +76,63 @@ public class KafkaBinderUnitTests {
 	public void testPropertyOverrides() throws Exception {
 		KafkaProperties kafkaProperties = new TestKafkaProperties();
 		KafkaBinderConfigurationProperties binderConfigurationProperties = new KafkaBinderConfigurationProperties(
-				kafkaProperties);
+	kafkaProperties);
 		KafkaTopicProvisioner provisioningProvider = new KafkaTopicProvisioner(
-				binderConfigurationProperties, kafkaProperties, null);
+	binderConfigurationProperties, kafkaProperties, null);
 		KafkaMessageChannelBinder binder = new KafkaMessageChannelBinder(
-				binderConfigurationProperties, provisioningProvider);
+	binderConfigurationProperties, provisioningProvider);
 		KafkaConsumerProperties consumerProps = new KafkaConsumerProperties();
 		ExtendedConsumerProperties<KafkaConsumerProperties> ecp = new ExtendedConsumerProperties<KafkaConsumerProperties>(
-				consumerProps);
+	consumerProps);
 		Method method = KafkaMessageChannelBinder.class.getDeclaredMethod(
-				"createKafkaConsumerFactory", boolean.class, String.class,
-				ExtendedConsumerProperties.class, String.class, String.class);
+	"createKafkaConsumerFactory", boolean.class, String.class,
+	ExtendedConsumerProperties.class, String.class, String.class);
 		method.setAccessible(true);
 
 		// test default for anon
 		Object factory = method.invoke(binder, true, "foo-1", ecp, "foo.consumer", "foo");
 		Map<?, ?> configs = TestUtils.getPropertyValue(factory, "configs", Map.class);
 		assertThat(configs.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG))
-				.isEqualTo("latest");
+	.isEqualTo("latest");
 
 		// test default for named
 		factory = method.invoke(binder, false, "foo-2", ecp, "foo.consumer", "foo");
 		configs = TestUtils.getPropertyValue(factory, "configs", Map.class);
 		assertThat(configs.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG))
-				.isEqualTo("earliest");
+	.isEqualTo("earliest");
 
 		// binder level setting
 		binderConfigurationProperties.setConfiguration(Collections
-				.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
+	.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
 		factory = method.invoke(binder, false, "foo-3", ecp, "foo.consumer", "foo");
 		configs = TestUtils.getPropertyValue(factory, "configs", Map.class);
 		assertThat(configs.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG))
-				.isEqualTo("latest");
+	.isEqualTo("latest");
 
 		// consumer level setting
 		consumerProps.setConfiguration(Collections
-				.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		factory = method.invoke(binder, false, "foo-4", ecp, "foo.consumer", "foo");
 		configs = TestUtils.getPropertyValue(factory, "configs", Map.class);
 		assertThat(configs.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG))
-				.isEqualTo("earliest");
+	.isEqualTo("earliest");
 	}
 
 	@Test
 	public void testMergedConsumerProperties() {
 		KafkaProperties bootProps = new TestKafkaProperties();
 		bootProps.getConsumer().getProperties()
-				.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "bar");
+	.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "bar");
 		KafkaBinderConfigurationProperties props = new KafkaBinderConfigurationProperties(
-				bootProps);
+	bootProps);
 		assertThat(props.mergedConsumerConfiguration()
-				.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("bar");
+	.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("bar");
 		props.getConfiguration().put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "baz");
 		assertThat(props.mergedConsumerConfiguration()
-				.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("baz");
+	.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("baz");
 		props.getConsumerProperties().put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "qux");
 		assertThat(props.mergedConsumerConfiguration()
-				.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("qux");
+	.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)).isEqualTo("qux");
 	}
 
 	@Test
@@ -140,61 +140,61 @@ public class KafkaBinderUnitTests {
 		KafkaProperties bootProps = new TestKafkaProperties();
 		bootProps.getProducer().getProperties().put(ProducerConfig.RETRIES_CONFIG, "bar");
 		KafkaBinderConfigurationProperties props = new KafkaBinderConfigurationProperties(
-				bootProps);
+	bootProps);
 		assertThat(props.mergedProducerConfiguration().get(ProducerConfig.RETRIES_CONFIG))
-				.isEqualTo("bar");
+	.isEqualTo("bar");
 		props.getConfiguration().put(ProducerConfig.RETRIES_CONFIG, "baz");
 		assertThat(props.mergedProducerConfiguration().get(ProducerConfig.RETRIES_CONFIG))
-				.isEqualTo("baz");
+	.isEqualTo("baz");
 		props.getProducerProperties().put(ProducerConfig.RETRIES_CONFIG, "qux");
 		assertThat(props.mergedProducerConfiguration().get(ProducerConfig.RETRIES_CONFIG))
-				.isEqualTo("qux");
+	.isEqualTo("qux");
 	}
 
 	@Test
 	public void testOffsetResetWithGroupManagementEarliest() throws Exception {
 		testOffsetResetWithGroupManagement(true, true, "foo-100",
-				"testOffsetResetWithGroupManagementEarliest");
+	"testOffsetResetWithGroupManagementEarliest");
 	}
 
 	@Test
 	public void testOffsetResetWithGroupManagementLatest() throws Throwable {
 		testOffsetResetWithGroupManagement(false, true, "foo-101",
-				"testOffsetResetWithGroupManagementLatest");
+	"testOffsetResetWithGroupManagementLatest");
 	}
 
 	@Test
 	public void testOffsetResetWithManualAssignmentEarliest() throws Exception {
 		testOffsetResetWithGroupManagement(true, false, "foo-102",
-				"testOffsetResetWithManualAssignmentEarliest");
+	"testOffsetResetWithManualAssignmentEarliest");
 	}
 
 	@Test
 	public void testOffsetResetWithGroupManualAssignmentLatest() throws Throwable {
 		testOffsetResetWithGroupManagement(false, false, "foo-103",
-				"testOffsetResetWithGroupManualAssignmentLatest");
+	"testOffsetResetWithGroupManualAssignmentLatest");
 	}
 
 	private void testOffsetResetWithGroupManagement(final boolean earliest,
-			boolean groupManage, String topic, String group) throws Exception {
+boolean groupManage, String topic, String group) throws Exception {
 
 		final List<TopicPartition> partitions = new ArrayList<>();
 		partitions.add(new TopicPartition(topic, 0));
 		partitions.add(new TopicPartition(topic, 1));
 		KafkaBinderConfigurationProperties configurationProperties = new KafkaBinderConfigurationProperties(
-				new TestKafkaProperties());
+	new TestKafkaProperties());
 		KafkaTopicProvisioner provisioningProvider = mock(KafkaTopicProvisioner.class);
 		ConsumerDestination dest = mock(ConsumerDestination.class);
 		given(dest.getName()).willReturn(topic);
 		given(provisioningProvider.provisionConsumerDestination(anyString(), anyString(),
-				any())).willReturn(dest);
+	any())).willReturn(dest);
 		final AtomicInteger part = new AtomicInteger();
 		willAnswer(i -> {
 			return partitions.stream().map(p -> new PartitionInfo(topic,
-					part.getAndIncrement(), null, null, null))
-					.collect(Collectors.toList());
+		part.getAndIncrement(), null, null, null))
+		.collect(Collectors.toList());
 		}).given(provisioningProvider).getPartitionsForTopic(anyInt(), anyBoolean(),
-				any(), any());
+	any(), any());
 		@SuppressWarnings("unchecked")
 		final Consumer<byte[], byte[]> consumer = mock(Consumer.class);
 		final CountDownLatch latch = new CountDownLatch(1);
@@ -209,7 +209,7 @@ public class KafkaBinderUnitTests {
 		}).given(consumer).poll(any(Duration.class));
 		willAnswer(i -> {
 			((org.apache.kafka.clients.consumer.ConsumerRebalanceListener) i
-					.getArgument(1)).onPartitionsAssigned(partitions);
+		.getArgument(1)).onPartitionsAssigned(partitions);
 			latch.countDown();
 			return null;
 		}).given(consumer).subscribe(eq(Collections.singletonList(topic)), any());
@@ -225,19 +225,19 @@ public class KafkaBinderUnitTests {
 
 			@Override
 			public void configure(AbstractMessageListenerContainer<?, ?> container, String destinationName,
-					String group) {
+		String group) {
 
 				container.getContainerProperties().setMissingTopicsFatal(false);
 			}
 
 		}
 		KafkaMessageChannelBinder binder = new KafkaMessageChannelBinder(
-				configurationProperties, provisioningProvider, new Customizer(), null) {
+	configurationProperties, provisioningProvider, new Customizer(), null) {
 
 			@Override
 			protected ConsumerFactory<?, ?> createKafkaConsumerFactory(boolean anonymous,
-					String consumerGroup,
-					ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties, String beanName, String destination) {
+		String consumerGroup,
+		ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties, String beanName, String destination) {
 
 				return new ConsumerFactory<byte[], byte[]>() {
 
@@ -253,13 +253,13 @@ public class KafkaBinderUnitTests {
 
 					@Override
 					public Consumer<byte[], byte[]> createConsumer(String arg0,
-							String arg1) {
+				String arg1) {
 						return consumer;
 					}
 
 					@Override
 					public Consumer<byte[], byte[]> createConsumer(String groupId,
-							String clientIdPrefix, String clientIdSuffix) {
+				String clientIdPrefix, String clientIdSuffix) {
 						return consumer;
 					}
 
@@ -272,7 +272,7 @@ public class KafkaBinderUnitTests {
 					public Map<String, Object> getConfigurationProperties() {
 						Map<String, Object> props = new HashMap<>();
 						props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-								earliest ? "earliest" : "latest");
+					earliest ? "earliest" : "latest");
 						props.put(ConsumerConfig.GROUP_ID_CONFIG, group);
 						return props;
 					}
@@ -299,10 +299,10 @@ public class KafkaBinderUnitTests {
 		extension.setResetOffsets(true);
 		extension.setAutoRebalanceEnabled(groupManage);
 		ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties = new ExtendedConsumerProperties<>(
-				extension);
+	extension);
 		consumerProperties.setInstanceCount(1);
 		Binding<MessageChannel> messageChannelBinding = binder.bindConsumer(topic, group,
-				channel, consumerProperties);
+	channel, consumerProperties);
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		@SuppressWarnings("unchecked")
 		ArgumentCaptor<Set<TopicPartition>> captor = ArgumentCaptor.forClass(Set.class);

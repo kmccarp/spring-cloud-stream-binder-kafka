@@ -35,15 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author Soby Chacko
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(
-		classes = BaseKafkaBinderTopicPropertiesUpdateTest.TopicAutoConfigsTestConfig.class,
-		webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-		"spring.cloud.stream.function.bindings.process-in-0=standard-in",
-		"spring.cloud.stream.function.bindings.process-out-0=standard-out",
-		"spring.cloud.stream.kafka.bindings.standard-out.producer.topic.properties.retention.ms=9001",
-		"spring.cloud.stream.kafka.default.producer.topic.properties.retention.ms=-1",
-		"spring.cloud.stream.kafka.bindings.standard-in.consumer.topic.properties.retention.ms=9001",
-		"spring.cloud.stream.kafka.default.consumer.topic.properties.retention.ms=-1"
+@SpringBootTest(classes = BaseKafkaBinderTopicPropertiesUpdateTest.TopicAutoConfigsTestConfig.class,webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.cloud.stream.function.bindings.process-in-0=standard-in","spring.cloud.stream.function.bindings.process-out-0=standard-out","spring.cloud.stream.kafka.bindings.standard-out.producer.topic.properties.retention.ms=9001","spring.cloud.stream.kafka.default.producer.topic.properties.retention.ms=-1","spring.cloud.stream.kafka.bindings.standard-in.consumer.topic.properties.retention.ms=9001","spring.cloud.stream.kafka.default.consumer.topic.properties.retention.ms=-1"
 })
 @DirtiesContext
 public abstract class BaseKafkaBinderTopicPropertiesUpdateTest {
@@ -56,7 +48,7 @@ public abstract class BaseKafkaBinderTopicPropertiesUpdateTest {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
+	kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass

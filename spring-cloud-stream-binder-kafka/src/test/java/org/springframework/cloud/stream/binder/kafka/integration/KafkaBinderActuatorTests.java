@@ -66,8 +66,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 // @checkstyle:off
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
-		properties = {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,properties = {
 		"spring.cloud.stream.bindings.input.group=" + KafkaBinderActuatorTests.TEST_CONSUMER_GROUP,
 		"spring.cloud.stream.function.bindings.process-in-0=input",
 		"spring.cloud.stream.pollable-source=input"}
@@ -86,7 +85,7 @@ public class KafkaBinderActuatorTests {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
+	kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass
@@ -106,53 +105,53 @@ public class KafkaBinderActuatorTests {
 		this.kafkaTemplate.flush();
 
 		assertThat(this.meterRegistry.get("spring.cloud.stream.binder.kafka.offset")
-				.tag("group", TEST_CONSUMER_GROUP).tag("topic", "input").gauge()
-				.value()).isGreaterThan(0);
+	.tag("group", TEST_CONSUMER_GROUP).tag("topic", "input").gauge()
+	.value()).isGreaterThan(0);
 	}
 
 	@Test
 	@Ignore
 	public void testKafkaBinderMetricsWhenNoMicrometer() {
 		new ApplicationContextRunner().withUserConfiguration(KafkaMetricsTestConfig.class)
-				.withPropertyValues(
-						"spring.cloud.stream.bindings.input.group", KafkaBinderActuatorTests.TEST_CONSUMER_GROUP,
-						"spring.cloud.stream.function.bindings.process-in-0", "input",
-						"spring.cloud.stream.pollable-source", "input")
-				.withClassLoader(new FilteredClassLoader("io.micrometer.core"))
-				.run(context -> {
-					assertThat(context.getBeanNamesForType(MeterRegistry.class))
-							.isEmpty();
-					assertThat(context.getBeanNamesForType(MeterBinder.class)).isEmpty();
+	.withPropertyValues(
+"spring.cloud.stream.bindings.input.group", KafkaBinderActuatorTests.TEST_CONSUMER_GROUP,
+"spring.cloud.stream.function.bindings.process-in-0", "input",
+"spring.cloud.stream.pollable-source", "input")
+	.withClassLoader(new FilteredClassLoader("io.micrometer.core"))
+	.run(context -> {
+		assertThat(context.getBeanNamesForType(MeterRegistry.class))
+	.isEmpty();
+		assertThat(context.getBeanNamesForType(MeterBinder.class)).isEmpty();
 
-					DirectFieldAccessor channelBindingServiceAccessor = new DirectFieldAccessor(
-							context.getBean(BindingService.class));
-					@SuppressWarnings("unchecked")
-					Map<String, List<Binding<MessageChannel>>> consumerBindings =
-						(Map<String, List<Binding<MessageChannel>>>) channelBindingServiceAccessor
-							.getPropertyValue("consumerBindings");
-					assertThat(new DirectFieldAccessor(
-							consumerBindings.get("input").get(0)).getPropertyValue(
-									"lifecycle.messageListenerContainer.beanName"))
-											.isEqualTo("setByCustomizer:input");
-					assertThat(new DirectFieldAccessor(
-							consumerBindings.get("input").get(0)).getPropertyValue(
-									"lifecycle.beanName"))
-											.isEqualTo("setByCustomizer:input");
-					assertThat(new DirectFieldAccessor(
-							consumerBindings.get("source").get(0)).getPropertyValue(
-									"lifecycle.beanName"))
-											.isEqualTo("setByCustomizer:source");
+		DirectFieldAccessor channelBindingServiceAccessor = new DirectFieldAccessor(
+	context.getBean(BindingService.class));
+		@SuppressWarnings("unchecked")
+		Map<String, List<Binding<MessageChannel>>> consumerBindings =
+	(Map<String, List<Binding<MessageChannel>>>) channelBindingServiceAccessor
+.getPropertyValue("consumerBindings");
+		assertThat(new DirectFieldAccessor(
+	consumerBindings.get("input").get(0)).getPropertyValue(
+	"lifecycle.messageListenerContainer.beanName"))
+	.isEqualTo("setByCustomizer:input");
+		assertThat(new DirectFieldAccessor(
+	consumerBindings.get("input").get(0)).getPropertyValue(
+	"lifecycle.beanName"))
+	.isEqualTo("setByCustomizer:input");
+		assertThat(new DirectFieldAccessor(
+	consumerBindings.get("source").get(0)).getPropertyValue(
+	"lifecycle.beanName"))
+	.isEqualTo("setByCustomizer:source");
 
-					@SuppressWarnings("unchecked")
-					Map<String, Binding<MessageChannel>> producerBindings =
-						(Map<String, Binding<MessageChannel>>) channelBindingServiceAccessor
-							.getPropertyValue("producerBindings");
+		@SuppressWarnings("unchecked")
+		Map<String, Binding<MessageChannel>> producerBindings =
+	(Map<String, Binding<MessageChannel>>) channelBindingServiceAccessor
+.getPropertyValue("producerBindings");
 
-					assertThat(new DirectFieldAccessor(
-							producerBindings.get("output")).getPropertyValue(
-							"lifecycle.beanName"))
-							.isEqualTo("setByCustomizer:output");
-				});
+		assertThat(new DirectFieldAccessor(
+	producerBindings.get("output")).getPropertyValue(
+	"lifecycle.beanName"))
+	.isEqualTo("setByCustomizer:output");
+	});
 	}
 
 	@EnableAutoConfiguration

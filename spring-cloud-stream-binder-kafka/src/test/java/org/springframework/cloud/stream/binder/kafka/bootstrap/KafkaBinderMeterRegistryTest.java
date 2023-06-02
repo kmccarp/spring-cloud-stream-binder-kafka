@@ -57,7 +57,7 @@ public class KafkaBinderMeterRegistryTest {
 		embeddedKafka = EmbeddedKafkaCondition.getBroker();
 
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
@@ -73,12 +73,11 @@ public class KafkaBinderMeterRegistryTest {
 	@Test
 	public void testMetricsWithSingleBinder() throws Exception {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(SimpleApplication.class)
-				.web(WebApplicationType.NONE)
-				.run("--spring.cloud.stream.bindings.uppercase-in-0.destination=inputTopic",
-						"--spring.cloud.stream.bindings.uppercase-in-0.group=inputGroup",
-						"--spring.cloud.stream.bindings.uppercase-out-0.destination=outputTopic",
-						"--spring.cloud.stream.kafka.binder.brokers" + "="
-								+ embeddedKafka.getBrokersAsString());
+	.web(WebApplicationType.NONE)
+	.run("--spring.cloud.stream.bindings.uppercase-in-0.destination=inputTopic",
+"--spring.cloud.stream.bindings.uppercase-in-0.group=inputGroup",
+"--spring.cloud.stream.bindings.uppercase-out-0.destination=outputTopic",
+"--spring.cloud.stream.kafka.binder.brokers" + "="+ embeddedKafka.getBrokersAsString());
 
 
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
@@ -101,20 +100,16 @@ public class KafkaBinderMeterRegistryTest {
 	@Test
 	public void testMetricsWithMultiBinders() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(SimpleApplication.class)
-				.web(WebApplicationType.NONE)
-				.run("--spring.cloud.stream.bindings.uppercase-in-0.destination=inputTopic",
-						"--spring.cloud.stream.bindings.uppercase-in-0.group=inputGroup",
-						"--spring.cloud.stream.bindings.uppercase-in-0.binder=kafka1",
-						"--spring.cloud.stream.bindings.uppercase-out-0.destination=outputTopic",
-						"--spring.cloud.stream.bindings.uppercase-out-0.binder=kafka2",
-						"--spring.cloud.stream.binders.kafka1.type=kafka",
-						"--spring.cloud.stream.binders.kafka2.type=kafka",
-						"--spring.cloud.stream.binders.kafka1.environment"
-								+ ".spring.cloud.stream.kafka.binder.brokers" + "="
-								+ embeddedKafka.getBrokersAsString(),
-						"--spring.cloud.stream.binders.kafka2.environment"
-								+ ".spring.cloud.stream.kafka.binder.brokers" + "="
-								+ embeddedKafka.getBrokersAsString());
+	.web(WebApplicationType.NONE)
+	.run("--spring.cloud.stream.bindings.uppercase-in-0.destination=inputTopic",
+"--spring.cloud.stream.bindings.uppercase-in-0.group=inputGroup",
+"--spring.cloud.stream.bindings.uppercase-in-0.binder=kafka1",
+"--spring.cloud.stream.bindings.uppercase-out-0.destination=outputTopic",
+"--spring.cloud.stream.bindings.uppercase-out-0.binder=kafka2",
+"--spring.cloud.stream.binders.kafka1.type=kafka",
+"--spring.cloud.stream.binders.kafka2.type=kafka",
+"--spring.cloud.stream.binders.kafka1.environment"+ ".spring.cloud.stream.kafka.binder.brokers" + "="+ embeddedKafka.getBrokersAsString(),
+"--spring.cloud.stream.binders.kafka2.environment"+ ".spring.cloud.stream.kafka.binder.brokers" + "="+ embeddedKafka.getBrokersAsString());
 
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -138,8 +133,8 @@ public class KafkaBinderMeterRegistryTest {
 
 		// assert kafka binder metrics
 		assertThat(meterRegistry.get("spring.cloud.stream.binder.kafka.offset")
-				.tag("group", "inputGroup")
-				.tag("topic", "inputTopic").gauge().value()).isNotNull();
+	.tag("group", "inputGroup")
+	.tag("topic", "inputTopic").gauge().value()).isNotNull();
 
 		// assert consumer metrics
 		assertThatCode(() -> meterRegistry.get("kafka.consumer.fetch.manager.fetch.total").meter()).doesNotThrowAnyException();

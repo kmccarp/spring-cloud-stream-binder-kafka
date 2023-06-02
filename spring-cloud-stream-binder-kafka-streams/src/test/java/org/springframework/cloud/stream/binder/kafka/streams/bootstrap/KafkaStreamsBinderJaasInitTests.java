@@ -59,24 +59,24 @@ public class KafkaStreamsBinderJaasInitTests {
 	@Test
 	public void testKafkaStreamsBinderJaasInitialization() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				KafkaStreamsBinderJaasInitTestsApplication.class).web(WebApplicationType.NONE).run(
-				"--spring.cloud.function.definition=foo",
-				"--spring.cloud.stream.kafka.streams.bindings.foo-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderJaasInitialization-jaas-id",
-				"--spring.cloud.stream.kafka.streams.binder.jaas.loginModule=org.apache.kafka.common.security.plain.PlainLoginModule",
-				"--spring.cloud.stream.kafka.streams.binder.jaas.options.username=foo",
-				"--spring.cloud.stream.kafka.streams.binder.jaas.options.password=bar",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	KafkaStreamsBinderJaasInitTestsApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.function.definition=foo",
+	"--spring.cloud.stream.kafka.streams.bindings.foo-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderJaasInitialization-jaas-id",
+	"--spring.cloud.stream.kafka.streams.binder.jaas.loginModule=org.apache.kafka.common.security.plain.PlainLoginModule",
+	"--spring.cloud.stream.kafka.streams.binder.jaas.options.username=foo",
+	"--spring.cloud.stream.kafka.streams.binder.jaas.options.password=bar",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 		javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
-				.getConfiguration();
+	.getConfiguration();
 		final AppConfigurationEntry[] kafkaConfiguration = configuration
-				.getAppConfigurationEntry("KafkaClient");
+	.getAppConfigurationEntry("KafkaClient");
 		assertThat(kafkaConfiguration).hasSize(1);
 		assertThat(kafkaConfiguration[0].getOptions().get("username")).isEqualTo("foo");
 		assertThat(kafkaConfiguration[0].getOptions().get("password")).isEqualTo("bar");
 		assertThat(kafkaConfiguration[0].getControlFlag())
-				.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUIRED);
+	.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUIRED);
 		applicationContext.close();
 	}
 

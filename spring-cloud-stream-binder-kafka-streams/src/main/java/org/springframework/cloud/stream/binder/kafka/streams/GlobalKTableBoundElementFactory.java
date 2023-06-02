@@ -36,16 +36,15 @@ import org.springframework.util.Assert;
  * @author Soby Chacko
  * @since 2.1.0
  */
-public class GlobalKTableBoundElementFactory
-		extends AbstractBindingTargetFactory<GlobalKTable> {
+public class GlobalKTableBoundElementFactoryextends AbstractBindingTargetFactory<GlobalKTable> {
 
 	private final BindingServiceProperties bindingServiceProperties;
 	private final EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler;
 	private final KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue;
 
 	GlobalKTableBoundElementFactory(BindingServiceProperties bindingServiceProperties,
-									EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler,
-									KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
+EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler,
+KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
 		super(GlobalKTable.class);
 		this.bindingServiceProperties = bindingServiceProperties;
 		this.encodingDecodingBindAdviceHandler = encodingDecodingBindAdviceHandler;
@@ -72,8 +71,8 @@ public class GlobalKTableBoundElementFactory
 		GlobalKTableBoundElementFactory.GlobalKTableWrapperHandler wrapper = new GlobalKTableBoundElementFactory.GlobalKTableWrapperHandler();
 		// @checkstyle:on
 		ProxyFactory proxyFactory = new ProxyFactory(
-				GlobalKTableBoundElementFactory.GlobalKTableWrapper.class,
-				GlobalKTable.class);
+	GlobalKTableBoundElementFactory.GlobalKTableWrapper.class,
+	GlobalKTable.class);
 		proxyFactory.addAdvice(wrapper);
 
 		final GlobalKTable proxy = (GlobalKTable) proxyFactory.getProxy();
@@ -84,7 +83,7 @@ public class GlobalKTableBoundElementFactory
 	@Override
 	public GlobalKTable createOutput(String name) {
 		throw new UnsupportedOperationException(
-				"Outbound operations are not allowed on target type GlobalKTable");
+	"Outbound operations are not allowed on target type GlobalKTable");
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class GlobalKTableBoundElementFactory
 	}
 
 	private static class GlobalKTableWrapperHandler implements
-			GlobalKTableBoundElementFactory.GlobalKTableWrapper, MethodInterceptor {
+GlobalKTableBoundElementFactory.GlobalKTableWrapper, MethodInterceptor {
 
 		private GlobalKTable<Object, Object> delegate;
 
@@ -111,21 +110,21 @@ public class GlobalKTableBoundElementFactory
 		@Override
 		public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 			if (methodInvocation.getMethod().getDeclaringClass()
-					.equals(GlobalKTable.class)) {
+		.equals(GlobalKTable.class)) {
 				Assert.notNull(this.delegate,
-						"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
-								+ "  but no delegate has been set.");
+			"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
+		+ "  but no delegate has been set.");
 				return methodInvocation.getMethod().invoke(this.delegate,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else if (methodInvocation.getMethod().getDeclaringClass()
-					.equals(GlobalKTableBoundElementFactory.GlobalKTableWrapper.class)) {
+		.equals(GlobalKTableBoundElementFactory.GlobalKTableWrapper.class)) {
 				return methodInvocation.getMethod().invoke(this,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else {
 				throw new IllegalStateException(
-						"Only GlobalKTable method invocations are permitted");
+			"Only GlobalKTable method invocations are permitted");
 			}
 		}
 

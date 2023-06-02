@@ -49,12 +49,7 @@ import static org.mockito.Mockito.mock;
 /**
  * @author Gary Russell
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-		"spring.cloud.function.definition=retryInBinder;retryInContainer",
-		"spring.cloud.stream.bindings.retryInBinder-in-0.group=foo",
-		"spring.cloud.stream.bindings.retryInContainer-in-0.group=bar",
-		"spring.cloud.stream.kafka.bindings.retryInBinder-in-0.consumer.enable-dlq=true",
-		"spring.cloud.stream.kafka.bindings.retryInContainer-in-0.consumer.enable-dlq=true"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.cloud.function.definition=retryInBinder;retryInContainer","spring.cloud.stream.bindings.retryInBinder-in-0.group=foo","spring.cloud.stream.bindings.retryInContainer-in-0.group=bar","spring.cloud.stream.kafka.bindings.retryInBinder-in-0.consumer.enable-dlq=true","spring.cloud.stream.kafka.bindings.retryInContainer-in-0.consumer.enable-dlq=true"})
 @EmbeddedKafka(bootstrapServersProperty = "spring.kafka.bootstrap-servers")
 @DirtiesContext
 public class KafkaRetryDlqBinderOrContainerTests {
@@ -64,14 +59,14 @@ public class KafkaRetryDlqBinderOrContainerTests {
 		Binding<?> retryInBinder = controller.queryState("retryInBinder-in-0");
 		assertThat(KafkaTestUtils.getPropertyValue(retryInBinder, "lifecycle.retryTemplate")).isNotNull();
 		assertThat(KafkaTestUtils.getPropertyValue(retryInBinder,
-				"lifecycle.messageListenerContainer.commonErrorHandler")).isNull();
+	"lifecycle.messageListenerContainer.commonErrorHandler")).isNull();
 		Binding<?> retryInContainer = controller.queryState("retryInContainer-in-0");
 		assertThat(KafkaTestUtils.getPropertyValue(retryInContainer, "lifecycle.retryTemplate")).isNull();
 		assertThat(KafkaTestUtils.getPropertyValue(retryInContainer,
-				"lifecycle.messageListenerContainer.commonErrorHandler")).isInstanceOf(CommonErrorHandler.class);
+	"lifecycle.messageListenerContainer.commonErrorHandler")).isInstanceOf(CommonErrorHandler.class);
 		assertThat(KafkaTestUtils.getPropertyValue(retryInContainer,
-					"lifecycle.messageListenerContainer.commonErrorHandler.failureTracker.backOff"))
-				.isInstanceOf(ExponentialBackOffWithMaxRetries.class);
+	"lifecycle.messageListenerContainer.commonErrorHandler.failureTracker.backOff"))
+	.isInstanceOf(ExponentialBackOffWithMaxRetries.class);
 	}
 
 	@SpringBootApplication
@@ -79,12 +74,14 @@ public class KafkaRetryDlqBinderOrContainerTests {
 
 		@Bean
 		public Consumer<String> retryInBinder() {
-			return str -> { };
+			return str -> {
+			};
 		}
 
 		@Bean
 		public Consumer<String> retryInContainer() {
-			return str -> { };
+			return str -> {
+			};
 		}
 
 		@Bean
@@ -93,13 +90,13 @@ public class KafkaRetryDlqBinderOrContainerTests {
 
 				@Override
 				public void configure(AbstractMessageListenerContainer<?, ?> container, String destinationName,
-						String group,
-						BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> dlqDestinationResolver,
-						@Nullable BackOff backOff) {
+			String group,
+			BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> dlqDestinationResolver,
+			@Nullable BackOff backOff) {
 
 					if (destinationName.contains("Container")) {
 						ConsumerRecordRecoverer dlpr = new DeadLetterPublishingRecoverer(mock(KafkaOperations.class),
-								dlqDestinationResolver);
+					dlqDestinationResolver);
 						container.setCommonErrorHandler(new DefaultErrorHandler(dlpr, backOff));
 					}
 				}

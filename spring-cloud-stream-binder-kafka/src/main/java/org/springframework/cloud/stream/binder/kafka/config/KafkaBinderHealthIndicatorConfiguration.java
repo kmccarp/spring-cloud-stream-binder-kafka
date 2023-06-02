@@ -51,25 +51,25 @@ public class KafkaBinderHealthIndicatorConfiguration {
 
 	@Bean
 	public KafkaBinderHealthIndicator kafkaBinderHealthIndicator(
-			KafkaMessageChannelBinder kafkaMessageChannelBinder,
-			KafkaBinderConfigurationProperties configurationProperties) {
+KafkaMessageChannelBinder kafkaMessageChannelBinder,
+KafkaBinderConfigurationProperties configurationProperties) {
 		Map<String, Object> props = new HashMap<>();
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-				ByteArrayDeserializer.class);
+	ByteArrayDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-				ByteArrayDeserializer.class);
+	ByteArrayDeserializer.class);
 		Map<String, Object> mergedConfig = configurationProperties
-				.mergedConsumerConfiguration();
+	.mergedConsumerConfiguration();
 		if (!ObjectUtils.isEmpty(mergedConfig)) {
 			props.putAll(mergedConfig);
 		}
 		if (!props.containsKey(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG)) {
 			props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					configurationProperties.getKafkaConnectionString());
+		configurationProperties.getKafkaConnectionString());
 		}
 		ConsumerFactory<?, ?> consumerFactory = new DefaultKafkaConsumerFactory<>(props);
 		KafkaBinderHealthIndicator indicator = new KafkaBinderHealthIndicator(
-				kafkaMessageChannelBinder, consumerFactory);
+	kafkaMessageChannelBinder, consumerFactory);
 		indicator.setTimeout(configurationProperties.getHealthTimeout());
 		indicator.setConsiderDownWhenAnyPartitionHasNoLeader(configurationProperties.isConsiderDownWhenAnyPartitionHasNoLeader());
 		return indicator;

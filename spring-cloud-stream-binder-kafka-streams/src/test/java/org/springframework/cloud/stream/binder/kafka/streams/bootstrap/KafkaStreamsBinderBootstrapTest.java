@@ -59,32 +59,32 @@ public class KafkaStreamsBinderBootstrapTest {
 	@Test
 	public void testKStreamBinderWithCustomEnvironmentCanStart() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
-						"--spring.cloud.function.definition=input1;input2;input3",
-						"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
-								+ "=testKStreamBinderWithCustomEnvironmentCanStart",
-				"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
-						+ "=testKStreamBinderWithCustomEnvironmentCanStart-foo",
-				"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
-						+ "=testKStreamBinderWithCustomEnvironmentCanStart-foobar",
-						"--spring.cloud.stream.bindings.input1-in-0.destination=foo",
-						"--spring.cloud.stream.bindings.input1-in-0.binder=kstreamBinder",
-						"--spring.cloud.stream.binders.kstreamBinder.type=kstream",
-						"--spring.cloud.stream.binders.kstreamBinder.environment"
-								+ ".spring.cloud.stream.kafka.streams.binder.brokers"
-								+ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
-				"--spring.cloud.stream.bindings.input2-in-0.destination=bar",
-				"--spring.cloud.stream.bindings.input2-in-0.binder=ktableBinder",
-				"--spring.cloud.stream.binders.ktableBinder.type=ktable",
-				"--spring.cloud.stream.binders.ktableBinder.environment"
-						+ ".spring.cloud.stream.kafka.streams.binder.brokers"
-						+ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
-				"--spring.cloud.stream.bindings.input3-in-0.destination=foobar",
-				"--spring.cloud.stream.bindings.input3-in-0.binder=globalktableBinder",
-				"--spring.cloud.stream.binders.globalktableBinder.type=globalktable",
-				"--spring.cloud.stream.binders.globalktableBinder.environment"
-						+ ".spring.cloud.stream.kafka.streams.binder.brokers"
-						+ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.function.definition=input1;input2;input3",
+	"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
++ "=testKStreamBinderWithCustomEnvironmentCanStart",
+	"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
++ "=testKStreamBinderWithCustomEnvironmentCanStart-foo",
+	"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
++ "=testKStreamBinderWithCustomEnvironmentCanStart-foobar",
+	"--spring.cloud.stream.bindings.input1-in-0.destination=foo",
+	"--spring.cloud.stream.bindings.input1-in-0.binder=kstreamBinder",
+	"--spring.cloud.stream.binders.kstreamBinder.type=kstream",
+	"--spring.cloud.stream.binders.kstreamBinder.environment"
++ ".spring.cloud.stream.kafka.streams.binder.brokers"
++ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
+	"--spring.cloud.stream.bindings.input2-in-0.destination=bar",
+	"--spring.cloud.stream.bindings.input2-in-0.binder=ktableBinder",
+	"--spring.cloud.stream.binders.ktableBinder.type=ktable",
+	"--spring.cloud.stream.binders.ktableBinder.environment"
++ ".spring.cloud.stream.kafka.streams.binder.brokers"
++ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
+	"--spring.cloud.stream.bindings.input3-in-0.destination=foobar",
+	"--spring.cloud.stream.bindings.input3-in-0.binder=globalktableBinder",
+	"--spring.cloud.stream.binders.globalktableBinder.type=globalktable",
+	"--spring.cloud.stream.binders.globalktableBinder.environment"
++ ".spring.cloud.stream.kafka.streams.binder.brokers"
++ "=" + embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 
 		applicationContext.close();
 	}
@@ -92,16 +92,16 @@ public class KafkaStreamsBinderBootstrapTest {
 	@Test
 	public void testKafkaStreamsBinderWithStandardConfigurationCanStart() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
-				"--spring.cloud.function.definition=input1;input2;input3",
-				"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart",
-				"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foo",
-				"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foobar",
-						"--spring.cloud.stream.kafka.streams.binder.brokers="
-								+ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.function.definition=input1;input2;input3",
+	"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart",
+	"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foo",
+	"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foobar",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 
 		applicationContext.close();
 	}
@@ -110,20 +110,20 @@ public class KafkaStreamsBinderBootstrapTest {
 	@SuppressWarnings("unchecked")
 	public void testStreamConfigGlobalProperties_GH1149() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
-				"--spring.cloud.function.definition=input1;input2;input3",
-				"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart",
-				"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foo",
-				"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.configuration.spring.json.value.type.method=" + this.getClass().getName() + ".determineType",
-				"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
-						+ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foobar",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	SimpleKafkaStreamsApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.function.definition=input1;input2;input3",
+	"--spring.cloud.stream.kafka.streams.bindings.input1-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart",
+	"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foo",
+	"--spring.cloud.stream.kafka.streams.bindings.input2-in-0.consumer.configuration.spring.json.value.type.method=" + this.getClass().getName() + ".determineType",
+	"--spring.cloud.stream.kafka.streams.bindings.input3-in-0.consumer.application-id"
++ "=testKafkaStreamsBinderWithStandardConfigurationCanStart-foobar",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 
 		Map<String, Object> streamConfigGlobalProperties = applicationContext
-				.getBean("streamConfigGlobalProperties", Map.class);
+	.getBean("streamConfigGlobalProperties", Map.class);
 		// Make sure that global stream configs do not contain individual binding config set on second function.
 		assertThat(streamConfigGlobalProperties.containsKey("spring.json.value.type.method")).isFalse();
 

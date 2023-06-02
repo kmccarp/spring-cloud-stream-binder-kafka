@@ -60,7 +60,7 @@ public class KafkaStreamsEventTypeRoutingTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"foo-1", "foo-2");
+"foo-1", "foo-2");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -71,7 +71,7 @@ public class KafkaStreamsEventTypeRoutingTests {
 	@BeforeClass
 	public static void setUp() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("test-group-1", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put("value.deserializer", JsonDeserializer.class);
 		consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
@@ -92,15 +92,15 @@ public class KafkaStreamsEventTypeRoutingTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=process",
-				"--spring.cloud.stream.bindings.process-in-0.destination=foo-1",
-				"--spring.cloud.stream.bindings.process-out-0.destination=foo-2",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.eventTypes=foo,bar",
-				"--spring.cloud.stream.kafka.streams.binder.functions.process.applicationId=process-id-foo-0",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=process",
+	"--spring.cloud.stream.bindings.process-in-0.destination=foo-1",
+	"--spring.cloud.stream.bindings.process-out-0.destination=foo-2",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.eventTypes=foo,bar",
+	"--spring.cloud.stream.kafka.streams.binder.functions.process.applicationId=process-id-foo-0",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			senderProps.put("value.serializer", JsonSerializer.class);
 			DefaultKafkaProducerFactory<Integer, Foo> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -162,13 +162,13 @@ public class KafkaStreamsEventTypeRoutingTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=consumer",
-				"--spring.cloud.stream.bindings.consumer-in-0.destination=foo-consumer-1",
-				"--spring.cloud.stream.kafka.streams.bindings.consumer-in-0.consumer.eventTypes=foo,bar",
-				"--spring.cloud.stream.kafka.streams.binder.functions.consumer.applicationId=consumer-id-foo-0",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=consumer",
+	"--spring.cloud.stream.bindings.consumer-in-0.destination=foo-consumer-1",
+	"--spring.cloud.stream.kafka.streams.bindings.consumer-in-0.consumer.eventTypes=foo,bar",
+	"--spring.cloud.stream.kafka.streams.binder.functions.consumer.applicationId=consumer-id-foo-0",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			senderProps.put("value.serializer", JsonSerializer.class);
 			DefaultKafkaProducerFactory<Integer, Foo> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -221,9 +221,9 @@ public class KafkaStreamsEventTypeRoutingTests {
 
 		@Bean
 		public java.util.function.Consumer<KTable<Integer, Foo>> consumer() {
-				return ktable -> ktable.toStream().foreach((key, value) -> {
-					LATCH.countDown();
-				});
+			return ktable -> ktable.toStream().foreach((key, value) -> {
+				LATCH.countDown();
+			});
 		}
 
 		@Bean

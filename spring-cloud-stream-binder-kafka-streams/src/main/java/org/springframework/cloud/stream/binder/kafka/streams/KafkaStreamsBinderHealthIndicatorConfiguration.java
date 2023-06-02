@@ -37,12 +37,12 @@ public class KafkaStreamsBinderHealthIndicatorConfiguration {
 
 	@Bean
 	public KafkaStreamsBinderHealthIndicator kafkaStreamsBinderHealthIndicator(
-			ObjectProvider<KafkaStreamsRegistry> kafkaStreamsRegistry,
-			@Qualifier("binderConfigurationProperties")KafkaStreamsBinderConfigurationProperties kafkaStreamsBinderConfigurationProperties,
-			KafkaProperties kafkaProperties, KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
+ObjectProvider<KafkaStreamsRegistry> kafkaStreamsRegistry,
+@Qualifier("binderConfigurationProperties")KafkaStreamsBinderConfigurationProperties kafkaStreamsBinderConfigurationProperties,
+KafkaProperties kafkaProperties, KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
 		if (kafkaStreamsRegistry.getIfUnique() != null) {
 			return new KafkaStreamsBinderHealthIndicator(kafkaStreamsRegistry.getIfUnique(), kafkaStreamsBinderConfigurationProperties,
-					kafkaProperties, kafkaStreamsBindingInformationCatalogue);
+		kafkaProperties, kafkaStreamsBindingInformationCatalogue);
 		}
 		return null;
 	}

@@ -89,15 +89,15 @@ public class KafkaStreamsBinderHealthIndicator extends AbstractHealthIndicator i
 	private final Lock lock = new ReentrantLock();
 
 	KafkaStreamsBinderHealthIndicator(KafkaStreamsRegistry kafkaStreamsRegistry,
-									KafkaStreamsBinderConfigurationProperties kafkaStreamsBinderConfigurationProperties,
-									KafkaProperties kafkaProperties,
-									KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
+KafkaStreamsBinderConfigurationProperties kafkaStreamsBinderConfigurationProperties,
+KafkaProperties kafkaProperties,
+KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
 		super("Kafka-streams health check failed");
 		kafkaProperties.buildAdminProperties();
 		this.configurationProperties = kafkaStreamsBinderConfigurationProperties;
 		this.adminClientProperties = kafkaProperties.buildAdminProperties();
 		KafkaTopicProvisioner.normalalizeBootPropsWithBinder(this.adminClientProperties, kafkaProperties,
-				kafkaStreamsBinderConfigurationProperties);
+	kafkaStreamsBinderConfigurationProperties);
 		this.kafkaStreamsRegistry = kafkaStreamsRegistry;
 		this.kafkaStreamsBindingInformationCatalogue = kafkaStreamsBindingInformationCatalogue;
 	}
@@ -207,7 +207,7 @@ public class KafkaStreamsBinderHealthIndicator extends AbstractHealthIndicator i
 			}
 			else {
 				details.put("partitions",
-						addPartitionsInfo(metadata));
+			addPartitionsInfo(metadata));
 			}
 		}
 		return details;
@@ -215,8 +215,8 @@ public class KafkaStreamsBinderHealthIndicator extends AbstractHealthIndicator i
 
 	private static List<String> addPartitionsInfo(TaskMetadata metadata) {
 		return metadata.topicPartitions().stream().map(
-				p -> "partition=" + p.partition() + ", topic=" + p.topic())
-				.collect(Collectors.toList());
+	p -> "partition=" + p.partition() + ", topic=" + p.topic())
+	.collect(Collectors.toList());
 	}
 
 	@Override

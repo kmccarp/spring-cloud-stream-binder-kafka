@@ -56,8 +56,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Based on: https://github.com/spring-projects/spring-kafka/issues/897#issuecomment-466060097
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.cloud.function.definition=process",
-		"spring.cloud.stream.bindings.process-in-0.group=KafkaConfigCustomizationTests.group"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.cloud.function.definition=process","spring.cloud.stream.bindings.process-in-0.group=KafkaConfigCustomizationTests.group"})
 @DirtiesContext
 public class KafkaConfigCustomizationTests {
 
@@ -71,7 +70,7 @@ public class KafkaConfigCustomizationTests {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
+	kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass
@@ -82,9 +81,9 @@ public class KafkaConfigCustomizationTests {
 	@Test
 	public void testBothConsumerAndProducerConfigsCanBeCustomized() throws InterruptedException {
 		Map<String, Object> producerProps = KafkaTestUtils
-				.producerProps(kafkaEmbedded.getEmbeddedKafka());
+	.producerProps(kafkaEmbedded.getEmbeddedKafka());
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(
-				new DefaultKafkaProducerFactory<>(producerProps));
+	new DefaultKafkaProducerFactory<>(producerProps));
 		template.send("process-in-0", "test-foo");
 		template.flush();
 		assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue();

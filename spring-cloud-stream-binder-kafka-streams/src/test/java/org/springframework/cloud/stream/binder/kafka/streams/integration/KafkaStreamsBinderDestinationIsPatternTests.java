@@ -47,17 +47,17 @@ public class KafkaStreamsBinderDestinationIsPatternTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"in.1", "in.2", "out");
+"in.1", "in.2", "out");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	private static org.apache.kafka.clients.consumer.Consumer<Integer, String> consumer;
 
 	@BeforeClass
 	public static void setUp() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group", "true",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
 		consumer = cf.createConsumer();
@@ -74,24 +74,24 @@ public class KafkaStreamsBinderDestinationIsPatternTests {
 		SpringApplication app = new SpringApplication(ConsumingApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.cloud.stream.bindings.process-out-0.destination=out",
-				"--spring.cloud.stream.bindings.process-in-0.destination=in.*",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.destinationIsPattern=true",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.cloud.stream.bindings.process-out-0.destination=out",
+	"--spring.cloud.stream.bindings.process-in-0.destination=in.*",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.destinationIsPattern=true",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 		try {
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> producerFactory = new DefaultKafkaProducerFactory<>(
-					senderProps);
+		senderProps);
 			KafkaTemplate<Integer, String> template = new KafkaTemplate<>(producerFactory, true);
 
 			// send message to both topics that fit the pattern
 			template.send("in.1", "foo1");
 			assertThat(KafkaTestUtils.getSingleRecord(consumer, "out").value())
-					.isEqualTo("foo1");
+		.isEqualTo("foo1");
 			template.send("in.2", "foo2");
 			assertThat(KafkaTestUtils.getSingleRecord(consumer, "out").value())
-					.isEqualTo("foo2");
+		.isEqualTo("foo2");
 		}
 		finally {
 			context.close();

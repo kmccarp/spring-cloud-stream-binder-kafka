@@ -38,8 +38,8 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 		return () -> {
 			Map<ConfigurationPropertyName, ConfigurationPropertyName> mappings = new HashMap<>();
 			mappings.put(
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.bindings"),
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.default"));
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.bindings"),
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.default"));
 			return mappings;
 		};
 	}

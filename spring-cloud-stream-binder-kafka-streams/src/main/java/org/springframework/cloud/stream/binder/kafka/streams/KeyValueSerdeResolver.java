@@ -83,7 +83,7 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	private ConfigurableApplicationContext context;
 
 	KeyValueSerdeResolver(Map<String, Object> streamConfigGlobalProperties,
-			KafkaStreamsBinderConfigurationProperties binderConfigurationProperties) {
+KafkaStreamsBinderConfigurationProperties binderConfigurationProperties) {
 		this.streamConfigGlobalProperties = streamConfigGlobalProperties;
 		this.binderConfigurationProperties = binderConfigurationProperties;
 	}
@@ -95,14 +95,14 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	 * @return configurd {@link Serde} for the inbound key.
 	 */
 	public Serde<?> getInboundKeySerde(
-			KafkaStreamsConsumerProperties extendedConsumerProperties) {
+KafkaStreamsConsumerProperties extendedConsumerProperties) {
 		String keySerdeString = extendedConsumerProperties.getKeySerde();
 
 		return getKeySerde(keySerdeString, extendedConsumerProperties.getConfiguration());
 	}
 
 	public Serde<?> getInboundKeySerde(
-			KafkaStreamsConsumerProperties extendedConsumerProperties, ResolvableType resolvableType) {
+KafkaStreamsConsumerProperties extendedConsumerProperties, ResolvableType resolvableType) {
 		String keySerdeString = extendedConsumerProperties.getKeySerde();
 
 		return getKeySerde(keySerdeString, resolvableType, extendedConsumerProperties.getConfiguration());
@@ -116,7 +116,7 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	 * @return configurd {@link Serde} for the inbound value.
 	 */
 	public Serde<?> getInboundValueSerde(ConsumerProperties consumerProperties,
-			KafkaStreamsConsumerProperties extendedConsumerProperties) {
+KafkaStreamsConsumerProperties extendedConsumerProperties) {
 		Serde<?> valueSerde;
 
 		String valueSerdeString = extendedConsumerProperties.getValueSerde();
@@ -135,8 +135,8 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	}
 
 	public Serde<?> getInboundValueSerde(ConsumerProperties consumerProperties,
-										KafkaStreamsConsumerProperties extendedConsumerProperties,
-										ResolvableType resolvableType) {
+KafkaStreamsConsumerProperties extendedConsumerProperties,
+ResolvableType resolvableType) {
 		Serde<?> valueSerde;
 
 		String valueSerdeString = extendedConsumerProperties.getValueSerde();
@@ -176,12 +176,12 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	 * @return configurd {@link Serde} for the outbound value.
 	 */
 	public Serde<?> getOutboundValueSerde(ProducerProperties producerProperties,
-			KafkaStreamsProducerProperties kafkaStreamsProducerProperties) {
+KafkaStreamsProducerProperties kafkaStreamsProducerProperties) {
 		Serde<?> valueSerde;
 		try {
 			if (producerProperties.isUseNativeEncoding()) {
 				valueSerde = getValueSerde(
-						kafkaStreamsProducerProperties.getValueSerde(), kafkaStreamsProducerProperties.getConfiguration());
+			kafkaStreamsProducerProperties.getValueSerde(), kafkaStreamsProducerProperties.getConfiguration());
 			}
 			else {
 				valueSerde = Serdes.ByteArray();
@@ -194,12 +194,12 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 	}
 
 	public Serde<?> getOutboundValueSerde(ProducerProperties producerProperties,
-										KafkaStreamsProducerProperties kafkaStreamsProducerProperties, ResolvableType resolvableType) {
+KafkaStreamsProducerProperties kafkaStreamsProducerProperties, ResolvableType resolvableType) {
 		Serde<?> valueSerde;
 		try {
 			if (producerProperties.isUseNativeEncoding()) {
 				valueSerde = getValueSerde(
-						kafkaStreamsProducerProperties.getValueSerde(), resolvableType, kafkaStreamsProducerProperties.getConfiguration());
+			kafkaStreamsProducerProperties.getValueSerde(), resolvableType, kafkaStreamsProducerProperties.getConfiguration());
 			}
 			else {
 				valueSerde = Serdes.ByteArray();
@@ -259,7 +259,7 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 			}
 			else {
 				if (resolvableType != null &&
-						(isResolvalbeKafkaStreamsType(resolvableType) || isResolvableKStreamArrayType(resolvableType))) {
+			(isResolvalbeKafkaStreamsType(resolvableType) || isResolvableKStreamArrayType(resolvableType))) {
 					ResolvableType generic = resolvableType.isArray() ? resolvableType.getComponentType().getGeneric(0) : resolvableType.getGeneric(0);
 					Serde<?> fallbackSerde = getFallbackSerde("default.key.serde");
 					keySerde = getSerde(generic, fallbackSerde);
@@ -278,12 +278,12 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 
 	private boolean isResolvableKStreamArrayType(ResolvableType resolvableType) {
 		return resolvableType.isArray() &&
-				KStream.class.isAssignableFrom(resolvableType.getComponentType().getRawClass());
+	KStream.class.isAssignableFrom(resolvableType.getComponentType().getRawClass());
 	}
 
 	private boolean isResolvalbeKafkaStreamsType(ResolvableType resolvableType) {
 		return resolvableType.getRawClass() != null && (KStream.class.isAssignableFrom(resolvableType.getRawClass()) || KTable.class.isAssignableFrom(resolvableType.getRawClass()) ||
-				GlobalKTable.class.isAssignableFrom(resolvableType.getRawClass()));
+	GlobalKTable.class.isAssignableFrom(resolvableType.getRawClass()));
 	}
 
 	private Serde<?> getSerde(ResolvableType generic, Serde<?> fallbackSerde) {
@@ -295,9 +295,9 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 		final Class<?> genericRawClazz = generic.getRawClass();
 		beansOfType.forEach((k, v) -> {
 			final Class<?> classObj = ClassUtils.resolveClassName(((AnnotatedBeanDefinition)
-							context.getBeanFactory().getBeanDefinition(k))
-							.getMetadata().getClassName(),
-					ClassUtils.getDefaultClassLoader());
+	context.getBeanFactory().getBeanDefinition(k))
+	.getMetadata().getClassName(),
+		ClassUtils.getDefaultClassLoader());
 			try {
 				Method[] methods = classObj.getMethods();
 				Optional<Method> serdeBeanMethod = Arrays.stream(methods).filter(m -> m.getName().equals(k)).findFirst();
@@ -382,7 +382,7 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 
 
 	private Serde<?> getValueSerde(String valueSerdeString, Map<String, ?> extendedConfiguration)
-			throws ClassNotFoundException {
+throws ClassNotFoundException {
 		Serde<?> valueSerde;
 		if (StringUtils.hasText(valueSerdeString)) {
 			valueSerde = Utils.newInstance(valueSerdeString, Serde.class);
@@ -396,16 +396,16 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 
 	private Serde<?> getFallbackSerde(String s) throws ClassNotFoundException {
 		return this.binderConfigurationProperties.getConfiguration()
-				.containsKey(s)
-				? Utils.newInstance(this.binderConfigurationProperties
-						.getConfiguration().get(s),
-				Serde.class)
-				: Serdes.ByteArray();
+	.containsKey(s)
+	? Utils.newInstance(this.binderConfigurationProperties
+.getConfiguration().get(s),
+	Serde.class)
+	: Serdes.ByteArray();
 	}
 
 	@SuppressWarnings("unchecked")
 	private Serde<?> getValueSerde(String valueSerdeString, ResolvableType resolvableType, Map<String, ?> extendedConfiguration)
-			throws ClassNotFoundException {
+throws ClassNotFoundException {
 		Serde<?> valueSerde = null;
 		if (StringUtils.hasText(valueSerdeString)) {
 			valueSerde = Utils.newInstance(valueSerdeString, Serde.class);
@@ -413,7 +413,7 @@ public class KeyValueSerdeResolver implements ApplicationContextAware {
 		else {
 
 			if (resolvableType != null && ((isResolvalbeKafkaStreamsType(resolvableType)) ||
-					(isResolvableKStreamArrayType(resolvableType)))) {
+		(isResolvableKStreamArrayType(resolvableType)))) {
 				Serde<?> fallbackSerde = getFallbackSerde("default.value.serde");
 				ResolvableType generic = resolvableType.isArray() ? resolvableType.getComponentType().getGeneric(1) : resolvableType.getGeneric(1);
 				valueSerde = getSerde(generic, fallbackSerde);

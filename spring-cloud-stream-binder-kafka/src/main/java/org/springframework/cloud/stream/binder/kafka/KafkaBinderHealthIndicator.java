@@ -59,7 +59,7 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 	private static final int DEFAULT_TIMEOUT = 60;
 
 	private final ExecutorService executor = Executors.newSingleThreadExecutor(
-		new CustomizableThreadFactory("kafka-binder-health-"));
+new CustomizableThreadFactory("kafka-binder-health-"));
 
 	private final KafkaMessageChannelBinder binder;
 
@@ -72,7 +72,7 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 	private boolean considerDownWhenAnyPartitionHasNoLeader;
 
 	public KafkaBinderHealthIndicator(KafkaMessageChannelBinder binder,
-									ConsumerFactory<?, ?> consumerFactory) {
+ConsumerFactory<?, ?> consumerFactory) {
 		this.binder = binder;
 		this.consumerFactory = consumerFactory;
 	}
@@ -98,7 +98,7 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 
 	private Health merge(Health topicsHealth, Health listenerContainersHealth) {
 		Status aggregatedStatus = StatusAggregator.getDefault()
-						.getAggregateStatus(topicsHealth.getStatus(), listenerContainersHealth.getStatus());
+	.getAggregateStatus(topicsHealth.getStatus(), listenerContainersHealth.getStatus());
 		Map<String, Object> aggregatedDetails = new HashMap<>();
 		aggregatedDetails.putAll(topicsHealth.getDetails());
 		aggregatedDetails.putAll(listenerContainersHealth.getDetails());
@@ -113,16 +113,16 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			return Health.down()
-					.withDetail("Interrupted while waiting for partition information in",
-							this.timeout + " seconds")
-					.build();
+		.withDetail("Interrupted while waiting for partition information in",
+	this.timeout + " seconds")
+		.build();
 		}
 		catch (ExecutionException ex) {
 			return Health.down(ex).build();
 		}
 		catch (TimeoutException ex) {
 			return Health.down().withDetail("Failed to retrieve partition information in",
-					this.timeout + " seconds").build();
+		this.timeout + " seconds").build();
 		}
 	}
 
@@ -138,34 +138,34 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 			Set<String> downMessages = new HashSet<>();
 			Set<String> checkedTopics = new HashSet<>();
 			final Map<String, KafkaMessageChannelBinder.TopicInformation> topicsInUse = KafkaBinderHealthIndicator.this.binder
-					.getTopicsInUse();
+		.getTopicsInUse();
 			if (topicsInUse.isEmpty()) {
 				try {
 					this.metadataConsumer.listTopics(Duration.ofSeconds(this.timeout));
 				}
 				catch (Exception e) {
 					return Health.down().withDetail("No topic information available",
-							"Kafka broker is not reachable").build();
+				"Kafka broker is not reachable").build();
 				}
 				return Health.unknown().withDetail("No bindings found",
-						"Kafka binder may not be bound to destinations on the broker").build();
+			"Kafka binder may not be bound to destinations on the broker").build();
 			}
 			else {
 				for (String topic : topicsInUse.keySet()) {
 					KafkaMessageChannelBinder.TopicInformation topicInformation = topicsInUse
-							.get(topic);
+				.get(topic);
 					if (!topicInformation.isTopicPattern()) {
 						List<PartitionInfo> partitionInfos = this.metadataConsumer
-								.partitionsFor(topic);
+					.partitionsFor(topic);
 						for (PartitionInfo partitionInfo : partitionInfos) {
 							if (topicInformation.getPartitionInfos()
-									.contains(partitionInfo)
-									&& partitionInfo.leader() == null ||
-									(partitionInfo.leader() != null && partitionInfo.leader().id() == -1)) {
+						.contains(partitionInfo)
+						&& partitionInfo.leader() == null ||
+						(partitionInfo.leader() != null && partitionInfo.leader().id() == -1)) {
 								downMessages.add(partitionInfo.toString());
 							}
 							else if (this.considerDownWhenAnyPartitionHasNoLeader &&
-									partitionInfo.leader() == null || (partitionInfo.leader() != null && partitionInfo.leader().id() == -1)) {
+						partitionInfo.leader() == null || (partitionInfo.leader() != null && partitionInfo.leader().id() == -1)) {
 								downMessages.add(partitionInfo.toString());
 							}
 						}
@@ -178,9 +178,9 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 			}
 			else {
 				return Health.down()
-						.withDetail("Following partitions in use have no leaders: ",
-								downMessages.toString())
-						.build();
+			.withDetail("Following partitions in use have no leaders: ",
+		downMessages.toString())
+			.build();
 			}
 		}
 		catch (Exception ex) {
@@ -213,8 +213,8 @@ public class KafkaBinderHealthIndicator implements KafkaBinderHealth, Disposable
 			containersDetails.add(containerDetails);
 		}
 		return Health.status(status)
-				.withDetail("listenerContainers", containersDetails)
-				.build();
+	.withDetail("listenerContainers", containersDetails)
+	.build();
 	}
 
 	@Override

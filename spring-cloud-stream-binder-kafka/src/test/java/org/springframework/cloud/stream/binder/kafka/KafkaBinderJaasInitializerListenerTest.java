@@ -48,12 +48,12 @@ public class KafkaBinderJaasInitializerListenerTest {
 	private static String JAVA_LOGIN_CONFIG_PARAM_VALUE;
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(KafkaBinderConfiguration.class, KafkaAutoConfiguration.class);
+.withUserConfiguration(KafkaBinderConfiguration.class, KafkaAutoConfiguration.class);
 
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
+	kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 		//Retrieve the current value for this system property if there is one set.
 		JAVA_LOGIN_CONFIG_PARAM_VALUE = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
 		System.clearProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
@@ -75,60 +75,60 @@ public class KafkaBinderJaasInitializerListenerTest {
 
 	@Test
 	public void testConfigurationParsedCorrectlyWithKafkaClientAndDefaultControlFlag()
-			throws Exception {
+throws Exception {
 		ConfigFile configFile = new ConfigFile(
-				new ClassPathResource("jaas-sample-kafka-only.conf").getURI());
+	new ClassPathResource("jaas-sample-kafka-only.conf").getURI());
 		final AppConfigurationEntry[] kafkaConfigurationArray = configFile
-				.getAppConfigurationEntry("KafkaClient");
+	.getAppConfigurationEntry("KafkaClient");
 
 
 		this.contextRunner
-				.withPropertyValues("spring.cloud.stream.kafka.binder.jaas.options.useKeyTab=true",
-						"spring.cloud.stream.kafka.binder.jaas.options.storeKey=true",
-						"spring.cloud.stream.kafka.binder.jaas.options.keyTab=/etc/security/keytabs/kafka_client.keytab",
-						"spring.cloud.stream.kafka.binder.jaas.options.principal=kafka-client-1@EXAMPLE.COM",
-						"spring.jmx.enabled=false")
-				.run(context -> {
-					javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
-							.getConfiguration();
+	.withPropertyValues("spring.cloud.stream.kafka.binder.jaas.options.useKeyTab=true",
+"spring.cloud.stream.kafka.binder.jaas.options.storeKey=true",
+"spring.cloud.stream.kafka.binder.jaas.options.keyTab=/etc/security/keytabs/kafka_client.keytab",
+"spring.cloud.stream.kafka.binder.jaas.options.principal=kafka-client-1@EXAMPLE.COM",
+"spring.jmx.enabled=false")
+	.run(context -> {
+		javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
+	.getConfiguration();
 
-					final AppConfigurationEntry[] kafkaConfiguration = configuration
-							.getAppConfigurationEntry("KafkaClient");
-					assertThat(kafkaConfiguration).hasSize(1);
-					assertThat(kafkaConfiguration[0].getOptions())
-							.isEqualTo(kafkaConfigurationArray[0].getOptions());
-					assertThat(kafkaConfiguration[0].getControlFlag())
-							.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUIRED);
-				});
+		final AppConfigurationEntry[] kafkaConfiguration = configuration
+	.getAppConfigurationEntry("KafkaClient");
+		assertThat(kafkaConfiguration).hasSize(1);
+		assertThat(kafkaConfiguration[0].getOptions())
+	.isEqualTo(kafkaConfigurationArray[0].getOptions());
+		assertThat(kafkaConfiguration[0].getControlFlag())
+	.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUIRED);
+	});
 	}
 
 	@Test
 	public void testConfigurationParsedCorrectlyWithKafkaClientAndNonDefaultControlFlag()
-			throws Exception {
+throws Exception {
 		ConfigFile configFile = new ConfigFile(
-				new ClassPathResource("jaas-sample-kafka-only.conf").getURI());
+	new ClassPathResource("jaas-sample-kafka-only.conf").getURI());
 		final AppConfigurationEntry[] kafkaConfigurationArray = configFile
-				.getAppConfigurationEntry("KafkaClient");
+	.getAppConfigurationEntry("KafkaClient");
 
 		this.contextRunner
-				.withPropertyValues("spring.cloud.stream.kafka.binder.jaas.options.useKeyTab=true",
-						"spring.cloud.stream.kafka.binder.jaas.controlFlag=requisite",
-						"spring.cloud.stream.kafka.binder.jaas.options.storeKey=true",
-						"spring.cloud.stream.kafka.binder.jaas.options.keyTab=/etc/security/keytabs/kafka_client.keytab",
-						"spring.cloud.stream.kafka.binder.jaas.options.principal=kafka-client-1@EXAMPLE.COM",
-						"spring.jmx.enabled=false")
-				.run(context -> {
-					javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
-							.getConfiguration();
+	.withPropertyValues("spring.cloud.stream.kafka.binder.jaas.options.useKeyTab=true",
+"spring.cloud.stream.kafka.binder.jaas.controlFlag=requisite",
+"spring.cloud.stream.kafka.binder.jaas.options.storeKey=true",
+"spring.cloud.stream.kafka.binder.jaas.options.keyTab=/etc/security/keytabs/kafka_client.keytab",
+"spring.cloud.stream.kafka.binder.jaas.options.principal=kafka-client-1@EXAMPLE.COM",
+"spring.jmx.enabled=false")
+	.run(context -> {
+		javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
+	.getConfiguration();
 
-					final AppConfigurationEntry[] kafkaConfiguration = configuration
-							.getAppConfigurationEntry("KafkaClient");
-					assertThat(kafkaConfiguration).hasSize(1);
-					assertThat(kafkaConfiguration[0].getOptions())
-							.isEqualTo(kafkaConfigurationArray[0].getOptions());
-					assertThat(kafkaConfiguration[0].getControlFlag())
-							.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUISITE);
-					context.close();
-				});
+		final AppConfigurationEntry[] kafkaConfiguration = configuration
+	.getAppConfigurationEntry("KafkaClient");
+		assertThat(kafkaConfiguration).hasSize(1);
+		assertThat(kafkaConfiguration[0].getOptions())
+	.isEqualTo(kafkaConfigurationArray[0].getOptions());
+		assertThat(kafkaConfiguration[0].getControlFlag())
+	.isEqualTo(AppConfigurationEntry.LoginModuleControlFlag.REQUISITE);
+		context.close();
+	});
 	}
 }

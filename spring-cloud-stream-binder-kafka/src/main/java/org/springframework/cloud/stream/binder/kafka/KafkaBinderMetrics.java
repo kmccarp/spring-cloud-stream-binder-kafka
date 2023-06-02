@@ -62,8 +62,7 @@ import org.springframework.util.ObjectUtils;
  * @author Thomas Cheyney
  * @author Gary Russell
  */
-public class KafkaBinderMetrics
-		implements MeterBinder, ApplicationListener<BindingCreatedEvent> {
+public class KafkaBinderMetricsimplements MeterBinder, ApplicationListener<BindingCreatedEvent> {
 
 	private static final int DEFAULT_TIMEOUT = 5;
 
@@ -93,9 +92,9 @@ public class KafkaBinderMetrics
 	Map<String, Long> unconsumedMessages = new ConcurrentHashMap<>();
 
 	public KafkaBinderMetrics(KafkaMessageChannelBinder binder,
-							KafkaBinderConfigurationProperties binderConfigurationProperties,
-							ConsumerFactory<?, ?> defaultConsumerFactory,
-							@Nullable MeterRegistry meterRegistry) {
+KafkaBinderConfigurationProperties binderConfigurationProperties,
+ConsumerFactory<?, ?> defaultConsumerFactory,
+@Nullable MeterRegistry meterRegistry) {
 
 		this.binder = binder;
 		this.binderConfigurationProperties = binderConfigurationProperties;
@@ -105,7 +104,7 @@ public class KafkaBinderMetrics
 	}
 
 	public KafkaBinderMetrics(KafkaMessageChannelBinder binder,
-							KafkaBinderConfigurationProperties binderConfigurationProperties) {
+KafkaBinderConfigurationProperties binderConfigurationProperties) {
 
 		this(binder, binderConfigurationProperties, null, null);
 	}
@@ -139,15 +138,15 @@ public class KafkaBinderMetrics
 			String group = topicInfo.getValue().getConsumerGroup();
 
 			final Gauge register = Gauge.builder(OFFSET_LAG_METRIC_NAME, this,
-					(o) -> computeAndGetUnconsumedMessages(topic, group)).tag("group", group)
-					.tag("topic", topic)
-					.description("Unconsumed messages for a particular group and topic")
-					.register(registry);
+		(o) -> computeAndGetUnconsumedMessages(topic, group)).tag("group", group)
+		.tag("topic", topic)
+		.description("Unconsumed messages for a particular group and topic")
+		.register(registry);
 
 			if (!(register instanceof NoopGauge)) {
 				//Schedule a task to compute the unconsumed messages for this group/topic every minute.
 				this.scheduler.scheduleWithFixedDelay(computeUnconsumedMessagesRunnable(topic, group, this.metadataConsumers),
-						10, DELAY_BETWEEN_TASK_EXECUTION, TimeUnit.SECONDS);
+			10, DELAY_BETWEEN_TASK_EXECUTION, TimeUnit.SECONDS);
 			}
 		}
 	}
@@ -195,18 +194,18 @@ public class KafkaBinderMetrics
 	private long findTotalTopicGroupLag(String topic, String group, Map<String, Consumer<?, ?>> metadataConsumers) {
 		long lag = 0;
 		Consumer<?, ?> metadataConsumer = metadataConsumers.computeIfAbsent(
-				group,
-				(g) -> createConsumerFactory().createConsumer(g, "monitoring"));
+	group,
+	(g) -> createConsumerFactory().createConsumer(g, "monitoring"));
 		List<PartitionInfo> partitionInfos = metadataConsumer
-				.partitionsFor(topic);
+	.partitionsFor(topic);
 		List<TopicPartition> topicPartitions = new LinkedList<>();
 		for (PartitionInfo partitionInfo : partitionInfos) {
 			topicPartitions.add(new TopicPartition(partitionInfo.topic(),
-					partitionInfo.partition()));
+		partitionInfo.partition()));
 		}
 
 		Map<TopicPartition, Long> endOffsets = metadataConsumer
-				.endOffsets(topicPartitions);
+	.endOffsets(topicPartitions);
 
 		final Map<TopicPartition, OffsetAndMetadata> committedOffsets = metadataConsumer.committed(endOffsets.keySet());
 
@@ -225,21 +224,21 @@ public class KafkaBinderMetrics
 		if (this.defaultConsumerFactory == null) {
 			Map<String, Object> props = new HashMap<>();
 			props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					ByteArrayDeserializer.class);
+		ByteArrayDeserializer.class);
 			props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					ByteArrayDeserializer.class);
+		ByteArrayDeserializer.class);
 			Map<String, Object> mergedConfig = this.binderConfigurationProperties
-					.mergedConsumerConfiguration();
+		.mergedConsumerConfiguration();
 			if (!ObjectUtils.isEmpty(mergedConfig)) {
 				props.putAll(mergedConfig);
 			}
 			if (!props.containsKey(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG)) {
 				props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-						this.binderConfigurationProperties
-								.getKafkaConnectionString());
+			this.binderConfigurationProperties
+		.getKafkaConnectionString());
 			}
 			this.defaultConsumerFactory = new DefaultKafkaConsumerFactory<>(
-					props);
+		props);
 		}
 		return this.defaultConsumerFactory;
 	}

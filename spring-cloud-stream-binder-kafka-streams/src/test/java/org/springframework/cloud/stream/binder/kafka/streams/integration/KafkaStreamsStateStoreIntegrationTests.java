@@ -53,28 +53,28 @@ public class KafkaStreamsStateStoreIntegrationTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts-id");
+"counts-id");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	@Test
 	public void testKstreamStateStore() throws Exception {
 		SpringApplication app = new SpringApplication(ProductCountApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.bindings.input.destination=foobar",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId"
-						+ "=KafkaStreamsStateStoreIntegrationTests-abc",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.bindings.input.destination=foobar",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId"
++ "=KafkaStreamsStateStoreIntegrationTests-abc",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 		try {
 			Thread.sleep(2000);
 			receiveAndValidateFoo(context, ProductCountApplication.class);
@@ -92,20 +92,20 @@ public class KafkaStreamsStateStoreIntegrationTests {
 		SpringApplication app = new SpringApplication(ProductCountApplicationWithMultipleInputBindings.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.bindings.process-in-0=input1",
-				"--spring.cloud.stream.function.bindings.process-in-1=input2",
-				"--spring.cloud.stream.bindings.input1.destination=foobar",
-				"--spring.cloud.stream.bindings.input2.destination=hello-foobar",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.input1.consumer.applicationId"
-						+ "=KafkaStreamsStateStoreIntegrationTests-abc",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.bindings.process-in-0=input1",
+	"--spring.cloud.stream.function.bindings.process-in-1=input2",
+	"--spring.cloud.stream.bindings.input1.destination=foobar",
+	"--spring.cloud.stream.bindings.input2.destination=hello-foobar",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.input1.consumer.applicationId"
++ "=KafkaStreamsStateStoreIntegrationTests-abc",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 		try {
 			Thread.sleep(2000);
 			// We are not particularly interested in querying the state store here, as that is verified by the other test
@@ -123,10 +123,10 @@ public class KafkaStreamsStateStoreIntegrationTests {
 	}
 
 	private void receiveAndValidateFoo(ConfigurableApplicationContext context, Class<?> clazz)
-			throws Exception {
+throws Exception {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 		template.setDefaultTopic("foobar");
 		template.sendDefault("{\"id\":\"123\"}");
@@ -135,7 +135,7 @@ public class KafkaStreamsStateStoreIntegrationTests {
 		// assertions
 		if (clazz.isAssignableFrom(ProductCountApplication.class)) {
 			ProductCountApplication productCount = context
-					.getBean(ProductCountApplication.class);
+		.getBean(ProductCountApplication.class);
 			WindowStore<Object, String> state = productCount.state;
 			assertThat(state != null).isTrue();
 			assertThat(state.name()).isEqualTo("mystate");
@@ -182,9 +182,9 @@ public class KafkaStreamsStateStoreIntegrationTests {
 		@Bean
 		public StoreBuilder mystore() {
 			return Stores.windowStoreBuilder(
-					Stores.persistentWindowStore("mystate",
-							Duration.ofMillis(3), Duration.ofMillis(3), false), Serdes.String(),
-					Serdes.String());
+		Stores.persistentWindowStore("mystate",
+	Duration.ofMillis(3), Duration.ofMillis(3), false), Serdes.String(),
+		Serdes.String());
 		}
 	}
 
@@ -220,16 +220,17 @@ public class KafkaStreamsStateStoreIntegrationTests {
 					}
 				}, "mystate");
 				//simple use of input2, we are not using input2 for anything other than triggering some test behavior.
-				input2.foreach((key, value) -> { });
+				input2.foreach((key, value) -> {
+				});
 			};
 		}
 
 		@Bean
 		public StoreBuilder mystore() {
 			return Stores.windowStoreBuilder(
-					Stores.persistentWindowStore("mystate",
-							Duration.ofMillis(3), Duration.ofMillis(3), false), Serdes.String(),
-					Serdes.String());
+		Stores.persistentWindowStore("mystate",
+	Duration.ofMillis(3), Duration.ofMillis(3), false), Serdes.String(),
+		Serdes.String());
 		}
 	}
 

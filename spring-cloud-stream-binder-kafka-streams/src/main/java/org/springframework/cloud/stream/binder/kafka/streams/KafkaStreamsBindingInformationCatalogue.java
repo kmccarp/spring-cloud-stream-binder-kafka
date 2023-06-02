@@ -116,7 +116,7 @@ public class KafkaStreamsBindingInformationCatalogue {
 	 * @param bindingProperties {@link BindingProperties} for this KStream
 	 */
 	void registerBindingProperties(KStream<?, ?> bindingTarget,
-			BindingProperties bindingProperties) {
+BindingProperties bindingProperties) {
 		if (bindingProperties != null) {
 			this.bindingProperties.put(bindingTarget, bindingProperties);
 		}
@@ -128,7 +128,7 @@ public class KafkaStreamsBindingInformationCatalogue {
 	 * @param kafkaStreamsConsumerProperties consumer properties for this KStream
 	 */
 	void registerConsumerProperties(KStream<?, ?> bindingTarget,
-			KafkaStreamsConsumerProperties kafkaStreamsConsumerProperties) {
+KafkaStreamsConsumerProperties kafkaStreamsConsumerProperties) {
 		if (kafkaStreamsConsumerProperties != null) {
 			this.consumerProperties.put(bindingTarget, kafkaStreamsConsumerProperties);
 		}
@@ -198,9 +198,9 @@ public class KafkaStreamsBindingInformationCatalogue {
 
 	public List<ProducerFactory<byte[], byte[]>> getDlqProducerFactories() {
 		return this.dlqProducerFactories.values()
-				.stream()
-				.flatMap(List::stream)
-				.collect(Collectors.toList());
+	.stream()
+	.flatMap(List::stream)
+	.collect(Collectors.toList());
 	}
 
 	public List<ProducerFactory<byte[], byte[]>> getDlqProducerFactory(StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
@@ -208,7 +208,7 @@ public class KafkaStreamsBindingInformationCatalogue {
 	}
 
 	public void addDlqProducerFactory(StreamsBuilderFactoryBean streamsBuilderFactoryBean,
-									ProducerFactory<byte[], byte[]> producerFactory) {
+ProducerFactory<byte[], byte[]> producerFactory) {
 		List<ProducerFactory<byte[], byte[]>> producerFactories = this.dlqProducerFactories.get(streamsBuilderFactoryBean);
 		if (CollectionUtils.isEmpty(producerFactories)) {
 			producerFactories = new ArrayList<>();

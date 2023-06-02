@@ -78,7 +78,7 @@ public class KafkaBinderHealthIndicatorTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		org.mockito.BDDMockito.given(consumerFactory.createConsumer())
-				.willReturn(consumer);
+	.willReturn(consumer);
 		org.mockito.BDDMockito.given(binder.getTopicsInUse()).willReturn(topicsInUse);
 		this.indicator = new KafkaBinderHealthIndicator(binder, consumerFactory);
 		this.indicator.setTimeout(10);
@@ -88,11 +88,11 @@ public class KafkaBinderHealthIndicatorTest {
 	public void kafkaBinderIsUpWithNoConsumers() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group1-healthIndicator", partitions, false));
+	"group1-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		org.mockito.BDDMockito.given(binder.getKafkaMessageListenerContainers())
-				.willReturn(Collections.emptyList());
+	.willReturn(Collections.emptyList());
 
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
@@ -103,11 +103,11 @@ public class KafkaBinderHealthIndicatorTest {
 	public void kafkaBinderIsUp() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group1-healthIndicator", partitions, false));
+	"group1-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		org.mockito.BDDMockito.given(binder.getKafkaMessageListenerContainers())
-				.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
+	.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
 		mockContainer(listenerContainerA, true, true);
 		mockContainer(listenerContainerB, true, true);
 
@@ -115,18 +115,18 @@ public class KafkaBinderHealthIndicatorTest {
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
 		assertThat(health.getDetails()).containsEntry("topicsInUse", singleton(TEST_TOPIC));
 		assertThat(health.getDetails()).hasEntrySatisfying("listenerContainers", value ->
-				assertThat((ArrayList<?>) value).hasSize(2));
+	assertThat((ArrayList<?>) value).hasSize(2));
 	}
 
 	@Test
 	public void kafkaBinderIsDownWhenOneOfConsumersIsNotRunning() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group1-healthIndicator", partitions, false));
+	"group1-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		org.mockito.BDDMockito.given(binder.getKafkaMessageListenerContainers())
-				.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
+	.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
 		mockContainer(listenerContainerA, false, true);
 		mockContainer(listenerContainerB, true, true);
 
@@ -134,18 +134,18 @@ public class KafkaBinderHealthIndicatorTest {
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
 		assertThat(health.getDetails()).containsEntry("topicsInUse", singleton(TEST_TOPIC));
 		assertThat(health.getDetails()).hasEntrySatisfying("listenerContainers", value ->
-				assertThat((ArrayList<?>) value).hasSize(2));
+	assertThat((ArrayList<?>) value).hasSize(2));
 	}
 
 	@Test
 	public void kafkaBinderIsDownWhenOneOfContainersWasStoppedAbnormally() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group1-healthIndicator", partitions, false));
+	"group1-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		org.mockito.BDDMockito.given(binder.getKafkaMessageListenerContainers())
-				.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
+	.willReturn(Arrays.asList(listenerContainerA, listenerContainerB));
 		mockContainer(listenerContainerA, false, false);
 		mockContainer(listenerContainerB, true, true);
 
@@ -153,11 +153,11 @@ public class KafkaBinderHealthIndicatorTest {
 		assertThat(health.getStatus()).isEqualTo(Status.DOWN);
 		assertThat(health.getDetails()).containsEntry("topicsInUse", singleton(TEST_TOPIC));
 		assertThat(health.getDetails()).hasEntrySatisfying("listenerContainers", value ->
-				assertThat((ArrayList<?>) value).hasSize(2));
+	assertThat((ArrayList<?>) value).hasSize(2));
 	}
 
 	private void mockContainer(AbstractMessageListenerContainer<?, ?> container, boolean isRunning,
-			boolean normalState) {
+boolean normalState) {
 
 		org.mockito.BDDMockito.given(container.isRunning()).willReturn(isRunning);
 		org.mockito.BDDMockito.given(container.isContainerPaused()).willReturn(true);
@@ -169,11 +169,11 @@ public class KafkaBinderHealthIndicatorTest {
 	@Test
 	public void kafkaBinderIsUpWithRegexTopic() {
 		topicsInUse.put(REGEX_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"regex-healthIndicator", null, true));
+	"regex-healthIndicator", null, true));
 		Health health = indicator.health();
 		// verify no consumer interaction for retrieving partitions
 		org.mockito.BDDMockito.verify(consumer, Mockito.never())
-				.partitionsFor(REGEX_TOPIC);
+	.partitionsFor(REGEX_TOPIC);
 		// Ensuring the normal health check returns with status "up"
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
 	}
@@ -182,9 +182,9 @@ public class KafkaBinderHealthIndicatorTest {
 	public void kafkaBinderIsDown() {
 		final List<PartitionInfo> partitions = partitions(null);
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group2-healthIndicator", partitions, false));
+	"group2-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.DOWN);
 	}
@@ -195,9 +195,9 @@ public class KafkaBinderHealthIndicatorTest {
 		partitions.add(new PartitionInfo(TEST_TOPIC, 0, null, null, null));
 		indicator.setConsiderDownWhenAnyPartitionHasNoLeader(true);
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group2-healthIndicator", partitions, false));
+	"group2-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.DOWN);
 	}
@@ -209,9 +209,9 @@ public class KafkaBinderHealthIndicatorTest {
 		partitions.add(new PartitionInfo(TEST_TOPIC, 0, null, null, null));
 		indicator.setConsiderDownWhenAnyPartitionHasNoLeader(false);
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group2-healthIndicator", partitions(node), false));
+	"group2-healthIndicator", partitions(node), false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
 	}
@@ -220,13 +220,13 @@ public class KafkaBinderHealthIndicatorTest {
 	public void kafkaBinderDoesNotAnswer() {
 		final List<PartitionInfo> partitions = partitions(new Node(-1, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group3-healthIndicator", partitions, false));
+	"group3-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willAnswer(invocation -> {
-					final int fiveMinutes = 1000 * 60 * 5;
-					Thread.sleep(fiveMinutes);
-					return partitions;
-				});
+	.willAnswer(invocation -> {
+		final int fiveMinutes = 1000 * 60 * 5;
+		Thread.sleep(fiveMinutes);
+		return partitions;
+	});
 		this.indicator.setTimeout(1);
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.DOWN);
@@ -236,9 +236,9 @@ public class KafkaBinderHealthIndicatorTest {
 	public void createsConsumerOnceWhenInvokedMultipleTimes() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"group4-healthIndicator", partitions, false));
+	"group4-healthIndicator", partitions, false));
 		org.mockito.BDDMockito.given(consumer.partitionsFor(TEST_TOPIC))
-				.willReturn(partitions);
+	.willReturn(partitions);
 
 		indicator.health();
 		Health health = indicator.health();
@@ -251,10 +251,10 @@ public class KafkaBinderHealthIndicatorTest {
 	public void consumerCreationFailsFirstTime() {
 		final List<PartitionInfo> partitions = partitions(new Node(0, null, 0));
 		topicsInUse.put(TEST_TOPIC, new KafkaMessageChannelBinder.TopicInformation(
-				"foo-healthIndicator", partitions, false));
+	"foo-healthIndicator", partitions, false));
 
 		org.mockito.BDDMockito.given(consumerFactory.createConsumer())
-				.willThrow(KafkaException.class).willReturn(consumer);
+	.willThrow(KafkaException.class).willReturn(consumer);
 
 		Health health = indicator.health();
 		assertThat(health.getStatus()).isEqualTo(Status.DOWN);
@@ -263,7 +263,7 @@ public class KafkaBinderHealthIndicatorTest {
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
 
 		org.mockito.Mockito.verify(this.consumerFactory, Mockito.times(2))
-				.createConsumer();
+	.createConsumer();
 	}
 
 	@Test

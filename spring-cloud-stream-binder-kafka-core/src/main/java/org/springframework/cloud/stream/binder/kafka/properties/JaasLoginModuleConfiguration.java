@@ -55,7 +55,7 @@ public class JaasLoginModuleConfiguration {
 	public void setControlFlag(String controlFlag) {
 		Assert.notNull(controlFlag, "cannot be null");
 		this.controlFlag = KafkaJaasLoginModuleInitializer.ControlFlag
-				.valueOf(controlFlag.toUpperCase());
+	.valueOf(controlFlag.toUpperCase());
 	}
 
 	public Map<String, String> getOptions() {

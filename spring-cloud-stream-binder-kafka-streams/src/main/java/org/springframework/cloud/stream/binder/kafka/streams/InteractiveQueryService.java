@@ -70,7 +70,7 @@ public class InteractiveQueryService {
 	 * @param binderConfigurationProperties kafka Streams binder configuration properties
 	 */
 	public InteractiveQueryService(KafkaStreamsRegistry kafkaStreamsRegistry,
-			KafkaStreamsBinderConfigurationProperties binderConfigurationProperties) {
+KafkaStreamsBinderConfigurationProperties binderConfigurationProperties) {
 		this.kafkaStreamsRegistry = kafkaStreamsRegistry;
 		this.binderConfigurationProperties = binderConfigurationProperties;
 	}
@@ -94,8 +94,8 @@ public class InteractiveQueryService {
 			if (contextSpecificKafkaStreams != null) {
 				try {
 					store = contextSpecificKafkaStreams.store(
-							StoreQueryParameters.fromNameAndType(
-									storeName, storeType));
+				StoreQueryParameters.fromNameAndType(
+			storeName, storeType));
 				}
 				catch (InvalidStateStoreException e) {
 					// pass through..
@@ -107,15 +107,15 @@ public class InteractiveQueryService {
 			}
 			else if (contextSpecificKafkaStreams != null) {
 				LOG.warn("Store " + storeName
-						+ " could not be found in Streams context, falling back to all known Streams instances");
+			+ " could not be found in Streams context, falling back to all known Streams instances");
 			}
 			final Set<KafkaStreams> kafkaStreams = kafkaStreamsRegistry.getKafkaStreams();
 			final Iterator<KafkaStreams> iterator = kafkaStreams.iterator();
 			while (iterator.hasNext()) {
 				try {
 					store = iterator.next()
-							.store(StoreQueryParameters.fromNameAndType(
-									storeName, storeType));
+				.store(StoreQueryParameters.fromNameAndType(
+			storeName, storeType));
 				}
 				catch (InvalidStateStoreException e) {
 					// pass through..
@@ -126,8 +126,8 @@ public class InteractiveQueryService {
 				return store;
 			}
 			throw new IllegalStateException(
-					"Error when retrieving state store: " + storeName,
-					throwable);
+		"Error when retrieving state store: " + storeName,
+		throwable);
 		});
 	}
 
@@ -138,7 +138,7 @@ public class InteractiveQueryService {
 	 */
 	private KafkaStreams getThreadContextSpecificKafkaStreams() {
 		return this.kafkaStreamsRegistry.getKafkaStreams().stream()
-				.filter(this::filterByThreadName).findAny().orElse(null);
+	.filter(this::filterByThreadName).findAny().orElse(null);
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class InteractiveQueryService {
 	 */
 	private boolean filterByThreadName(KafkaStreams streams) {
 		String applicationId = kafkaStreamsRegistry.streamBuilderFactoryBean(
-						streams).getStreamsConfiguration()
-				.getProperty(StreamsConfig.APPLICATION_ID_CONFIG);
+	streams).getStreamsConfiguration()
+	.getProperty(StreamsConfig.APPLICATION_ID_CONFIG);
 		// TODO: is there some better way to find out if a Stream App created the Thread?
 		return Thread.currentThread().getName().contains(applicationId);
 	}
@@ -166,7 +166,7 @@ public class InteractiveQueryService {
 	 */
 	public HostInfo getCurrentHostInfo() {
 		Map<String, String> configuration = this.binderConfigurationProperties
-				.getConfiguration();
+	.getConfiguration();
 		if (configuration.containsKey("application.server")) {
 
 			String applicationServer = configuration.get("application.server");
@@ -200,9 +200,9 @@ public class InteractiveQueryService {
 			Throwable throwable = null;
 			try {
 				final KeyQueryMetadata keyQueryMetadata = this.kafkaStreamsRegistry.getKafkaStreams()
-						.stream()
-						.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
-						.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
+			.stream()
+			.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
+			.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
 				if (keyQueryMetadata != null) {
 					return keyQueryMetadata.activeHost();
 				}
@@ -211,7 +211,7 @@ public class InteractiveQueryService {
 				throwable = e;
 			}
 			throw new IllegalStateException(
-					"Error when retrieving state store.", throwable != null ? throwable : new Throwable("Kafka Streams is not ready."));
+		"Error when retrieving state store.", throwable != null ? throwable : new Throwable("Kafka Streams is not ready."));
 		});
 	}
 
@@ -241,9 +241,9 @@ public class InteractiveQueryService {
 	 */
 	public <K> KeyQueryMetadata getKeyQueryMetadata(String store, K key, Serializer<K> serializer) {
 		return this.kafkaStreamsRegistry.getKafkaStreams()
-				.stream()
-				.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
-				.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
+	.stream()
+	.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
+	.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
 	}
 
 	/**
@@ -259,12 +259,12 @@ public class InteractiveQueryService {
 	public <K> KafkaStreams getKafkaStreams(String store, K key, Serializer<K> serializer) {
 		final AtomicReference<KafkaStreams> kafkaStreamsAtomicReference = new AtomicReference<>();
 		this.kafkaStreamsRegistry.getKafkaStreams()
-				.forEach(k -> {
-					final KeyQueryMetadata keyQueryMetadata = k.queryMetadataForKey(store, key, serializer);
-					if (keyQueryMetadata != null) {
-						kafkaStreamsAtomicReference.set(k);
-					}
-				});
+	.forEach(k -> {
+		final KeyQueryMetadata keyQueryMetadata = k.queryMetadataForKey(store, key, serializer);
+		if (keyQueryMetadata != null) {
+			kafkaStreamsAtomicReference.set(k);
+		}
+	});
 		return kafkaStreamsAtomicReference.get();
 	}
 
@@ -282,11 +282,11 @@ public class InteractiveQueryService {
 	 */
 	public List<HostInfo> getAllHostsInfo(String store) {
 		return kafkaStreamsRegistry.getKafkaStreams()
-				.stream()
-				.flatMap(k -> k.allMetadataForStore(store).stream())
-				.filter(Objects::nonNull)
-				.map(StreamsMetadata::hostInfo)
-				.collect(Collectors.toList());
+	.stream()
+	.flatMap(k -> k.allMetadataForStore(store).stream())
+	.filter(Objects::nonNull)
+	.map(StreamsMetadata::hostInfo)
+	.collect(Collectors.toList());
 	}
 
 }

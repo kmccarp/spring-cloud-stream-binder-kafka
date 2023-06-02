@@ -55,13 +55,13 @@ public class KafkaNullConverter extends AbstractMessageConverter {
 
 	@Override
 	protected Object convertFromInternal(Message<?> message, Class<?> targetClass,
-			Object conversionHint) {
+Object conversionHint) {
 		return message.getPayload();
 	}
 
 	@Override
 	protected Object convertToInternal(Object payload, MessageHeaders headers,
-			Object conversionHint) {
+Object conversionHint) {
 		return payload;
 	}
 

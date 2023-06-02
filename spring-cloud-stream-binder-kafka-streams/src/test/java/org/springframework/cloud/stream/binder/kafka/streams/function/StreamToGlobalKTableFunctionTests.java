@@ -66,7 +66,7 @@ public class StreamToGlobalKTableFunctionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"enriched-order");
+"enriched-order");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -77,57 +77,57 @@ public class StreamToGlobalKTableFunctionTests {
 		SpringApplication app = new SpringApplication(OrderEnricherApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		try (ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=process",
-				"--spring.cloud.stream.function.bindings.process-in-0=order",
-				"--spring.cloud.stream.function.bindings.process-in-1=customer",
-				"--spring.cloud.stream.function.bindings.process-in-2=product",
-				"--spring.cloud.stream.function.bindings.process-out-0=enriched-order",
-				"--spring.cloud.stream.bindings.order.destination=orders",
-				"--spring.cloud.stream.bindings.customer.destination=customers",
-				"--spring.cloud.stream.bindings.product.destination=products",
-				"--spring.cloud.stream.bindings.enriched-order.destination=enriched-order",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=process",
+	"--spring.cloud.stream.function.bindings.process-in-0=order",
+	"--spring.cloud.stream.function.bindings.process-in-1=customer",
+	"--spring.cloud.stream.function.bindings.process-in-2=product",
+	"--spring.cloud.stream.function.bindings.process-out-0=enriched-order",
+	"--spring.cloud.stream.bindings.order.destination=orders",
+	"--spring.cloud.stream.bindings.customer.destination=customers",
+	"--spring.cloud.stream.bindings.product.destination=products",
+	"--spring.cloud.stream.bindings.enriched-order.destination=enriched-order",
 
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
-				"--spring.cloud.stream.kafka.streams.bindings.order.consumer.applicationId=" +
-						"StreamToGlobalKTableJoinFunctionTests-abc",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
+	"--spring.cloud.stream.kafka.streams.bindings.order.consumer.applicationId=" +
+"StreamToGlobalKTableJoinFunctionTests-abc",
 
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.topic.properties.cleanup.policy=compact",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-1.consumer.topic.properties.cleanup.policy=compact",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-2.consumer.topic.properties.cleanup.policy=compact",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.topic.properties.cleanup.policy=compact",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-1.consumer.topic.properties.cleanup.policy=compact",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-2.consumer.topic.properties.cleanup.policy=compact",
 
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			// Testing certain ancillary configuration of GlobalKTable around topics creation.
 			// See this issue: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/687
 
 			BinderFactory binderFactory = context.getBeanFactory()
-					.getBean(BinderFactory.class);
+		.getBean(BinderFactory.class);
 
 			Binder<KStream, ? extends ConsumerProperties, ? extends ProducerProperties> kStreamBinder = binderFactory
-					.getBinder("kstream", KStream.class);
+		.getBinder("kstream", KStream.class);
 
 			KafkaStreamsConsumerProperties input = (KafkaStreamsConsumerProperties) ((ExtendedPropertiesBinder) kStreamBinder)
-					.getExtendedConsumerProperties("process-in-0");
+		.getExtendedConsumerProperties("process-in-0");
 			String cleanupPolicy = input.getTopic().getProperties().get("cleanup.policy");
 
 			assertThat(cleanupPolicy).isEqualTo("compact");
 
 			Binder<GlobalKTable, ? extends ConsumerProperties, ? extends ProducerProperties> globalKTableBinder = binderFactory
-					.getBinder("globalktable", GlobalKTable.class);
+		.getBinder("globalktable", GlobalKTable.class);
 
 			KafkaStreamsConsumerProperties inputX = (KafkaStreamsConsumerProperties) ((ExtendedPropertiesBinder) globalKTableBinder)
-					.getExtendedConsumerProperties("process-in-1");
+		.getExtendedConsumerProperties("process-in-1");
 			String cleanupPolicyX = inputX.getTopic().getProperties().get("cleanup.policy");
 
 			assertThat(cleanupPolicyX).isEqualTo("compact");
 
 			KafkaStreamsConsumerProperties inputY = (KafkaStreamsConsumerProperties) ((ExtendedPropertiesBinder) globalKTableBinder)
-					.getExtendedConsumerProperties("process-in-2");
+		.getExtendedConsumerProperties("process-in-2");
 			String cleanupPolicyY = inputY.getTopic().getProperties().get("cleanup.policy");
 
 			assertThat(cleanupPolicyY).isEqualTo("compact");
@@ -136,10 +136,10 @@ public class StreamToGlobalKTableFunctionTests {
 			Map<String, Object> senderPropsCustomer = KafkaTestUtils.producerProps(embeddedKafka);
 			senderPropsCustomer.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
 			senderPropsCustomer.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					JsonSerializer.class);
+		JsonSerializer.class);
 
 			DefaultKafkaProducerFactory<Long, Customer> pfCustomer =
-					new DefaultKafkaProducerFactory<>(senderPropsCustomer);
+		new DefaultKafkaProducerFactory<>(senderPropsCustomer);
 			KafkaTemplate<Long, Customer> template = new KafkaTemplate<>(pfCustomer, true);
 			template.setDefaultTopic("customers");
 			for (long i = 0; i < 5; i++) {
@@ -153,7 +153,7 @@ public class StreamToGlobalKTableFunctionTests {
 			senderPropsProduct.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
 			DefaultKafkaProducerFactory<Long, Product> pfProduct =
-					new DefaultKafkaProducerFactory<>(senderPropsProduct);
+		new DefaultKafkaProducerFactory<>(senderPropsProduct);
 			KafkaTemplate<Long, Product> productTemplate = new KafkaTemplate<>(pfProduct, true);
 			productTemplate.setDefaultTopic("products");
 
@@ -179,14 +179,14 @@ public class StreamToGlobalKTableFunctionTests {
 			}
 
 			Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group", "false",
-					embeddedKafka);
+		embeddedKafka);
 			consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 			consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
 			consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					JsonDeserializer.class);
+		JsonDeserializer.class);
 			consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
-					"org.springframework.cloud.stream.binder.kafka.streams." +
-							"function.StreamToGlobalKTableFunctionTests.EnrichedOrder");
+		"org.springframework.cloud.stream.binder.kafka.streams." +
+	"function.StreamToGlobalKTableFunctionTests.EnrichedOrder");
 			DefaultKafkaConsumerFactory<Long, EnrichedOrder> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
 
 			consumer = cf.createConsumer();
@@ -230,30 +230,30 @@ public class StreamToGlobalKTableFunctionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=forTimeExtractorTest",
-				"--spring.cloud.stream.bindings.forTimeExtractorTest-in-0.destination=orders",
-				"--spring.cloud.stream.bindings.forTimeExtractorTest-in-1.destination=customers",
-				"--spring.cloud.stream.bindings.forTimeExtractorTest-in-2.destination=products",
-				"--spring.cloud.stream.bindings.forTimeExtractorTest-out-0.destination=enriched-order",
-				"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-0.consumer.timestampExtractorBeanName" +
-						"=timestampExtractor",
-				"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-1.consumer.timestampExtractorBeanName" +
-						"=timestampExtractor",
-				"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-2.consumer.timestampExtractorBeanName" +
-						"=timestampExtractor",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
-				"--spring.cloud.stream.kafka.streams.bindings.order.consumer.applicationId=" +
-						"testTimeExtractor-abc",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=forTimeExtractorTest",
+	"--spring.cloud.stream.bindings.forTimeExtractorTest-in-0.destination=orders",
+	"--spring.cloud.stream.bindings.forTimeExtractorTest-in-1.destination=customers",
+	"--spring.cloud.stream.bindings.forTimeExtractorTest-in-2.destination=products",
+	"--spring.cloud.stream.bindings.forTimeExtractorTest-out-0.destination=enriched-order",
+	"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-0.consumer.timestampExtractorBeanName" +
+"=timestampExtractor",
+	"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-1.consumer.timestampExtractorBeanName" +
+"=timestampExtractor",
+	"--spring.cloud.stream.kafka.streams.bindings.forTimeExtractorTest-in-2.consumer.timestampExtractorBeanName" +
+"=timestampExtractor",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
+	"--spring.cloud.stream.kafka.streams.bindings.order.consumer.applicationId=" +
+"testTimeExtractor-abc",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			final KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties =
-					context.getBean(KafkaStreamsExtendedBindingProperties.class);
+		context.getBean(KafkaStreamsExtendedBindingProperties.class);
 
 			final Map<String, KafkaStreamsBindingProperties> bindings = kafkaStreamsExtendedBindingProperties.getBindings();
 
@@ -279,37 +279,29 @@ public class StreamToGlobalKTableFunctionTests {
 
 		@Bean
 		public Function<KStream<Long, Order>,
-				Function<GlobalKTable<Long, Customer>,
-						Function<GlobalKTable<Long, Product>, KStream<Long, EnrichedOrder>>>> process() {
+	Function<GlobalKTable<Long, Customer>,
+Function<GlobalKTable<Long, Product>, KStream<Long, EnrichedOrder>>>> process() {
 
 			return orderStream -> (
-					customers -> (
-							products -> (
-									orderStream.join(customers,
-											(orderId, order) -> order.getCustomerId(),
-											(order, customer) -> new CustomerOrder(customer, order))
-											.join(products,
+		customers -> (
+	products -> (
+orderStream.join(customers,(orderId, order) -> order.getCustomerId(),(order, customer) -> new CustomerOrder(customer, order)).join(products,
 													(orderId, customerOrder) -> customerOrder
 															.productId(),
-													(customerOrder, product) -> {
-														EnrichedOrder enrichedOrder = new EnrichedOrder();
-														enrichedOrder.setProduct(product);
-														enrichedOrder.setCustomer(customerOrder.customer);
-														enrichedOrder.setOrder(customerOrder.order);
-														return enrichedOrder;
+													(customerOrder, product) -> {EnrichedOrder enrichedOrder = new EnrichedOrder();enrichedOrder.setProduct(product);enrichedOrder.setCustomer(customerOrder.customer);enrichedOrder.setOrder(customerOrder.order);return enrichedOrder;
 													})
-							)
-					)
+	)
+		)
 			);
 		}
 
 		@Bean
 		public Function<KStream<Long, Order>,
-				Function<KTable<Long, Customer>,
-						Function<GlobalKTable<Long, Product>, KStream<Long, Order>>>> forTimeExtractorTest() {
+	Function<KTable<Long, Customer>,
+Function<GlobalKTable<Long, Product>, KStream<Long, Order>>>> forTimeExtractorTest() {
 			return orderStream ->
-					customers ->
-						products -> orderStream;
+		customers ->
+	products -> orderStream;
 		}
 
 		@Bean

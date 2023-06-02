@@ -93,15 +93,15 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 		String[] biConsumerNames = this.beanFactory.getBeanNamesForType(BiConsumer.class);
 
 		final Stream<String> concat = Stream.concat(
-				Stream.concat(Stream.of(functionNames), Stream.of(consumerNames)),
-				Stream.concat(Stream.of(biFunctionNames), Stream.of(biConsumerNames)));
+	Stream.concat(Stream.of(functionNames), Stream.of(consumerNames)),
+	Stream.concat(Stream.of(biFunctionNames), Stream.of(biConsumerNames)));
 		final List<String> collect = concat.collect(Collectors.toList());
 		collect.removeIf(s -> Arrays.stream(EXCLUDE_FUNCTIONS).anyMatch(t -> t.equals(s)));
 		collect.removeIf(Pattern.compile(".*_registration").asPredicate());
 
 		onlySingleFunction = collect.size() == 1;
 		collect.stream()
-				.forEach(this::extractResolvableTypes);
+	.forEach(this::extractResolvableTypes);
 
 		kafkaStreamsOnlyResolvableTypes.keySet().forEach(k -> addResolvableTypeInfo(k, kafkaStreamsOnlyResolvableTypes.get(k)));
 		kafakStreamsOnlyMethods.keySet().forEach(k -> addResolvableTypeInfo(k, kafakStreamsOnlyMethods.get(k)));
@@ -118,7 +118,7 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 			for (String s : getResolvableTypes().keySet()) {
 				ResolvableType[] resolvableTypes = new ResolvableType[]{getResolvableTypes().get(s)};
 				RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(
-						KafkaStreamsBindableProxyFactory.class);
+			KafkaStreamsBindableProxyFactory.class);
 				registerKakaStreamsProxyFactory(registry, s, resolvableTypes, rootBeanDefinition);
 			}
 		}
@@ -142,7 +142,7 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 					}
 					if (!nonKafkaStreamsFunctionsFound) {
 						RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(
-								KafkaStreamsBindableProxyFactory.class);
+					KafkaStreamsBindableProxyFactory.class);
 						registerKakaStreamsProxyFactory(registry, derivedNameFromComposed, resolvableTypes, rootBeanDefinition);
 					}
 				}
@@ -151,7 +151,7 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 					if (kafkaStreamsMethodNames.contains(functionUnit)) {
 						ResolvableType[] resolvableTypes = new ResolvableType[]{getResolvableTypes().get(functionUnit)};
 						RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(
-								KafkaStreamsBindableProxyFactory.class);
+					KafkaStreamsBindableProxyFactory.class);
 						registerKakaStreamsProxyFactory(registry, functionUnit, resolvableTypes, rootBeanDefinition);
 					}
 				}
@@ -161,19 +161,19 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 
 	private void registerKakaStreamsProxyFactory(BeanDefinitionRegistry registry, String s, ResolvableType[] resolvableTypes, RootBeanDefinition rootBeanDefinition) {
 		rootBeanDefinition.getConstructorArgumentValues()
-				.addGenericArgumentValue(resolvableTypes);
+	.addGenericArgumentValue(resolvableTypes);
 		rootBeanDefinition.getConstructorArgumentValues()
-				.addGenericArgumentValue(s);
+	.addGenericArgumentValue(s);
 		rootBeanDefinition.getConstructorArgumentValues()
-				.addGenericArgumentValue(getMethods().get(s));
+	.addGenericArgumentValue(getMethods().get(s));
 		registry.registerBeanDefinition("kafkaStreamsBindableProxyFactory-" + s, rootBeanDefinition);
 	}
 
 	private void extractResolvableTypes(String key) {
 		final Class<?> classObj = ClassUtils.resolveClassName(((AnnotatedBeanDefinition)
-						this.beanFactory.getBeanDefinition(key))
-						.getMetadata().getClassName(),
-				ClassUtils.getDefaultClassLoader());
+this.beanFactory.getBeanDefinition(key))
+.getMetadata().getClassName(),
+	ClassUtils.getDefaultClassLoader());
 		try {
 			Method[] methods = classObj.getMethods();
 			Optional<Method> functionalBeanMethods = Arrays.stream(methods).filter(m -> m.getName().equals(key)).findFirst();
@@ -198,8 +198,8 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 			}
 			else {
 				Optional<Method> componentBeanMethods = Arrays.stream(methods)
-						.filter(m -> m.getName().equals("apply") && isKafkaStreamsTypeFound(m) ||
-								m.getName().equals("accept") && isKafkaStreamsTypeFound(m)).findFirst();
+			.filter(m -> m.getName().equals("apply") && isKafkaStreamsTypeFound(m) ||
+		m.getName().equals("accept") && isKafkaStreamsTypeFound(m)).findFirst();
 				if (componentBeanMethods.isPresent()) {
 					Method method = componentBeanMethods.get();
 					final ResolvableType resolvableType = ResolvableType.forMethodParameter(method, 0);
@@ -262,8 +262,8 @@ public class KafkaStreamsFunctionBeanPostProcessor implements InitializingBean, 
 
 	private boolean isKafkaStreamsTypeFound(Method method) {
 		return KStream.class.isAssignableFrom(method.getParameters()[0].getType()) ||
-				KTable.class.isAssignableFrom(method.getParameters()[0].getType()) ||
-				GlobalKTable.class.isAssignableFrom(method.getParameters()[0].getType());
+	KTable.class.isAssignableFrom(method.getParameters()[0].getType()) ||
+	GlobalKTable.class.isAssignableFrom(method.getParameters()[0].getType());
 	}
 
 	@Override

@@ -35,10 +35,10 @@ public class KafkaBinderConfigurationPropertiesTest {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		kafkaProperties.getConsumer().setGroupId("group1");
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 
 		Map<String, Object> mergedConsumerConfiguration =
-				kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
+	kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
 		assertThat(mergedConsumerConfiguration).doesNotContainKeys(ConsumerConfig.GROUP_ID_CONFIG);
 	}
@@ -48,10 +48,10 @@ public class KafkaBinderConfigurationPropertiesTest {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		kafkaProperties.getConsumer().setEnableAutoCommit(true);
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 
 		Map<String, Object> mergedConsumerConfiguration =
-				kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
+	kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
 		assertThat(mergedConsumerConfiguration).doesNotContainKeys(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 	}
@@ -60,9 +60,9 @@ public class KafkaBinderConfigurationPropertiesTest {
 	public void mergedConsumerConfigurationFiltersGroupIdFromKafkaBinderConfigurationPropertiesConfiguration() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		kafkaBinderConfigurationProperties
-				.setConfiguration(Collections.singletonMap(ConsumerConfig.GROUP_ID_CONFIG, "group1"));
+	.setConfiguration(Collections.singletonMap(ConsumerConfig.GROUP_ID_CONFIG, "group1"));
 
 		Map<String, Object> mergedConsumerConfiguration = kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
@@ -73,9 +73,9 @@ public class KafkaBinderConfigurationPropertiesTest {
 	public void mergedConsumerConfigurationFiltersEnableAutoCommitFromKafkaBinderConfigurationPropertiesConfiguration() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		kafkaBinderConfigurationProperties
-				.setConfiguration(Collections.singletonMap(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"));
+	.setConfiguration(Collections.singletonMap(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"));
 
 		Map<String, Object> mergedConsumerConfiguration = kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
@@ -86,9 +86,9 @@ public class KafkaBinderConfigurationPropertiesTest {
 	public void mergedConsumerConfigurationFiltersGroupIdFromKafkaBinderConfigurationPropertiesConsumerProperties() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		kafkaBinderConfigurationProperties
-				.setConsumerProperties(Collections.singletonMap(ConsumerConfig.GROUP_ID_CONFIG, "group1"));
+	.setConsumerProperties(Collections.singletonMap(ConsumerConfig.GROUP_ID_CONFIG, "group1"));
 
 		Map<String, Object> mergedConsumerConfiguration = kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
@@ -99,9 +99,9 @@ public class KafkaBinderConfigurationPropertiesTest {
 	public void mergedConsumerConfigurationFiltersEnableAutoCommitFromKafkaBinderConfigurationPropertiesConsumerProps() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		kafkaBinderConfigurationProperties
-				.setConsumerProperties(Collections.singletonMap(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"));
+	.setConsumerProperties(Collections.singletonMap(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"));
 
 		Map<String, Object> mergedConsumerConfiguration = kafkaBinderConfigurationProperties.mergedConsumerConfiguration();
 
@@ -112,7 +112,7 @@ public class KafkaBinderConfigurationPropertiesTest {
 	public void testCertificateFilesAreConvertedToAbsolutePathsFromClassPathResources() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		final Map<String, String> configuration = kafkaBinderConfigurationProperties.getConfiguration();
 		configuration.put("ssl.truststore.location", "classpath:testclient.truststore");
 		configuration.put("ssl.keystore.location", "classpath:testclient.keystore");
@@ -120,16 +120,16 @@ public class KafkaBinderConfigurationPropertiesTest {
 		kafkaBinderConfigurationProperties.getKafkaConnectionString();
 
 		assertThat(configuration.get("ssl.truststore.location"))
-				.isEqualTo(Paths.get(System.getProperty("java.io.tmpdir"), "testclient.truststore").toString());
+	.isEqualTo(Paths.get(System.getProperty("java.io.tmpdir"), "testclient.truststore").toString());
 		assertThat(configuration.get("ssl.keystore.location"))
-				.isEqualTo(Paths.get(System.getProperty("java.io.tmpdir"), "testclient.keystore").toString());
+	.isEqualTo(Paths.get(System.getProperty("java.io.tmpdir"), "testclient.keystore").toString());
 	}
 
 	@Test
 	public void testCertificateFilesAreConvertedToGivenAbsolutePathsFromClassPathResources() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		final Map<String, String> configuration = kafkaBinderConfigurationProperties.getConfiguration();
 		configuration.put("ssl.truststore.location", "classpath:testclient.truststore");
 		configuration.put("ssl.keystore.location", "classpath:testclient.keystore");
@@ -138,16 +138,16 @@ public class KafkaBinderConfigurationPropertiesTest {
 		kafkaBinderConfigurationProperties.getKafkaConnectionString();
 
 		assertThat(configuration.get("ssl.truststore.location")).isEqualTo(
-				Paths.get(Files.currentFolder().toString(), "target", "testclient.truststore").toString());
+	Paths.get(Files.currentFolder().toString(), "target", "testclient.truststore").toString());
 		assertThat(configuration.get("ssl.keystore.location")).isEqualTo(
-				Paths.get(Files.currentFolder().toString(), "target", "testclient.keystore").toString());
+	Paths.get(Files.currentFolder().toString(), "target", "testclient.keystore").toString());
 	}
 
 	@Test
 	public void testCertificateFilesAreMovedForSchemaRegistryConfiguration() {
 		KafkaProperties kafkaProperties = new KafkaProperties();
 		KafkaBinderConfigurationProperties kafkaBinderConfigurationProperties =
-				new KafkaBinderConfigurationProperties(kafkaProperties);
+	new KafkaBinderConfigurationProperties(kafkaProperties);
 		final Map<String, String> configuration = kafkaBinderConfigurationProperties.getConfiguration();
 		configuration.put("schema.registry.ssl.truststore.location", "classpath:testclient.truststore");
 		configuration.put("schema.registry.ssl.keystore.location", "classpath:testclient.keystore");
@@ -156,8 +156,8 @@ public class KafkaBinderConfigurationPropertiesTest {
 		kafkaBinderConfigurationProperties.getKafkaConnectionString();
 
 		assertThat(configuration.get("schema.registry.ssl.truststore.location")).isEqualTo(
-				Paths.get(Files.currentFolder().toString(), "target", "testclient.truststore").toString());
+	Paths.get(Files.currentFolder().toString(), "target", "testclient.truststore").toString());
 		assertThat(configuration.get("schema.registry.ssl.keystore.location")).isEqualTo(
-				Paths.get(Files.currentFolder().toString(), "target", "testclient.keystore").toString());
+	Paths.get(Files.currentFolder().toString(), "target", "testclient.keystore").toString());
 	}
 }

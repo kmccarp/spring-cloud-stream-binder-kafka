@@ -38,11 +38,11 @@ public final class KafkaTopicUtils {
 			byte[] utf8 = topicName.getBytes("UTF-8");
 			for (byte b : utf8) {
 				if (!((b >= 'a') && (b <= 'z') || (b >= 'A') && (b <= 'Z')
-						|| (b >= '0') && (b <= '9') || (b == '.') || (b == '-')
-						|| (b == '_'))) {
+			|| (b >= '0') && (b <= '9') || (b == '.') || (b == '-')
+			|| (b == '_'))) {
 					throw new IllegalArgumentException(
-							"Topic name can only have ASCII alphanumerics, '.', '_' and '-', but was: '"
-									+ topicName + "'");
+				"Topic name can only have ASCII alphanumerics, '.', '_' and '-', but was: '"
+			+ topicName + "'");
 				}
 			}
 		}

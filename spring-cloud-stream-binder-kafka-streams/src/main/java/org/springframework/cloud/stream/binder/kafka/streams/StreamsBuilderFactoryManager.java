@@ -58,10 +58,10 @@ public class StreamsBuilderFactoryManager implements SmartLifecycle {
 	private final KafkaProperties kafkaProperties;
 
 	StreamsBuilderFactoryManager(KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
-								KafkaStreamsRegistry kafkaStreamsRegistry,
-								KafkaStreamsBinderMetrics kafkaStreamsBinderMetrics,
-								KafkaStreamsMicrometerListener listener,
-								KafkaProperties kafkaProperties) {
+KafkaStreamsRegistry kafkaStreamsRegistry,
+KafkaStreamsBinderMetrics kafkaStreamsBinderMetrics,
+KafkaStreamsMicrometerListener listener,
+KafkaProperties kafkaProperties) {
 		this.kafkaStreamsBindingInformationCatalogue = kafkaStreamsBindingInformationCatalogue;
 		this.kafkaStreamsRegistry = kafkaStreamsRegistry;
 		this.kafkaStreamsBinderMetrics = kafkaStreamsBinderMetrics;
@@ -87,7 +87,7 @@ public class StreamsBuilderFactoryManager implements SmartLifecycle {
 		if (!this.running) {
 			try {
 				Set<StreamsBuilderFactoryBean> streamsBuilderFactoryBeans = this.kafkaStreamsBindingInformationCatalogue
-						.getStreamsBuilderFactoryBeans();
+			.getStreamsBuilderFactoryBeans();
 				for (StreamsBuilderFactoryBean streamsBuilderFactoryBean : streamsBuilderFactoryBeans) {
 					if (this.listener != null) {
 						streamsBuilderFactoryBean.addListener(this.listener);
@@ -96,10 +96,10 @@ public class StreamsBuilderFactoryManager implements SmartLifecycle {
 					// Users can override this by customizing SBFB. See this issue for more details:
 					// https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/1110
 					streamsBuilderFactoryBean.setStreamsUncaughtExceptionHandler(exception ->
-							StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
+				StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
 					// Starting the stream.
 					final Map<StreamsBuilderFactoryBean, List<ConsumerProperties>> bindingServicePropertiesPerSbfb =
-							this.kafkaStreamsBindingInformationCatalogue.getConsumerPropertiesPerSbfb();
+				this.kafkaStreamsBindingInformationCatalogue.getConsumerPropertiesPerSbfb();
 					final List<ConsumerProperties> consumerProperties = bindingServicePropertiesPerSbfb.get(streamsBuilderFactoryBean);
 					final boolean autoStartupDisabledOnAtLeastOneConsumerBinding = consumerProperties.stream().anyMatch(consumerProperties1 -> !consumerProperties1.isAutoStartup());
 					if (!autoStartupDisabledOnAtLeastOneConsumerBinding) {
@@ -123,7 +123,7 @@ public class StreamsBuilderFactoryManager implements SmartLifecycle {
 		if (this.running) {
 			try {
 				Set<StreamsBuilderFactoryBean> streamsBuilderFactoryBeans = this.kafkaStreamsBindingInformationCatalogue
-						.getStreamsBuilderFactoryBeans();
+			.getStreamsBuilderFactoryBeans();
 				int n = 0;
 				for (StreamsBuilderFactoryBean streamsBuilderFactoryBean : streamsBuilderFactoryBeans) {
 					streamsBuilderFactoryBean.removeListener(this.listener);

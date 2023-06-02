@@ -35,8 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Ilayaperumal Gopinathan
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { KafkaBinderConfiguration.class, KafkaAutoConfiguration.class,
-		KafkaBinderConfigurationTest.class })
+@SpringBootTest(classes = {KafkaBinderConfiguration.class, KafkaAutoConfiguration.class,KafkaBinderConfigurationTest.class})
 public class KafkaBinderConfigurationTest {
 
 	@Autowired
@@ -46,11 +45,11 @@ public class KafkaBinderConfigurationTest {
 	public void testKafkaBinderProducerListener() {
 		assertThat(this.kafkaMessageChannelBinder).isNotNull();
 		Field producerListenerField = ReflectionUtils.findField(
-				KafkaMessageChannelBinder.class, "producerListener",
-				ProducerListener.class);
+	KafkaMessageChannelBinder.class, "producerListener",
+	ProducerListener.class);
 		ReflectionUtils.makeAccessible(producerListenerField);
 		ProducerListener producerListener = (ProducerListener) ReflectionUtils
-				.getField(producerListenerField, this.kafkaMessageChannelBinder);
+	.getField(producerListenerField, this.kafkaMessageChannelBinder);
 		assertThat(producerListener).isNotNull();
 	}
 

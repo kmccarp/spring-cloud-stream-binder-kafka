@@ -48,8 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Ilayaperumal Gopinathan
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { KafkaBinderConfiguration.class, KafkaAutoConfiguration.class,
-		KafkaBinderConfigurationPropertiesTest.class })
+@SpringBootTest(classes = {KafkaBinderConfiguration.class, KafkaAutoConfiguration.class,KafkaBinderConfigurationPropertiesTest.class})
 @TestPropertySource(locations = "classpath:binder-config.properties")
 public class KafkaBinderConfigurationPropertiesTest {
 
@@ -65,58 +64,58 @@ public class KafkaBinderConfigurationPropertiesTest {
 		kafkaProducerProperties.setBatchTimeout(100);
 		kafkaProducerProperties.setCloseTimeout(10);
 		kafkaProducerProperties
-				.setCompressionType(KafkaProducerProperties.CompressionType.gzip);
+	.setCompressionType(KafkaProducerProperties.CompressionType.gzip);
 		ExtendedProducerProperties<KafkaProducerProperties> producerProperties = new ExtendedProducerProperties<>(
-				kafkaProducerProperties);
+	kafkaProducerProperties);
 		Method getProducerFactoryMethod = KafkaMessageChannelBinder.class
-				.getDeclaredMethod("getProducerFactory", String.class,
-						ExtendedProducerProperties.class, String.class, String.class);
+	.getDeclaredMethod("getProducerFactory", String.class,
+ExtendedProducerProperties.class, String.class, String.class);
 		getProducerFactoryMethod.setAccessible(true);
 		DefaultKafkaProducerFactory producerFactory = (DefaultKafkaProducerFactory) getProducerFactoryMethod
-				.invoke(this.kafkaMessageChannelBinder, "bar", producerProperties, "bar.producer", "bar");
+	.invoke(this.kafkaMessageChannelBinder, "bar", producerProperties, "bar.producer", "bar");
 		Field producerFactoryConfigField = ReflectionUtils
-				.findField(DefaultKafkaProducerFactory.class, "configs", Map.class);
+	.findField(DefaultKafkaProducerFactory.class, "configs", Map.class);
 		ReflectionUtils.makeAccessible(producerFactoryConfigField);
 		Map<String, Object> producerConfigs = (Map<String, Object>) ReflectionUtils
-				.getField(producerFactoryConfigField, producerFactory);
+	.getField(producerFactoryConfigField, producerFactory);
 		assertThat(producerConfigs.get("batch.size")).isEqualTo("12345");
 		assertThat(producerConfigs.get("linger.ms")).isEqualTo("100");
 		assertThat(producerConfigs.get("key.serializer"))
-				.isEqualTo(ByteArraySerializer.class);
+	.isEqualTo(ByteArraySerializer.class);
 		assertThat(producerConfigs.get("value.serializer"))
-				.isEqualTo(ByteArraySerializer.class);
+	.isEqualTo(ByteArraySerializer.class);
 		assertThat(producerConfigs.get("compression.type")).isEqualTo("gzip");
 
 		Field physicalCloseTimeoutField = ReflectionUtils
-				.findField(DefaultKafkaProducerFactory.class, "physicalCloseTimeout", Duration.class);
+	.findField(DefaultKafkaProducerFactory.class, "physicalCloseTimeout", Duration.class);
 		ReflectionUtils.makeAccessible(physicalCloseTimeoutField);
 		Duration physicalCloseTimeoutConfig = (Duration) ReflectionUtils
-				.getField(physicalCloseTimeoutField, producerFactory);
+	.getField(physicalCloseTimeoutField, producerFactory);
 		assertThat(physicalCloseTimeoutConfig).isEqualTo(Duration.ofSeconds(10));
 
 		List<String> bootstrapServers = new ArrayList<>();
 		bootstrapServers.add("10.98.09.199:9082");
 		assertThat((((String) producerConfigs.get("bootstrap.servers"))
-				.contains("10.98.09.199:9082"))).isTrue();
+	.contains("10.98.09.199:9082"))).isTrue();
 		Method createKafkaConsumerFactoryMethod = KafkaMessageChannelBinder.class
-				.getDeclaredMethod("createKafkaConsumerFactory", boolean.class,
-						String.class, ExtendedConsumerProperties.class, String.class, String.class);
+	.getDeclaredMethod("createKafkaConsumerFactory", boolean.class,
+String.class, ExtendedConsumerProperties.class, String.class, String.class);
 		createKafkaConsumerFactoryMethod.setAccessible(true);
 		ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties = new ExtendedConsumerProperties<>(
-				new KafkaConsumerProperties());
+	new KafkaConsumerProperties());
 		DefaultKafkaConsumerFactory consumerFactory = (DefaultKafkaConsumerFactory) createKafkaConsumerFactoryMethod
-				.invoke(this.kafkaMessageChannelBinder, true, "test", consumerProperties, "test.consumer", "test");
+	.invoke(this.kafkaMessageChannelBinder, true, "test", consumerProperties, "test.consumer", "test");
 		Field consumerFactoryConfigField = ReflectionUtils
-				.findField(DefaultKafkaConsumerFactory.class, "configs", Map.class);
+	.findField(DefaultKafkaConsumerFactory.class, "configs", Map.class);
 		ReflectionUtils.makeAccessible(consumerFactoryConfigField);
 		Map<String, Object> consumerConfigs = (Map<String, Object>) ReflectionUtils
-				.getField(consumerFactoryConfigField, consumerFactory);
+	.getField(consumerFactoryConfigField, consumerFactory);
 		assertThat(consumerConfigs.get("key.deserializer"))
-				.isEqualTo(ByteArrayDeserializer.class);
+	.isEqualTo(ByteArrayDeserializer.class);
 		assertThat(consumerConfigs.get("value.deserializer"))
-				.isEqualTo(ByteArrayDeserializer.class);
+	.isEqualTo(ByteArrayDeserializer.class);
 		assertThat((((String) consumerConfigs.get("bootstrap.servers"))
-				.contains("10.98.09.199:9082"))).isTrue();
+	.contains("10.98.09.199:9082"))).isTrue();
 	}
 
 }

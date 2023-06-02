@@ -81,49 +81,48 @@ import org.springframework.messaging.converter.MessageConverter;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(Binder.class)
-@Import({ KafkaAutoConfiguration.class, KafkaBinderHealthIndicatorConfiguration.class })
-@EnableConfigurationProperties({ KafkaExtendedBindingProperties.class })
+@Import({KafkaAutoConfiguration.class, KafkaBinderHealthIndicatorConfiguration.class})
+@EnableConfigurationProperties({KafkaExtendedBindingProperties.class})
 public class KafkaBinderConfiguration {
 
 	@Bean
 	KafkaBinderConfigurationProperties configurationProperties(
-			KafkaProperties kafkaProperties) {
+KafkaProperties kafkaProperties) {
 		return new KafkaBinderConfigurationProperties(kafkaProperties);
 	}
 
 	@Bean
 	KafkaTopicProvisioner provisioningProvider(
-			KafkaBinderConfigurationProperties configurationProperties,
-			ObjectProvider<AdminClientConfigCustomizer> adminClientConfigCustomizer, KafkaProperties kafkaProperties) {
+KafkaBinderConfigurationProperties configurationProperties,
+ObjectProvider<AdminClientConfigCustomizer> adminClientConfigCustomizer, KafkaProperties kafkaProperties) {
 		return new KafkaTopicProvisioner(configurationProperties,
-				kafkaProperties, adminClientConfigCustomizer.getIfUnique());
+	kafkaProperties, adminClientConfigCustomizer.getIfUnique());
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Bean
 	KafkaMessageChannelBinder kafkaMessageChannelBinder(
-			KafkaBinderConfigurationProperties configurationProperties,
-			KafkaTopicProvisioner provisioningProvider,
-			@Nullable ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> listenerContainerCustomizer,
-			@Nullable MessageSourceCustomizer<KafkaMessageSource<?, ?>> sourceCustomizer,
-			@Nullable ProducerMessageHandlerCustomizer<KafkaProducerMessageHandler<?, ?>> messageHandlerCustomizer,
-			@Nullable ConsumerEndpointCustomizer<KafkaMessageDrivenChannelAdapter<?, ?>> consumerCustomizer,
-			ObjectProvider<KafkaBindingRebalanceListener> rebalanceListener,
-			ObjectProvider<DlqPartitionFunction> dlqPartitionFunction,
-			ObjectProvider<DlqDestinationResolver> dlqDestinationResolver,
-			ObjectProvider<ClientFactoryCustomizer> clientFactoryCustomizer,
-			ObjectProvider<ConsumerConfigCustomizer> consumerConfigCustomizer,
-			ObjectProvider<ProducerConfigCustomizer> producerConfigCustomizer,
-			ProducerListener producerListener, KafkaExtendedBindingProperties kafkaExtendedBindingProperties
-			) {
+KafkaBinderConfigurationProperties configurationProperties,
+KafkaTopicProvisioner provisioningProvider,
+@Nullable ListenerContainerCustomizer<AbstractMessageListenerContainer<?, ?>> listenerContainerCustomizer,
+@Nullable MessageSourceCustomizer<KafkaMessageSource<?, ?>> sourceCustomizer,
+@Nullable ProducerMessageHandlerCustomizer<KafkaProducerMessageHandler<?, ?>> messageHandlerCustomizer,
+@Nullable ConsumerEndpointCustomizer<KafkaMessageDrivenChannelAdapter<?, ?>> consumerCustomizer,
+ObjectProvider<KafkaBindingRebalanceListener> rebalanceListener,
+ObjectProvider<DlqPartitionFunction> dlqPartitionFunction,
+ObjectProvider<DlqDestinationResolver> dlqDestinationResolver,
+ObjectProvider<ClientFactoryCustomizer> clientFactoryCustomizer,
+ObjectProvider<ConsumerConfigCustomizer> consumerConfigCustomizer,
+ObjectProvider<ProducerConfigCustomizer> producerConfigCustomizer,
+ProducerListener producerListener, KafkaExtendedBindingProperties kafkaExtendedBindingProperties) {
 
 		KafkaMessageChannelBinder kafkaMessageChannelBinder = new KafkaMessageChannelBinder(
-				configurationProperties, provisioningProvider,
-				listenerContainerCustomizer, sourceCustomizer, rebalanceListener.getIfUnique(),
-				dlqPartitionFunction.getIfUnique(), dlqDestinationResolver.getIfUnique());
+	configurationProperties, provisioningProvider,
+	listenerContainerCustomizer, sourceCustomizer, rebalanceListener.getIfUnique(),
+	dlqPartitionFunction.getIfUnique(), dlqDestinationResolver.getIfUnique());
 		kafkaMessageChannelBinder.setProducerListener(producerListener);
 		kafkaMessageChannelBinder
-				.setExtendedBindingProperties(kafkaExtendedBindingProperties);
+	.setExtendedBindingProperties(kafkaExtendedBindingProperties);
 		kafkaMessageChannelBinder.setProducerMessageHandlerCustomizer(messageHandlerCustomizer);
 		kafkaMessageChannelBinder.setConsumerEndpointCustomizer(consumerCustomizer);
 		kafkaMessageChannelBinder.setClientFactoryCustomizer(clientFactoryCustomizer.getIfUnique());
@@ -148,15 +147,15 @@ public class KafkaBinderConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(KafkaJaasLoginModuleInitializer.class)
 	public KafkaJaasLoginModuleInitializer jaasInitializer(
-			KafkaBinderConfigurationProperties configurationProperties)
-			throws IOException {
+KafkaBinderConfigurationProperties configurationProperties)
+throws IOException {
 		KafkaJaasLoginModuleInitializer kafkaJaasLoginModuleInitializer = new KafkaJaasLoginModuleInitializer();
 		JaasLoginModuleConfiguration jaas = configurationProperties.getJaas();
 		if (jaas != null) {
 			kafkaJaasLoginModuleInitializer.setLoginModule(jaas.getLoginModule());
 
 			KafkaJaasLoginModuleInitializer.ControlFlag controlFlag = jaas
-					.getControlFlag();
+		.getControlFlag();
 
 			if (controlFlag != null) {
 				kafkaJaasLoginModuleInitializer.setControlFlag(controlFlag);
@@ -175,12 +174,12 @@ public class KafkaBinderConfiguration {
 		@ConditionalOnBean(MeterRegistry.class)
 		@ConditionalOnMissingBean(KafkaBinderMetrics.class)
 		public MeterBinder kafkaBinderMetrics(
-				KafkaMessageChannelBinder kafkaMessageChannelBinder,
-				KafkaBinderConfigurationProperties configurationProperties,
-				MeterRegistry meterRegistry) {
+	KafkaMessageChannelBinder kafkaMessageChannelBinder,
+	KafkaBinderConfigurationProperties configurationProperties,
+	MeterRegistry meterRegistry) {
 
 			return new KafkaBinderMetrics(kafkaMessageChannelBinder,
-					configurationProperties, null, meterRegistry);
+		configurationProperties, null, meterRegistry);
 		}
 
 		@ConditionalOnClass(name = "org.springframework.kafka.core.MicrometerConsumerListener")
@@ -197,7 +196,7 @@ public class KafkaBinderConfiguration {
 					public void configure(ProducerFactory<?, ?> pf) {
 						if (pf instanceof DefaultKafkaProducerFactory) {
 							((DefaultKafkaProducerFactory<?, ?>) pf)
-									.addListener(new MicrometerProducerListener<>(meterRegistry));
+						.addListener(new MicrometerProducerListener<>(meterRegistry));
 						}
 					}
 
@@ -205,7 +204,7 @@ public class KafkaBinderConfiguration {
 					public void configure(ConsumerFactory<?, ?> cf) {
 						if (cf instanceof DefaultKafkaConsumerFactory) {
 							((DefaultKafkaConsumerFactory<?, ?>) cf)
-									.addListener(new MicrometerConsumerListener<>(meterRegistry));
+						.addListener(new MicrometerConsumerListener<>(meterRegistry));
 						}
 					}
 
@@ -225,14 +224,14 @@ public class KafkaBinderConfiguration {
 
 		@Bean
 		public MeterBinder kafkaBinderMetrics(
-				KafkaMessageChannelBinder kafkaMessageChannelBinder,
-				KafkaBinderConfigurationProperties configurationProperties,
-				ConfigurableApplicationContext context) {
+	KafkaMessageChannelBinder kafkaMessageChannelBinder,
+	KafkaBinderConfigurationProperties configurationProperties,
+	ConfigurableApplicationContext context) {
 
 			MeterRegistry meterRegistry = context.getBean("outerContext", ApplicationContext.class)
-					.getBean(MeterRegistry.class);
+		.getBean(MeterRegistry.class);
 			return new KafkaBinderMetrics(kafkaMessageChannelBinder,
-					configurationProperties, null, meterRegistry);
+		configurationProperties, null, meterRegistry);
 		}
 
 		@ConditionalOnClass(name = "org.springframework.kafka.core.MicrometerConsumerListener")
@@ -246,13 +245,13 @@ public class KafkaBinderConfiguration {
 				return new ClientFactoryCustomizer() {
 
 					MeterRegistry meterRegistry = context.getBean("outerContext", ApplicationContext.class)
-							.getBean(MeterRegistry.class);
+				.getBean(MeterRegistry.class);
 
 					@Override
 					public void configure(ProducerFactory<?, ?> pf) {
 						if (pf instanceof DefaultKafkaProducerFactory) {
 							((DefaultKafkaProducerFactory<?, ?>) pf)
-									.addListener(new MicrometerProducerListener<>(this.meterRegistry));
+						.addListener(new MicrometerProducerListener<>(this.meterRegistry));
 						}
 					}
 
@@ -260,7 +259,7 @@ public class KafkaBinderConfiguration {
 					public void configure(ConsumerFactory<?, ?> cf) {
 						if (cf instanceof DefaultKafkaConsumerFactory) {
 							((DefaultKafkaConsumerFactory<?, ?>) cf)
-									.addListener(new MicrometerConsumerListener<>(this.meterRegistry));
+						.addListener(new MicrometerConsumerListener<>(this.meterRegistry));
 						}
 					}
 

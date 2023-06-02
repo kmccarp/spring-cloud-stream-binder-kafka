@@ -41,19 +41,19 @@ import org.springframework.kafka.support.ProducerListener;
 public class KafkaTestBinder extends AbstractKafkaTestBinder {
 
 	KafkaTestBinder(KafkaBinderConfigurationProperties binderConfiguration,
-			KafkaTopicProvisioner kafkaTopicProvisioner) {
+KafkaTopicProvisioner kafkaTopicProvisioner) {
 
 		this(binderConfiguration, kafkaTopicProvisioner, null, null);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	KafkaTestBinder(KafkaBinderConfigurationProperties binderConfiguration,
-					KafkaTopicProvisioner kafkaTopicProvisioner, DlqPartitionFunction dlqPartitionFunction,
-					DlqDestinationResolver dlqDestinationResolver) {
+KafkaTopicProvisioner kafkaTopicProvisioner, DlqPartitionFunction dlqPartitionFunction,
+DlqDestinationResolver dlqDestinationResolver) {
 
 		try {
 			KafkaMessageChannelBinder binder = new KafkaMessageChannelBinder(
-					binderConfiguration, kafkaTopicProvisioner, null, null, null, dlqPartitionFunction, dlqDestinationResolver) {
+		binderConfiguration, kafkaTopicProvisioner, null, null, null, dlqPartitionFunction, dlqDestinationResolver) {
 
 				/*
 				 * Some tests use multiple instance indexes for the same topic; we need to
@@ -61,10 +61,10 @@ public class KafkaTestBinder extends AbstractKafkaTestBinder {
 				 */
 				@Override
 				protected String errorsBaseName(ConsumerDestination destination,
-						String group,
-						ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties) {
+			String group,
+			ExtendedConsumerProperties<KafkaConsumerProperties> consumerProperties) {
 					return super.errorsBaseName(destination, group, consumerProperties)
-							+ "-" + consumerProperties.getInstanceIndex();
+				+ "-" + consumerProperties.getInstanceIndex();
 				}
 
 			};
@@ -72,7 +72,7 @@ public class KafkaTestBinder extends AbstractKafkaTestBinder {
 			ProducerListener producerListener = new LoggingProducerListener();
 			binder.setProducerListener(producerListener);
 			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-					Config.class);
+		Config.class);
 			setApplicationContext(context);
 			binder.setApplicationContext(context);
 			binder.afterPropertiesSet();

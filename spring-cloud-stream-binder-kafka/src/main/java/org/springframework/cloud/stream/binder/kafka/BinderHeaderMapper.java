@@ -81,18 +81,12 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 	private static final String JAVA_LANG_STRING = "java.lang.String";
 
 	private static final List<String> DEFAULT_TRUSTED_PACKAGES =
-			Arrays.asList(
-					"java.lang",
-					"java.net",
-					"java.util",
-					"org.springframework.util"
-			);
+Arrays.asList("java.lang","java.net","java.util","org.springframework.util"
+);
 
 	private static final List<String> DEFAULT_TO_STRING_CLASSES =
-			Arrays.asList(
-					"org.springframework.util.MimeType",
-					"org.springframework.http.MediaType"
-			);
+Arrays.asList("org.springframework.util.MimeType","org.springframework.http.MediaType"
+);
 
 	/**
 	 * Header name for java types of other headers.
@@ -132,11 +126,11 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 	 */
 	public BinderHeaderMapper(ObjectMapper objectMapper) {
 		this(objectMapper,
-				NEVER_ID,
-				NEVER_TIMESTAMP,
-				NEVER_DELIVERY_ATTEMPT,
-				NEVER_NATIVE_HEADERS_PRESENT,
-				"*");
+	NEVER_ID,
+	NEVER_TIMESTAMP,
+	NEVER_DELIVERY_ATTEMPT,
+	NEVER_NATIVE_HEADERS_PRESENT,
+	"*");
 	}
 
 	/**
@@ -172,7 +166,7 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 		Assert.noNullElements(patterns, "'patterns' must not have null elements");
 		this.objectMapper = objectMapper;
 		this.objectMapper
-				.registerModule(new SimpleModule().addDeserializer(MimeType.class, new MimeTypeJsonDeserializer()));
+	.registerModule(new SimpleModule().addDeserializer(MimeType.class, new MimeTypeJsonDeserializer()));
 	}
 
 	/**
@@ -267,8 +261,8 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 							className = JAVA_LANG_STRING;
 						}
 						if (!this.encodeStrings
-								&& !MimeType.class.isAssignableFrom(rawValue.getClass())
-								&& valueToAdd instanceof String) {
+					&& !MimeType.class.isAssignableFrom(rawValue.getClass())
+					&& valueToAdd instanceof String) {
 							target.add(new RecordHeader(key, ((String) valueToAdd).getBytes(getCharset())));
 							className = JAVA_LANG_STRING;
 						}
@@ -332,8 +326,8 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 				}
 				catch (IOException e) {
 					logger.error(e, () ->
-							"Could not decode json type: " + new String(header.value()) + " for key: "
-									+ header.key());
+				"Could not decode json type: " + new String(header.value()) + " for key: "
+			+ header.key());
 					headers.put(header.key(), header.value());
 				}
 			}
@@ -352,7 +346,7 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 			if (trusted(nth.getUntrustedType())) {
 				try {
 					value = headerObjectMapper.readValue(nth.getHeaderValue(),
-							ClassUtils.forName(nth.getUntrustedType(), null));
+				ClassUtils.forName(nth.getUntrustedType(), null));
 				}
 				catch (Exception e) {
 					logger.error(e, () -> "Could not decode header: " + nth);
@@ -449,9 +443,9 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 				JsonNode subType = root.get("subtype");
 				JsonNode parameters = root.get("parameters");
 				Map<String, String> params =
-						BinderHeaderMapper.this.objectMapper.readValue(parameters.traverse(),
-								TypeFactory.defaultInstance()
-										.constructMapType(HashMap.class, String.class, String.class));
+			BinderHeaderMapper.this.objectMapper.readValue(parameters.traverse(),
+		TypeFactory.defaultInstance()
+	.constructMapType(HashMap.class, String.class, String.class));
 				return new MimeType(type.asText(), subType.asText(), params);
 			}
 		}
@@ -497,11 +491,11 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 		public String toString() {
 			try {
 				return "NonTrustedHeaderType [headerValue=" + new String(this.headerValue, StandardCharsets.UTF_8)
-						+ ", untrustedType=" + this.untrustedType + "]";
+			+ ", untrustedType=" + this.untrustedType + "]";
 			}
 			catch (@SuppressWarnings("unused") Exception e) {
 				return "NonTrustedHeaderType [headerValue=" + Arrays.toString(this.headerValue) + ", untrustedType="
-						+ this.untrustedType + "]";
+			+ this.untrustedType + "]";
 			}
 		}
 	}

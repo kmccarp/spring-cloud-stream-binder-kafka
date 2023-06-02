@@ -42,8 +42,8 @@ class KTableBoundElementFactory extends AbstractBindingTargetFactory<KTable> {
 	private final KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue;
 
 	KTableBoundElementFactory(BindingServiceProperties bindingServiceProperties,
-							EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler,
-							KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
+EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler,
+KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue) {
 		super(KTable.class);
 		this.bindingServiceProperties = bindingServiceProperties;
 		this.encodingDecodingBindAdviceHandler = encodingDecodingBindAdviceHandler;
@@ -68,7 +68,7 @@ class KTableBoundElementFactory extends AbstractBindingTargetFactory<KTable> {
 
 		KTableBoundElementFactory.KTableWrapperHandler wrapper = new KTableBoundElementFactory.KTableWrapperHandler();
 		ProxyFactory proxyFactory = new ProxyFactory(
-				KTableBoundElementFactory.KTableWrapper.class, KTable.class);
+	KTableBoundElementFactory.KTableWrapper.class, KTable.class);
 		proxyFactory.addAdvice(wrapper);
 
 		final KTable proxy = (KTable) proxyFactory.getProxy();
@@ -80,7 +80,7 @@ class KTableBoundElementFactory extends AbstractBindingTargetFactory<KTable> {
 	@SuppressWarnings("unchecked")
 	public KTable createOutput(final String name) {
 		throw new UnsupportedOperationException(
-				"Outbound operations are not allowed on target type KTable");
+	"Outbound operations are not allowed on target type KTable");
 	}
 
 	/**
@@ -93,7 +93,7 @@ class KTableBoundElementFactory extends AbstractBindingTargetFactory<KTable> {
 	}
 
 	private static class KTableWrapperHandler
-			implements KTableBoundElementFactory.KTableWrapper, MethodInterceptor {
+implements KTableBoundElementFactory.KTableWrapper, MethodInterceptor {
 
 		private KTable<Object, Object> delegate;
 
@@ -108,19 +108,19 @@ class KTableBoundElementFactory extends AbstractBindingTargetFactory<KTable> {
 		public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 			if (methodInvocation.getMethod().getDeclaringClass().equals(KTable.class)) {
 				Assert.notNull(this.delegate,
-						"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
-								+ "  but no delegate has been set.");
+			"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
+		+ "  but no delegate has been set.");
 				return methodInvocation.getMethod().invoke(this.delegate,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else if (methodInvocation.getMethod().getDeclaringClass()
-					.equals(KTableBoundElementFactory.KTableWrapper.class)) {
+		.equals(KTableBoundElementFactory.KTableWrapper.class)) {
 				return methodInvocation.getMethod().invoke(this,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else {
 				throw new IllegalStateException(
-						"Only KTable method invocations are permitted");
+			"Only KTable method invocations are permitted");
 			}
 		}
 

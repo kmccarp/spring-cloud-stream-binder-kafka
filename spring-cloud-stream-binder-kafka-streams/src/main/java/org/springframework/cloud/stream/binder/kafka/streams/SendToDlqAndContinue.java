@@ -52,7 +52,7 @@ public class SendToDlqAndContinue implements ConsumerRecordRecoverer {
 	}
 
 	void addKStreamDlqDispatch(String topic,
-			DeadLetterPublishingRecoverer kafkaStreamsDlqDispatch) {
+DeadLetterPublishingRecoverer kafkaStreamsDlqDispatch) {
 		this.dlqDispatchers.put(topic, kafkaStreamsDlqDispatch);
 	}
 

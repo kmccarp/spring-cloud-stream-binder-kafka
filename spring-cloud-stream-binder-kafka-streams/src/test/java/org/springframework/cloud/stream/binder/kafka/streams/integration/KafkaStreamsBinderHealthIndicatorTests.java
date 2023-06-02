@@ -64,10 +64,10 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"out", "out2");
+"out", "out2");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	@BeforeClass
 	public static void setUp() {
@@ -78,9 +78,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public void healthIndicatorUpTest() throws Exception {
 		try (ConfigurableApplicationContext context = singleStream("ApplicationHealthTest-xyz")) {
 			receive(context,
-					Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
-							new ProducerRecord<>("in", "{\"id\":\"123\"}")),
-					Status.UP, "out");
+		Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
+	new ProducerRecord<>("in", "{\"id\":\"123\"}")),
+		Status.UP, "out");
 		}
 	}
 
@@ -90,9 +90,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 			int callsToPerform = 5;
 			for (int i = 0; i < callsToPerform; i++) {
 				receive(context,
-						Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
-								new ProducerRecord<>("in", "{\"id\":\"123\"}")),
-						Status.UP, "out");
+			Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
+		new ProducerRecord<>("in", "{\"id\":\"123\"}")),
+			Status.UP, "out");
 			}
 		}
 	}
@@ -101,9 +101,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public void healthIndicatorDownTest() throws Exception {
 		try (ConfigurableApplicationContext context = singleStream("ApplicationHealthTest-xyzabc")) {
 			receive(context,
-					Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
-							new ProducerRecord<>("in", "{\"id\":\"124\"}")),
-					Status.DOWN, "out");
+		Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
+	new ProducerRecord<>("in", "{\"id\":\"124\"}")),
+		Status.DOWN, "out");
 		}
 	}
 
@@ -111,9 +111,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public void healthIndicatorUpMultipleKStreamsTest() throws Exception {
 		try (ConfigurableApplicationContext context = multipleStream()) {
 			receive(context,
-					Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
-							new ProducerRecord<>("in2", "{\"id\":\"123\"}")),
-					Status.UP, "out", "out2");
+		Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
+	new ProducerRecord<>("in2", "{\"id\":\"123\"}")),
+		Status.UP, "out", "out2");
 		}
 	}
 
@@ -121,9 +121,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public void healthIndicatorDownMultipleKStreamsTest() throws Exception {
 		try (ConfigurableApplicationContext context = multipleStream()) {
 			receive(context,
-					Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
-							new ProducerRecord<>("in2", "{\"id\":\"124\"}")),
-					Status.DOWN, "out", "out2");
+		Lists.newArrayList(new ProducerRecord<>("in", "{\"id\":\"123\"}"),
+	new ProducerRecord<>("in2", "{\"id\":\"124\"}")),
+		Status.DOWN, "out", "out2");
 		}
 	}
 
@@ -131,45 +131,45 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 		if (status == Status.UP) {
 			String threadState = (String) details.get("threadState");
 			return threadState != null
-					&& (threadState.equalsIgnoreCase(KafkaStreams.State.REBALANCING.name())
-							|| threadState.equalsIgnoreCase("PARTITIONS_REVOKED")
-							|| threadState.equalsIgnoreCase("PARTITIONS_ASSIGNED")
-							|| threadState.equalsIgnoreCase(
-									KafkaStreams.State.PENDING_SHUTDOWN.name()));
+		&& (threadState.equalsIgnoreCase(KafkaStreams.State.REBALANCING.name())
+		|| threadState.equalsIgnoreCase("PARTITIONS_REVOKED")
+		|| threadState.equalsIgnoreCase("PARTITIONS_ASSIGNED")
+		|| threadState.equalsIgnoreCase(
+		KafkaStreams.State.PENDING_SHUTDOWN.name()));
 		}
 		return false;
 	}
 
 	private void receive(ConfigurableApplicationContext context,
-			List<ProducerRecord<Integer, String>> records, Status expected,
-			String... topics) throws Exception {
+List<ProducerRecord<Integer, String>> records, Status expected,
+String... topics) throws Exception {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-id0",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(
-				consumerProps);
+	consumerProps);
 
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		try (Consumer<String, String> consumer = cf.createConsumer()) {
 			KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 			CountDownLatch latch = new CountDownLatch(records.size());
 			for (ProducerRecord<Integer, String> record : records) {
 				ListenableFuture<SendResult<Integer, String>> future = template
-						.send(record);
+			.send(record);
 				future.addCallback(
-						new ListenableFutureCallback<SendResult<Integer, String>>() {
-							@Override
-							public void onFailure(Throwable ex) {
-								Assert.fail();
-							}
+			new ListenableFutureCallback<SendResult<Integer, String>>() {
+				@Override
+				public void onFailure(Throwable ex) {
+					Assert.fail();
+				}
 
-							@Override
-							public void onSuccess(SendResult<Integer, String> result) {
-								latch.countDown();
-							}
-						});
+				@Override
+				public void onSuccess(SendResult<Integer, String> result) {
+					latch.countDown();
+				}
+			});
 			}
 
 			latch.await(5, TimeUnit.SECONDS);
@@ -186,9 +186,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	}
 
 	private static void checkHealth(ConfigurableApplicationContext context,
-			Status expected) throws InterruptedException {
+Status expected) throws InterruptedException {
 		CompositeHealthContributor healthIndicator = context
-				.getBean("bindersHealthContributor", CompositeHealthContributor.class);
+	.getBean("bindersHealthContributor", CompositeHealthContributor.class);
 		KafkaStreamsBinderHealthIndicator kafkaStreamsBinderHealthIndicator = (KafkaStreamsBinderHealthIndicator) healthIndicator.getContributor("kstream");
 		Health health = kafkaStreamsBinderHealthIndicator.health();
 		while (waitFor(health.getStatus(), health.getDetails())) {
@@ -202,19 +202,19 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 		SpringApplication app = new SpringApplication(KStreamApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		return app.run("--server.port=0", "--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.function.bindings.process-out-0=output",
-				"--spring.cloud.stream.bindings.input.destination=in",
-				"--spring.cloud.stream.bindings.output.destination=out",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde="
-						+ "org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde="
-						+ "org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId="
-						+ applicationId,
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.function.bindings.process-out-0=output",
+	"--spring.cloud.stream.bindings.input.destination=in",
+	"--spring.cloud.stream.bindings.output.destination=out",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde="
++ "org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde="
++ "org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId="
++ applicationId,
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 	}
 
 	private ConfigurableApplicationContext multipleStream() {
@@ -222,26 +222,26 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 		SpringApplication app = new SpringApplication(AnotherKStreamApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		return app.run("--server.port=0", "--spring.jmx.enabled=false",
-				"--spring.cloud.function.definition=process;process2",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.function.bindings.process-out-0=output",
-				"--spring.cloud.stream.function.bindings.process2-in-0=input2",
-				"--spring.cloud.stream.function.bindings.process2-out-0=output2",
-				"--spring.cloud.stream.bindings.input.destination=in",
-				"--spring.cloud.stream.bindings.output.destination=out",
-				"--spring.cloud.stream.bindings.input2.destination=in2",
-				"--spring.cloud.stream.bindings.output2.destination=out2",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde="
-						+ "org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde="
-						+ "org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId="
-						+ "ApplicationHealthTest-xyz",
-				"--spring.cloud.stream.kafka.streams.bindings.input2.consumer.applicationId="
-						+ "ApplicationHealthTest2-xyz",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.cloud.function.definition=process;process2",
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.function.bindings.process-out-0=output",
+	"--spring.cloud.stream.function.bindings.process2-in-0=input2",
+	"--spring.cloud.stream.function.bindings.process2-out-0=output2",
+	"--spring.cloud.stream.bindings.input.destination=in",
+	"--spring.cloud.stream.bindings.output.destination=out",
+	"--spring.cloud.stream.bindings.input2.destination=in2",
+	"--spring.cloud.stream.bindings.output2.destination=out2",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde="
++ "org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde="
++ "org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId="
++ "ApplicationHealthTest-xyz",
+	"--spring.cloud.stream.kafka.streams.bindings.input2.consumer.applicationId="
++ "ApplicationHealthTest2-xyz",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 	}
 
 	@EnableAutoConfiguration
@@ -289,7 +289,7 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 					@Override
 					public void customize(KafkaStreams kafkaStreams) {
 						kafkaStreams.setUncaughtExceptionHandler(exception ->
-								StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
+					StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
 					}
 				});
 			};

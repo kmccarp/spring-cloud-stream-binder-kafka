@@ -52,8 +52,8 @@ public class KafkaStreamsTopologyEndpoint {
 		final StringBuilder topologyDescription = new StringBuilder();
 		final List<String> descs = new ArrayList<>();
 		streamsBuilderFactoryBeans.stream()
-				.forEach(streamsBuilderFactoryBean ->
-						descs.add(streamsBuilderFactoryBean.getTopology().describe().toString()));
+	.forEach(streamsBuilderFactoryBean ->
+descs.add(streamsBuilderFactoryBean.getTopology().describe().toString()));
 		return descs;
 	}
 

@@ -51,9 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Soby Chacko
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-		"spring.kafka.consumer.auto-offset-reset=earliest",
-		"spring.cloud.stream.function.bindings.inputListen-in-0=kafkaNullInput"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.kafka.consumer.auto-offset-reset=earliest","spring.cloud.stream.function.bindings.inputListen-in-0=kafkaNullInput"})
 @DirtiesContext
 public class KafkaNullConverterTest {
 
@@ -71,7 +69,7 @@ public class KafkaNullConverterTest {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
+	kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass

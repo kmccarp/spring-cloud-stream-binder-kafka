@@ -54,7 +54,7 @@ public class FunctionDetectorCondition extends SpringBootCondition {
 
 	private static final Log LOG = LogFactory.getLog(FunctionDetectorCondition.class);
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 		if (context != null &&  context.getBeanFactory() != null) {
@@ -83,14 +83,14 @@ public class FunctionDetectorCondition extends SpringBootCondition {
 	}
 
 	private static List<String> pruneFunctionBeansForKafkaStreams(List<String> functionComponents,
-																		ConditionContext context) {
+ConditionContext context) {
 		final List<String> prunedList = new ArrayList<>();
 
 		for (String key : functionComponents) {
 			final Class<?> classObj = ClassUtils.resolveClassName(((AnnotatedBeanDefinition)
-							context.getBeanFactory().getBeanDefinition(key))
-							.getMetadata().getClassName(),
-					ClassUtils.getDefaultClassLoader());
+	context.getBeanFactory().getBeanDefinition(key))
+	.getMetadata().getClassName(),
+		ClassUtils.getDefaultClassLoader());
 			try {
 
 				Method[] methods = classObj.getMethods();
@@ -113,8 +113,8 @@ public class FunctionDetectorCondition extends SpringBootCondition {
 				else {
 					//check if it is a @Component bean.
 					Optional<Method> componentBeanMethod = Arrays.stream(methods).filter(
-							m -> (m.getName().equals("apply") || m.getName().equals("accept"))
-									&& isKafkaStreamsTypeFound(m)).findFirst();
+				m -> (m.getName().equals("apply") || m.getName().equals("accept"))
+			&& isKafkaStreamsTypeFound(m)).findFirst();
 					if (componentBeanMethod.isPresent()) {
 						Method method = componentBeanMethod.get();
 						final ResolvableType resolvableType1 = ResolvableType.forMethodParameter(method, 0);
@@ -134,7 +134,7 @@ public class FunctionDetectorCondition extends SpringBootCondition {
 
 	private static boolean isKafkaStreamsTypeFound(Method method) {
 		return KStream.class.isAssignableFrom(method.getParameters()[0].getType()) ||
-				KTable.class.isAssignableFrom(method.getParameters()[0].getType()) ||
-				GlobalKTable.class.isAssignableFrom(method.getParameters()[0].getType());
+	KTable.class.isAssignableFrom(method.getParameters()[0].getType()) ||
+	GlobalKTable.class.isAssignableFrom(method.getParameters()[0].getType());
 	}
 }

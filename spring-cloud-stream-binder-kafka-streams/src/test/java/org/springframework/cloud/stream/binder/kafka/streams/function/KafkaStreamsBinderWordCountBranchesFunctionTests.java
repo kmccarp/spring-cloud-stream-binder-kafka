@@ -56,7 +56,7 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts", "foo", "bar");
+"counts", "foo", "bar");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -65,7 +65,7 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("groupx", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
 		consumer = cf.createConsumer();
@@ -83,23 +83,23 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.bindings.input.destination=words",
-				"--spring.cloud.stream.function.bindings.process-out-0=output1",
-				"--spring.cloud.stream.bindings.output1.destination=counts",
-				"--spring.cloud.stream.function.bindings.process-out-1=output2",
-				"--spring.cloud.stream.bindings.output2.destination=foo",
-				"--spring.cloud.stream.function.bindings.process-out-2=output3",
-				"--spring.cloud.stream.bindings.output3.destination=bar",
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.bindings.input.destination=words",
+	"--spring.cloud.stream.function.bindings.process-out-0=output1",
+	"--spring.cloud.stream.bindings.output1.destination=counts",
+	"--spring.cloud.stream.function.bindings.process-out-1=output2",
+	"--spring.cloud.stream.bindings.output2.destination=foo",
+	"--spring.cloud.stream.function.bindings.process-out-2=output3",
+	"--spring.cloud.stream.bindings.output3.destination=bar",
 
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.applicationId" +
-						"=KafkaStreamsBinderWordCountBranchesFunctionTests-abc",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString());
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.applicationId" +
+"=KafkaStreamsBinderWordCountBranchesFunctionTests-abc",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString());
 		try {
 			receiveAndValidate(context);
 		}
@@ -192,18 +192,18 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 
 			return input -> {
 				final Map<String, KStream<Object, WordCount>> stringKStreamMap = input
-						.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
-						.groupBy((key, value) -> value)
-						.windowedBy(TimeWindows.of(Duration.ofSeconds(5)))
-						.count(Materialized.as("WordCounts-branch"))
-						.toStream()
-						.map((key, value) -> new KeyValue<>(null, new WordCount(key.key(), value,
-								new Date(key.window().start()), new Date(key.window().end()))))
-						.split()
-						.branch(isEnglish)
-						.branch(isFrench)
-						.branch(isSpanish)
-						.noDefaultBranch();
+			.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+			.groupBy((key, value) -> value)
+			.windowedBy(TimeWindows.of(Duration.ofSeconds(5)))
+			.count(Materialized.as("WordCounts-branch"))
+			.toStream()
+			.map((key, value) -> new KeyValue<>(null, new WordCount(key.key(), value,
+		new Date(key.window().start()), new Date(key.window().end()))))
+			.split()
+			.branch(isEnglish)
+			.branch(isFrench)
+			.branch(isSpanish)
+			.noDefaultBranch();
 
 				return stringKStreamMap.values().toArray(new KStream[0]);
 			};

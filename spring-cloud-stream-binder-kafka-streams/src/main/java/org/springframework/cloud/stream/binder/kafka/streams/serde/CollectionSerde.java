@@ -93,9 +93,9 @@ public class CollectionSerde<E> implements Serde<Collection<E>> {
 	public CollectionSerde(Serde<E> serde, Class<?> collectionsClass) {
 		this.collectionClass = collectionsClass;
 		this.inner =
-				Serdes.serdeFrom(
-						new CollectionSerializer<>(serde.serializer()),
-						new CollectionDeserializer<>(serde.deserializer(), collectionsClass));
+	Serdes.serdeFrom(
+new CollectionSerializer<>(serde.serializer()),
+new CollectionDeserializer<>(serde.deserializer(), collectionsClass));
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class CollectionSerde<E> implements Serde<Collection<E>> {
 		try (JsonSerde<E> jsonSerde = new JsonSerde(targetTypeForJsonSerde)) {
 
 			this.inner = Serdes.serdeFrom(
-					new CollectionSerializer<>(jsonSerde.serializer()),
-					new CollectionDeserializer<>(jsonSerde.deserializer(), collectionsClass));
+		new CollectionSerializer<>(jsonSerde.serializer()),
+		new CollectionDeserializer<>(jsonSerde.deserializer(), collectionsClass));
 		}
 	}
 
@@ -146,7 +146,8 @@ public class CollectionSerde<E> implements Serde<Collection<E>> {
 			this.inner = inner;
 		}
 
-		CollectionSerializer() { }
+		CollectionSerializer() {
+		}
 
 		@Override
 		public void configure(Map<String, ?> configs, boolean isKey) {

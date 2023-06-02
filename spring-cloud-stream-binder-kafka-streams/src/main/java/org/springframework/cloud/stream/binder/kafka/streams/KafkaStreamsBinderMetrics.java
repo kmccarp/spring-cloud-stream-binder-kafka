@@ -144,9 +144,9 @@ public class KafkaStreamsBinderMetrics {
 
 	private void registerCounter(MeterRegistry registry, Metric metric, String name, Iterable<Tag> tags) {
 		FunctionCounter.builder(name, metric, toMetricValue())
-				.tags(tags)
-				.description(metric.metricName().description())
-				.register(registry);
+	.tags(tags)
+	.description(metric.metricName().description())
+	.register(registry);
 	}
 
 	private ToDoubleFunction<Metric> toMetricValue() {
@@ -155,9 +155,9 @@ public class KafkaStreamsBinderMetrics {
 
 	private void registerGauge(MeterRegistry registry, Metric metric, String name, Iterable<Tag> tags) {
 		Gauge.builder(name, metric, toMetricValue())
-				.tags(tags)
-				.description(metric.metricName().description())
-				.register(registry);
+	.tags(tags)
+	.description(metric.metricName().description())
+	.register(registry);
 	}
 
 	private List<Tag> meterTags(Metric metric) {
@@ -217,7 +217,7 @@ public class KafkaStreamsBinderMetrics {
 					if (tags.size() < meterTagsWithCommonTags.size()) {
 						registry.remove(other);
 					}
-						// Check if already exists
+					// Check if already exists
 					else if (tags.size() == meterTagsWithCommonTags.size()) {
 						if (tags.equals(meterTagsWithCommonTags)) {
 							return;

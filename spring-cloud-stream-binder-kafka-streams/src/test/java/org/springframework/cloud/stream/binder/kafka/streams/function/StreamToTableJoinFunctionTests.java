@@ -76,7 +76,7 @@ public class StreamToTableJoinFunctionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1,
-			true, "output-topic-1", "output-topic-2", "user-clicks-2", "user-regions-2");
+true, "output-topic-1", "output-topic-2", "user-clicks-2", "user-regions-2");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -87,7 +87,7 @@ public class StreamToTableJoinFunctionTests {
 
 		Consumer<String, Long> consumer;
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-1",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
@@ -105,7 +105,7 @@ public class StreamToTableJoinFunctionTests {
 
 		Consumer<String, Long> consumer;
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-2",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
@@ -123,7 +123,7 @@ public class StreamToTableJoinFunctionTests {
 
 		Consumer<String, Long> consumer;
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-2",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
@@ -132,21 +132,21 @@ public class StreamToTableJoinFunctionTests {
 		embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "output-topic-1");
 
 		try (ConfigurableApplicationContext ignored = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-1",
-				"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-1",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.applicationId" +
-						"=testStreamToTableBiConsumer",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-1",
+	"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-1",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.applicationId" +
+"=testStreamToTableBiConsumer",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			// Input 1: Region per user (multiple records allowed per user).
 			List<KeyValue<String, String>> userRegions = Arrays.asList(
-					new KeyValue<>("alice", "asia")
+		new KeyValue<>("alice", "asia")
 			);
 
 			Map<String, Object> senderProps1 = KafkaTestUtils.producerProps(embeddedKafka);
@@ -163,7 +163,7 @@ public class StreamToTableJoinFunctionTests {
 
 			// Input 2: Clicks per user (multiple records allowed per user).
 			List<KeyValue<String, Long>> userClicks = Arrays.asList(
-					new KeyValue<>("alice", 13L)
+		new KeyValue<>("alice", 13L)
 			);
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
@@ -188,30 +188,30 @@ public class StreamToTableJoinFunctionTests {
 
 	private void runTest(SpringApplication app, Consumer<String, Long> consumer) {
 		try (ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-1",
-				"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-1",
-				"--spring.cloud.stream.bindings.process-out-0.destination=output-topic-1",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.applicationId" +
-						"=StreamToTableJoinFunctionTests-abc",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-1.consumer.topic.properties.cleanup.policy=compact",
-				"--spring.cloud.stream.kafka.streams.bindings.process-out-0.producer.topic.properties.cleanup.policy=compact",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-1",
+	"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-1",
+	"--spring.cloud.stream.bindings.process-out-0.destination=output-topic-1",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.applicationId" +
+"=StreamToTableJoinFunctionTests-abc",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-1.consumer.topic.properties.cleanup.policy=compact",
+	"--spring.cloud.stream.kafka.streams.bindings.process-out-0.producer.topic.properties.cleanup.policy=compact",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			// Input 1: Region per user (multiple records allowed per user).
 			List<KeyValue<String, String>> userRegions = Arrays.asList(
-					new KeyValue<>("alice", "asia"),   /* Alice lived in Asia originally... */
-					new KeyValue<>("bob", "americas"),
-					new KeyValue<>("chao", "asia"),
-					new KeyValue<>("dave", "europe"),
-					new KeyValue<>("alice", "europe"), /* ...but moved to Europe some time later. */
-					new KeyValue<>("eve", "americas"),
-					new KeyValue<>("fang", "asia")
+		new KeyValue<>("alice", "asia"),   /* Alice lived in Asia originally... */
+		new KeyValue<>("bob", "americas"),
+		new KeyValue<>("chao", "asia"),
+		new KeyValue<>("dave", "europe"),
+		new KeyValue<>("alice", "europe"), /* ...but moved to Europe some time later. */
+		new KeyValue<>("eve", "americas"),
+		new KeyValue<>("fang", "asia")
 			);
 
 			Map<String, Object> senderProps1 = KafkaTestUtils.producerProps(embeddedKafka);
@@ -228,14 +228,14 @@ public class StreamToTableJoinFunctionTests {
 
 			// Input 2: Clicks per user (multiple records allowed per user).
 			List<KeyValue<String, Long>> userClicks = Arrays.asList(
-					new KeyValue<>("alice", 13L),
-					new KeyValue<>("bob", 4L),
-					new KeyValue<>("chao", 25L),
-					new KeyValue<>("bob", 19L),
-					new KeyValue<>("dave", 56L),
-					new KeyValue<>("eve", 78L),
-					new KeyValue<>("alice", 40L),
-					new KeyValue<>("fang", 99L)
+		new KeyValue<>("alice", 13L),
+		new KeyValue<>("bob", 4L),
+		new KeyValue<>("chao", 25L),
+		new KeyValue<>("bob", 19L),
+		new KeyValue<>("dave", 56L),
+		new KeyValue<>("eve", 78L),
+		new KeyValue<>("alice", 40L),
+		new KeyValue<>("fang", 99L)
 			);
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
@@ -251,9 +251,9 @@ public class StreamToTableJoinFunctionTests {
 			}
 
 			List<KeyValue<String, Long>> expectedClicksPerRegion = Arrays.asList(
-					new KeyValue<>("americas", 101L),
-					new KeyValue<>("europe", 109L),
-					new KeyValue<>("asia", 124L)
+		new KeyValue<>("americas", 101L),
+		new KeyValue<>("europe", 109L),
+		new KeyValue<>("asia", 124L)
 			);
 
 			//Verify that we receive the expected data
@@ -274,22 +274,22 @@ public class StreamToTableJoinFunctionTests {
 			// Testing certain ancillary configuration of GlobalKTable around topics creation.
 			// See this issue: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/687
 			BinderFactory binderFactory = context.getBeanFactory()
-					.getBean(BinderFactory.class);
+		.getBean(BinderFactory.class);
 
 			Binder<KTable, ? extends ConsumerProperties, ? extends ProducerProperties> ktableBinder = binderFactory
-					.getBinder("ktable", KTable.class);
+		.getBinder("ktable", KTable.class);
 
 			KafkaStreamsConsumerProperties inputX = (KafkaStreamsConsumerProperties) ((ExtendedPropertiesBinder) ktableBinder)
-					.getExtendedConsumerProperties("process-in-1");
+		.getExtendedConsumerProperties("process-in-1");
 			String cleanupPolicyX = inputX.getTopic().getProperties().get("cleanup.policy");
 
 			assertThat(cleanupPolicyX).isEqualTo("compact");
 
 			Binder<KStream, ? extends ConsumerProperties, ? extends ProducerProperties> kStreamBinder = binderFactory
-					.getBinder("kstream", KStream.class);
+		.getBinder("kstream", KStream.class);
 
 			KafkaStreamsProducerProperties producerProperties = (KafkaStreamsProducerProperties) ((ExtendedPropertiesBinder) kStreamBinder)
-					.getExtendedProducerProperties("process-out-0");
+		.getExtendedProducerProperties("process-out-0");
 
 			String cleanupPolicyOutput = producerProperties.getTopic().getProperties().get("cleanup.policy");
 
@@ -307,7 +307,7 @@ public class StreamToTableJoinFunctionTests {
 
 		Consumer<String, Long> consumer;
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-3",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
@@ -319,16 +319,16 @@ public class StreamToTableJoinFunctionTests {
 		// binding (which is set to earliest below).
 		// Input 1: Clicks per user (multiple records allowed per user).
 		List<KeyValue<String, Long>> userClicks = Arrays.asList(
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L),
-				new KeyValue<>("alice", 100L)
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L),
+	new KeyValue<>("alice", 100L)
 		);
 
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
@@ -344,35 +344,35 @@ public class StreamToTableJoinFunctionTests {
 		}
 
 		try (ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-2",
-				"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-2",
-				"--spring.cloud.stream.bindings.process-out-0.destination=output-topic-2",
-				"--spring.cloud.stream.bindings.process-in-0.consumer.useNativeDecoding=true",
-				"--spring.cloud.stream.bindings.process-in-1.consumer.useNativeDecoding=true",
-				"--spring.cloud.stream.bindings.process-out-0.producer.useNativeEncoding=true",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.auto.offset.reset=latest",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.startOffset=earliest",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id" +
-						"=StreamToTableJoinFunctionTests-foobar",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
-				"--spring.cloud.stream.kafka.streams.binder.zkNodes=" + embeddedKafka.getZookeeperConnectionString())) {
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.bindings.process-in-0.destination=user-clicks-2",
+	"--spring.cloud.stream.bindings.process-in-1.destination=user-regions-2",
+	"--spring.cloud.stream.bindings.process-out-0.destination=output-topic-2",
+	"--spring.cloud.stream.bindings.process-in-0.consumer.useNativeDecoding=true",
+	"--spring.cloud.stream.bindings.process-in-1.consumer.useNativeDecoding=true",
+	"--spring.cloud.stream.bindings.process-out-0.producer.useNativeEncoding=true",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.auto.offset.reset=latest",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.startOffset=earliest",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=10000",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id" +
+"=StreamToTableJoinFunctionTests-foobar",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
+	"--spring.cloud.stream.kafka.streams.binder.zkNodes=" + embeddedKafka.getZookeeperConnectionString())) {
 			Thread.sleep(1000L);
 
 			// Input 2: Region per user (multiple records allowed per user).
 			List<KeyValue<String, String>> userRegions = Arrays.asList(
-					new KeyValue<>("alice", "asia"),   /* Alice lived in Asia originally... */
-					new KeyValue<>("bob", "americas"),
-					new KeyValue<>("chao", "asia"),
-					new KeyValue<>("dave", "europe"),
-					new KeyValue<>("alice", "europe"), /* ...but moved to Europe some time later. */
-					new KeyValue<>("eve", "americas"),
-					new KeyValue<>("fang", "asia")
+		new KeyValue<>("alice", "asia"),   /* Alice lived in Asia originally... */
+		new KeyValue<>("bob", "americas"),
+		new KeyValue<>("chao", "asia"),
+		new KeyValue<>("dave", "europe"),
+		new KeyValue<>("alice", "europe"), /* ...but moved to Europe some time later. */
+		new KeyValue<>("eve", "americas"),
+		new KeyValue<>("fang", "asia")
 			);
 
 			Map<String, Object> senderProps1 = KafkaTestUtils.producerProps(embeddedKafka);
@@ -390,12 +390,12 @@ public class StreamToTableJoinFunctionTests {
 
 			// Input 1: Clicks per user (multiple records allowed per user).
 			List<KeyValue<String, Long>> userClicks1 = Arrays.asList(
-					new KeyValue<>("bob", 4L),
-					new KeyValue<>("chao", 25L),
-					new KeyValue<>("bob", 19L),
-					new KeyValue<>("dave", 56L),
-					new KeyValue<>("eve", 78L),
-					new KeyValue<>("fang", 99L)
+		new KeyValue<>("bob", 4L),
+		new KeyValue<>("chao", 25L),
+		new KeyValue<>("bob", 19L),
+		new KeyValue<>("dave", 56L),
+		new KeyValue<>("eve", 78L),
+		new KeyValue<>("fang", 99L)
 			);
 
 			for (KeyValue<String, Long> keyValue : userClicks1) {
@@ -403,13 +403,13 @@ public class StreamToTableJoinFunctionTests {
 			}
 
 			List<KeyValue<String, Long>> expectedClicksPerRegion = Arrays.asList(
-					new KeyValue<>("americas", 101L),
-					new KeyValue<>("europe", 56L),
-					new KeyValue<>("asia", 124L),
-					//1000 alice entries which were there in the topic before the consumer started.
-					//Since we set the startOffset to earliest for the topic, it will read them,
-					//but the join fails to associate with a valid region, thus UNKNOWN.
-					new KeyValue<>("UNKNOWN", 1000L)
+		new KeyValue<>("americas", 101L),
+		new KeyValue<>("europe", 56L),
+		new KeyValue<>("asia", 124L),
+		//1000 alice entries which were there in the topic before the consumer started.
+		//Since we set the startOffset to earliest for the topic, it will read them,
+		//but the join fails to associate with a valid region, thus UNKNOWN.
+		new KeyValue<>("UNKNOWN", 1000L)
 			);
 
 			//Verify that we receive the expected data
@@ -428,7 +428,7 @@ public class StreamToTableJoinFunctionTests {
 			// TODO: This behavior is only observed after the Spring Kafka upgrade to 2.5.0 and kafka client to 2.5.
 			// TODO: Note that the test passes fine as a single test.
 			assertThat(count).matches(
-					matchedCount -> matchedCount == expectedClicksPerRegion.size() - 1 || matchedCount == expectedClicksPerRegion.size());
+		matchedCount -> matchedCount == expectedClicksPerRegion.size() - 1 || matchedCount == expectedClicksPerRegion.size());
 			assertThat(actualClicksPerRegion).containsAnyElementsOf(expectedClicksPerRegion);
 		}
 		finally {
@@ -441,10 +441,10 @@ public class StreamToTableJoinFunctionTests {
 		SpringApplication app = new SpringApplication(TrivialKTableApp.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		app.run("--server.port=0",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString(),
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=" +
-						"testTrivialSingleKTableInputAsNonDeclarative");
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString(),
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=" +
+"testTrivialSingleKTableInputAsNonDeclarative");
 		//All we are verifying is that this application didn't throw any errors.
 		//See this issue: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/536
 	}
@@ -452,13 +452,13 @@ public class StreamToTableJoinFunctionTests {
 	@Test
 	public void testTwoKStreamsCanBeJoined() {
 		SpringApplication app = new SpringApplication(
-				JoinProcessor.class);
+	JoinProcessor.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		app.run("--server.port=0",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString(),
-				"--spring.application.name=" +
-						"two-kstream-input-join-integ-test");
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString(),
+	"--spring.application.name=" +
+"two-kstream-input-join-integ-test");
 		//All we are verifying is that this application didn't throw any errors.
 		//See this issue: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/701
 	}
@@ -499,14 +499,14 @@ public class StreamToTableJoinFunctionTests {
 		@Bean
 		public Function<KStream<String, Long>, Function<KTable<String, String>, KStream<String, Long>>> process() {
 			return userClicksStream -> (userRegionsTable -> (userClicksStream
-					.leftJoin(userRegionsTable, (clicks, region) -> new RegionWithClicks(region == null ?
-									"UNKNOWN" : region, clicks),
-							Joined.with(Serdes.String(), Serdes.Long(), null))
-					.map((user, regionWithClicks) -> new KeyValue<>(regionWithClicks.getRegion(),
-							regionWithClicks.getClicks()))
-					.groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
-					.reduce(Long::sum, Materialized.as("CountClicks-" + UUID.randomUUID()))
-					.toStream()));
+		.leftJoin(userRegionsTable, (clicks, region) -> new RegionWithClicks(region == null ?
+"UNKNOWN" : region, clicks),
+	Joined.with(Serdes.String(), Serdes.Long(), null))
+		.map((user, regionWithClicks) -> new KeyValue<>(regionWithClicks.getRegion(),
+	regionWithClicks.getClicks()))
+		.groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
+		.reduce(Long::sum, Materialized.as("CountClicks-" + UUID.randomUUID()))
+		.toStream()));
 		}
 
 		@Bean
@@ -521,14 +521,14 @@ public class StreamToTableJoinFunctionTests {
 		@Bean
 		public BiFunction<KStream<String, Long>, KTable<String, String>, KStream<String, Long>> process() {
 			return (userClicksStream, userRegionsTable) -> (userClicksStream
-					.leftJoin(userRegionsTable, (clicks, region) -> new RegionWithClicks(region == null ?
-									"UNKNOWN" : region, clicks),
-							Joined.with(Serdes.String(), Serdes.Long(), null))
-					.map((user, regionWithClicks) -> new KeyValue<>(regionWithClicks.getRegion(),
-							regionWithClicks.getClicks()))
-					.groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
-					.reduce(Long::sum, Materialized.as("CountClicks-" + UUID.randomUUID()))
-					.toStream());
+		.leftJoin(userRegionsTable, (clicks, region) -> new RegionWithClicks(region == null ?
+"UNKNOWN" : region, clicks),
+	Joined.with(Serdes.String(), Serdes.Long(), null))
+		.map((user, regionWithClicks) -> new KeyValue<>(regionWithClicks.getRegion(),
+	regionWithClicks.getClicks()))
+		.groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
+		.reduce(Long::sum, Materialized.as("CountClicks-" + UUID.randomUUID()))
+		.toStream());
 		}
 
 		@Bean
@@ -564,15 +564,15 @@ public class StreamToTableJoinFunctionTests {
 
 		public BiConsumer<KStream<String, String>, KStream<String, String>> testProcessor() {
 			return (input1Stream, input2Stream) -> input1Stream
-					.join(input2Stream,
-							(event1, event2) -> null,
-							JoinWindows.of(Duration.ofMillis(5)),
-							StreamJoined.with(
-									Serdes.String(),
-									Serdes.String(),
-									Serdes.String()
-							)
-					);
+		.join(input2Stream,
+	(event1, event2) -> null,
+	JoinWindows.of(Duration.ofMillis(5)),
+	StreamJoined.with(
+Serdes.String(),
+Serdes.String(),
+Serdes.String()
+	)
+		);
 		}
 	}
 

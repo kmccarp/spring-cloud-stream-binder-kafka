@@ -42,40 +42,40 @@ public class KafkaBinderEnvironmentPostProcessor implements EnvironmentPostProce
 	private static final String SPRING_KAFKA_CONSUMER = SPRING_KAFKA + ".consumer";
 
 	private static final String SPRING_KAFKA_PRODUCER_KEY_SERIALIZER = SPRING_KAFKA_PRODUCER
-			+ "." + "keySerializer";
++ "." + "keySerializer";
 
 	private static final String SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER = SPRING_KAFKA_PRODUCER
-			+ "." + "valueSerializer";
++ "." + "valueSerializer";
 
 	private static final String SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER = SPRING_KAFKA_CONSUMER
-			+ "." + "keyDeserializer";
++ "." + "keyDeserializer";
 
 	private static final String SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER = SPRING_KAFKA_CONSUMER
-			+ "." + "valueDeserializer";
++ "." + "valueDeserializer";
 
 	private static final String KAFKA_BINDER_DEFAULT_PROPERTIES = "kafkaBinderDefaultProperties";
 
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment,
-			SpringApplication application) {
+SpringApplication application) {
 		if (!environment.getPropertySources().contains(KAFKA_BINDER_DEFAULT_PROPERTIES)) {
 			Map<String, Object> kafkaBinderDefaultProperties = new HashMap<>();
 			kafkaBinderDefaultProperties.put("logging.level.org.I0Itec.zkclient",
-					"ERROR");
+		"ERROR");
 			kafkaBinderDefaultProperties.put("logging.level.kafka.server.KafkaConfig",
-					"ERROR");
+		"ERROR");
 			kafkaBinderDefaultProperties
-					.put("logging.level.kafka.admin.AdminClient.AdminConfig", "ERROR");
+		.put("logging.level.kafka.admin.AdminClient.AdminConfig", "ERROR");
 			kafkaBinderDefaultProperties.put(SPRING_KAFKA_PRODUCER_KEY_SERIALIZER,
-					ByteArraySerializer.class.getName());
+		ByteArraySerializer.class.getName());
 			kafkaBinderDefaultProperties.put(SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER,
-					ByteArraySerializer.class.getName());
+		ByteArraySerializer.class.getName());
 			kafkaBinderDefaultProperties.put(SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER,
-					ByteArrayDeserializer.class.getName());
+		ByteArrayDeserializer.class.getName());
 			kafkaBinderDefaultProperties.put(SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER,
-					ByteArrayDeserializer.class.getName());
+		ByteArrayDeserializer.class.getName());
 			environment.getPropertySources().addLast(new MapPropertySource(
-					KAFKA_BINDER_DEFAULT_PROPERTIES, kafkaBinderDefaultProperties));
+		KAFKA_BINDER_DEFAULT_PROPERTIES, kafkaBinderDefaultProperties));
 		}
 	}
 

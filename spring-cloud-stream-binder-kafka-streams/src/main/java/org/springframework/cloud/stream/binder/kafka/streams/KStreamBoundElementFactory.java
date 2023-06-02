@@ -46,8 +46,8 @@ class KStreamBoundElementFactory extends AbstractBindingTargetFactory<KStream> {
 	private final EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler;
 
 	KStreamBoundElementFactory(BindingServiceProperties bindingServiceProperties,
-							KafkaStreamsBindingInformationCatalogue KafkaStreamsBindingInformationCatalogue,
-							EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler) {
+KafkaStreamsBindingInformationCatalogue KafkaStreamsBindingInformationCatalogue,
+EncodingDecodingBindAdviceHandler encodingDecodingBindAdviceHandler) {
 		super(KStream.class);
 		this.bindingServiceProperties = bindingServiceProperties;
 		this.kafkaStreamsBindingInformationCatalogue = KafkaStreamsBindingInformationCatalogue;
@@ -100,9 +100,9 @@ class KStreamBoundElementFactory extends AbstractBindingTargetFactory<KStream> {
 		// Add the binding properties to the catalogue for later retrieval during further
 		// binding steps downstream.
 		BindingProperties bindingProperties = this.bindingServiceProperties
-				.getBindingProperties(name);
+	.getBindingProperties(name);
 		this.kafkaStreamsBindingInformationCatalogue.registerBindingProperties(proxy,
-				bindingProperties);
+	bindingProperties);
 		this.kafkaStreamsBindingInformationCatalogue.addBindingNamePerTarget(proxy, name);
 		return proxy;
 	}
@@ -117,7 +117,7 @@ class KStreamBoundElementFactory extends AbstractBindingTargetFactory<KStream> {
 	}
 
 	static class KStreamWrapperHandler
-			implements KStreamWrapper, MethodInterceptor {
+implements KStreamWrapper, MethodInterceptor {
 
 		private KStream<Object, Object> delegate;
 
@@ -132,19 +132,19 @@ class KStreamBoundElementFactory extends AbstractBindingTargetFactory<KStream> {
 		public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 			if (methodInvocation.getMethod().getDeclaringClass().equals(KStream.class)) {
 				Assert.notNull(this.delegate,
-						"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
-								+ "  but no delegate has been set.");
+			"Trying to prepareConsumerBinding " + methodInvocation.getMethod()
+		+ "  but no delegate has been set.");
 				return methodInvocation.getMethod().invoke(this.delegate,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else if (methodInvocation.getMethod().getDeclaringClass()
-					.equals(KStreamWrapper.class)) {
+		.equals(KStreamWrapper.class)) {
 				return methodInvocation.getMethod().invoke(this,
-						methodInvocation.getArguments());
+			methodInvocation.getArguments());
 			}
 			else {
 				throw new IllegalStateException(
-						"Only KStream method invocations are permitted");
+			"Only KStream method invocations are permitted");
 			}
 		}
 

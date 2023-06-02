@@ -40,29 +40,26 @@ import org.springframework.context.annotation.Import;
  */
 @SuppressWarnings("ALL")
 @Configuration
-@Import({ KafkaAutoConfiguration.class,
-		MultiBinderPropertiesConfiguration.class,
-		KafkaStreamsBinderHealthIndicatorConfiguration.class,
-		KafkaStreamsJaasConfiguration.class})
+@Import({KafkaAutoConfiguration.class,MultiBinderPropertiesConfiguration.class,KafkaStreamsBinderHealthIndicatorConfiguration.class,KafkaStreamsJaasConfiguration.class})
 public class KTableBinderConfiguration {
 
 	@Bean
 	public KafkaTopicProvisioner provisioningProvider(
-			KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
-			KafkaProperties kafkaProperties, ObjectProvider<AdminClientConfigCustomizer> adminClientConfigCustomizer) {
+KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
+KafkaProperties kafkaProperties, ObjectProvider<AdminClientConfigCustomizer> adminClientConfigCustomizer) {
 		return new KafkaTopicProvisioner(binderConfigurationProperties, kafkaProperties, adminClientConfigCustomizer.getIfUnique());
 	}
 
 	@Bean
 	public KTableBinder kTableBinder(
-			KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
-			KafkaTopicProvisioner kafkaTopicProvisioner,
-			KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties,
-			KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
-			@Qualifier("streamConfigGlobalProperties") Map<String, Object> streamConfigGlobalProperties,
-			KafkaStreamsRegistry kafkaStreamsRegistry) {
+KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
+KafkaTopicProvisioner kafkaTopicProvisioner,
+KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties,
+KafkaStreamsBindingInformationCatalogue kafkaStreamsBindingInformationCatalogue,
+@Qualifier("streamConfigGlobalProperties") Map<String, Object> streamConfigGlobalProperties,
+KafkaStreamsRegistry kafkaStreamsRegistry) {
 		KTableBinder kTableBinder = new KTableBinder(binderConfigurationProperties,
-				kafkaTopicProvisioner, kafkaStreamsBindingInformationCatalogue, kafkaStreamsRegistry);
+	kafkaTopicProvisioner, kafkaStreamsBindingInformationCatalogue, kafkaStreamsRegistry);
 		kTableBinder.setKafkaStreamsExtendedBindingProperties(kafkaStreamsExtendedBindingProperties);
 		return kTableBinder;
 	}
@@ -76,16 +73,16 @@ public class KTableBinderConfiguration {
 			// registered as first
 			// and as independent from the parent context.
 			ApplicationContext outerContext = (ApplicationContext) beanFactory
-					.getBean("outerContext");
+		.getBean("outerContext");
 			beanFactory.registerSingleton(
-					KafkaStreamsExtendedBindingProperties.class.getSimpleName(),
-					outerContext.getBean(KafkaStreamsExtendedBindingProperties.class));
+		KafkaStreamsExtendedBindingProperties.class.getSimpleName(),
+		outerContext.getBean(KafkaStreamsExtendedBindingProperties.class));
 			beanFactory.registerSingleton(
-					KafkaStreamsBindingInformationCatalogue.class.getSimpleName(),
-					outerContext.getBean(KafkaStreamsBindingInformationCatalogue.class));
+		KafkaStreamsBindingInformationCatalogue.class.getSimpleName(),
+		outerContext.getBean(KafkaStreamsBindingInformationCatalogue.class));
 			beanFactory.registerSingleton(
-					KafkaStreamsRegistry.class.getSimpleName(),
-					outerContext.getBean(KafkaStreamsRegistry.class));
+		KafkaStreamsRegistry.class.getSimpleName(),
+		outerContext.getBean(KafkaStreamsRegistry.class));
 		};
 	}
 

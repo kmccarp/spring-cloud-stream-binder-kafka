@@ -29,8 +29,7 @@ import org.springframework.cloud.stream.binder.kafka.streams.DeserializationExce
  * @author Soby Chacko
  * @author Gary Russell
  */
-public class KafkaStreamsBinderConfigurationProperties
-		extends KafkaBinderConfigurationProperties {
+public class KafkaStreamsBinderConfigurationPropertiesextends KafkaBinderConfigurationProperties {
 
 	public KafkaStreamsBinderConfigurationProperties(KafkaProperties kafkaProperties) {
 		super(kafkaProperties);
@@ -107,17 +106,17 @@ public class KafkaStreamsBinderConfigurationProperties
 
 	@Deprecated
 	public void setSerdeError(
-			KafkaStreamsBinderConfigurationProperties.SerdeError serdeError) {
-			this.serdeError = serdeError;
-			if (serdeError == SerdeError.logAndContinue) {
-				this.deserializationExceptionHandler = DeserializationExceptionHandler.logAndContinue;
-			}
-			else if (serdeError == SerdeError.logAndFail) {
-				this.deserializationExceptionHandler = DeserializationExceptionHandler.logAndFail;
-			}
-			else if (serdeError == SerdeError.sendToDlq) {
-				this.deserializationExceptionHandler = DeserializationExceptionHandler.sendToDlq;
-			}
+KafkaStreamsBinderConfigurationProperties.SerdeError serdeError) {
+		this.serdeError = serdeError;
+		if (serdeError == SerdeError.logAndContinue) {
+			this.deserializationExceptionHandler = DeserializationExceptionHandler.logAndContinue;
+		}
+		else if (serdeError == SerdeError.logAndFail) {
+			this.deserializationExceptionHandler = DeserializationExceptionHandler.logAndFail;
+		}
+		else if (serdeError == SerdeError.sendToDlq) {
+			this.deserializationExceptionHandler = DeserializationExceptionHandler.sendToDlq;
+		}
 	}
 
 	public DeserializationExceptionHandler getDeserializationExceptionHandler() {

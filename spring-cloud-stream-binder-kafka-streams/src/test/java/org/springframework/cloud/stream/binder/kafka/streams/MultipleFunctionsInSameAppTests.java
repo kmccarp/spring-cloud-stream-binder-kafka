@@ -57,7 +57,7 @@ public class MultipleFunctionsInSameAppTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"coffee", "electronics");
+"coffee", "electronics");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -68,7 +68,7 @@ public class MultipleFunctionsInSameAppTests {
 	@BeforeClass
 	public static void setUp() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("purchase-groups", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
 		consumer = cf.createConsumer();
@@ -87,34 +87,34 @@ public class MultipleFunctionsInSameAppTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=process;analyze;anotherProcess;yetAnotherProcess",
-				"--spring.cloud.stream.bindings.process-in-0.destination=purchases",
-				"--spring.cloud.stream.bindings.process-out-0.destination=coffee",
-				"--spring.cloud.stream.bindings.process-out-1.destination=electronics",
-				"--spring.cloud.stream.bindings.analyze-in-0.destination=coffee",
-				"--spring.cloud.stream.bindings.analyze-in-1.destination=electronics",
-				"--spring.cloud.stream.kafka.streams.binder.functions.analyze.applicationId=analyze-id-0",
-				"--spring.cloud.stream.kafka.streams.binder.functions.process.applicationId=process-id-0",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.bindings.process-in-0.consumer.concurrency=2",
-				"--spring.cloud.stream.bindings.analyze-in-0.consumer.concurrency=1",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.num.stream.threads=3",
-				"--spring.cloud.stream.kafka.streams.binder.functions.process.configuration.client.id=process-client",
-				"--spring.cloud.stream.kafka.streams.binder.functions.analyze.configuration.client.id=analyze-client",
-				"--spring.cloud.stream.kafka.streams.binder.functions.anotherProcess.configuration.client.id=anotherProcess-client",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=process;analyze;anotherProcess;yetAnotherProcess",
+	"--spring.cloud.stream.bindings.process-in-0.destination=purchases",
+	"--spring.cloud.stream.bindings.process-out-0.destination=coffee",
+	"--spring.cloud.stream.bindings.process-out-1.destination=electronics",
+	"--spring.cloud.stream.bindings.analyze-in-0.destination=coffee",
+	"--spring.cloud.stream.bindings.analyze-in-1.destination=electronics",
+	"--spring.cloud.stream.kafka.streams.binder.functions.analyze.applicationId=analyze-id-0",
+	"--spring.cloud.stream.kafka.streams.binder.functions.process.applicationId=process-id-0",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.bindings.process-in-0.consumer.concurrency=2",
+	"--spring.cloud.stream.bindings.analyze-in-0.consumer.concurrency=1",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.num.stream.threads=3",
+	"--spring.cloud.stream.kafka.streams.binder.functions.process.configuration.client.id=process-client",
+	"--spring.cloud.stream.kafka.streams.binder.functions.analyze.configuration.client.id=analyze-client",
+	"--spring.cloud.stream.kafka.streams.binder.functions.anotherProcess.configuration.client.id=anotherProcess-client",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			receiveAndValidate("purchases", "coffee", "electronics");
 
 			StreamsBuilderFactoryBean processStreamsBuilderFactoryBean = context
-					.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
 
 			StreamsBuilderFactoryBean analyzeStreamsBuilderFactoryBean = context
-					.getBean("&stream-builder-analyze", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-analyze", StreamsBuilderFactoryBean.class);
 
 			StreamsBuilderFactoryBean anotherProcessStreamsBuilderFactoryBean = context
-					.getBean("&stream-builder-anotherProcess", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-anotherProcess", StreamsBuilderFactoryBean.class);
 
 			final Properties processStreamsConfiguration = processStreamsBuilderFactoryBean.getStreamsConfiguration();
 			final Properties analyzeStreamsConfiguration = analyzeStreamsBuilderFactoryBean.getStreamsConfiguration();
@@ -145,38 +145,38 @@ public class MultipleFunctionsInSameAppTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=process;analyze",
-				"--spring.cloud.stream.bindings.process-in-0.destination=purchases",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.startOffset=latest",
-				"--spring.cloud.stream.bindings.process-in-0.binder=kafka1",
-				"--spring.cloud.stream.bindings.process-out-0.destination=coffee",
-				"--spring.cloud.stream.bindings.process-out-0.binder=kafka1",
-				"--spring.cloud.stream.bindings.process-out-1.destination=electronics",
-				"--spring.cloud.stream.bindings.process-out-1.binder=kafka1",
-				"--spring.cloud.stream.bindings.analyze-in-0.destination=coffee",
-				"--spring.cloud.stream.bindings.analyze-in-0.binder=kafka2",
-				"--spring.cloud.stream.bindings.analyze-in-1.destination=electronics",
-				"--spring.cloud.stream.bindings.analyze-in-1.binder=kafka2",
-				"--spring.cloud.stream.bindings.analyze-in-0.consumer.concurrency=2",
-				"--spring.cloud.stream.binders.kafka1.type=kstream",
-				"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
-				"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.applicationId=my-app-1",
-				"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.configuration.client.id=process-client",
-				"--spring.cloud.stream.binders.kafka2.type=kstream",
-				"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
-				"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.applicationId=my-app-2",
-				"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.configuration.client.id=analyze-client")) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=process;analyze",
+	"--spring.cloud.stream.bindings.process-in-0.destination=purchases",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.startOffset=latest",
+	"--spring.cloud.stream.bindings.process-in-0.binder=kafka1",
+	"--spring.cloud.stream.bindings.process-out-0.destination=coffee",
+	"--spring.cloud.stream.bindings.process-out-0.binder=kafka1",
+	"--spring.cloud.stream.bindings.process-out-1.destination=electronics",
+	"--spring.cloud.stream.bindings.process-out-1.binder=kafka1",
+	"--spring.cloud.stream.bindings.analyze-in-0.destination=coffee",
+	"--spring.cloud.stream.bindings.analyze-in-0.binder=kafka2",
+	"--spring.cloud.stream.bindings.analyze-in-1.destination=electronics",
+	"--spring.cloud.stream.bindings.analyze-in-1.binder=kafka2",
+	"--spring.cloud.stream.bindings.analyze-in-0.consumer.concurrency=2",
+	"--spring.cloud.stream.binders.kafka1.type=kstream",
+	"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
+	"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.applicationId=my-app-1",
+	"--spring.cloud.stream.binders.kafka1.environment.spring.cloud.stream.kafka.streams.binder.configuration.client.id=process-client",
+	"--spring.cloud.stream.binders.kafka2.type=kstream",
+	"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString(),
+	"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.applicationId=my-app-2",
+	"--spring.cloud.stream.binders.kafka2.environment.spring.cloud.stream.kafka.streams.binder.configuration.client.id=analyze-client")) {
 
 			Thread.sleep(1000);
 			receiveAndValidate("purchases", "coffee", "electronics");
 
 			StreamsBuilderFactoryBean processStreamsBuilderFactoryBean = context
-					.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
 
 			StreamsBuilderFactoryBean analyzeStreamsBuilderFactoryBean = context
-					.getBean("&stream-builder-analyze", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-analyze", StreamsBuilderFactoryBean.class);
 
 			final Properties processStreamsConfiguration = processStreamsBuilderFactoryBean.getStreamsConfiguration();
 			final Properties analyzeStreamsConfiguration = analyzeStreamsBuilderFactoryBean.getStreamsConfiguration();
@@ -221,8 +221,8 @@ public class MultipleFunctionsInSameAppTests {
 		@Bean
 		public Function<KStream<String, String>, KStream<String, String>[]> process() {
 			return input -> input.branch(
-					(s, p) -> p.equalsIgnoreCase("coffee"),
-					(s, p) -> p.equalsIgnoreCase("electronics"));
+		(s, p) -> p.equalsIgnoreCase("coffee"),
+		(s, p) -> p.equalsIgnoreCase("electronics"));
 		}
 
 		@Bean

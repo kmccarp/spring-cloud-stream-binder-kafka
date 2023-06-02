@@ -75,20 +75,20 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts-id");
+"counts-id");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group-id",
-				"false", embeddedKafka);
+	"false", embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(
-				consumerProps);
+	consumerProps);
 		consumer = cf.createConsumer();
 		embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "counts-id");
 	}
@@ -111,10 +111,10 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 		mockProperties.put(StreamsConfig.APPLICATION_ID_CONFIG, "fooApp");
 		Mockito.when(mock.getStreamsConfiguration()).thenReturn(mockProperties);
 		KafkaStreamsBinderConfigurationProperties binderConfigurationProperties =
-				new KafkaStreamsBinderConfigurationProperties(new KafkaProperties());
+	new KafkaStreamsBinderConfigurationProperties(new KafkaProperties());
 		binderConfigurationProperties.getStateStoreRetry().setMaxAttempts(3);
 		InteractiveQueryService interactiveQueryService = new InteractiveQueryService(kafkaStreamsRegistry,
-				binderConfigurationProperties);
+	binderConfigurationProperties);
 
 		QueryableStoreType<ReadOnlyKeyValueStore<Object, Object>> storeType = QueryableStoreTypes.keyValueStore();
 		try {
@@ -124,7 +124,7 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 
 		}
 		Mockito.verify(mockKafkaStreams, times(3))
-				.store(StoreQueryParameters.fromNameAndType("foo", storeType));
+	.store(StoreQueryParameters.fromNameAndType("foo", storeType));
 	}
 
 	@Test
@@ -139,10 +139,10 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 		mockProperties.put(StreamsConfig.APPLICATION_ID_CONFIG, "foobarApp-123");
 		Mockito.when(mock.getStreamsConfiguration()).thenReturn(mockProperties);
 		KafkaStreamsBinderConfigurationProperties binderConfigurationProperties =
-				new KafkaStreamsBinderConfigurationProperties(new KafkaProperties());
+	new KafkaStreamsBinderConfigurationProperties(new KafkaProperties());
 		binderConfigurationProperties.getStateStoreRetry().setMaxAttempts(3);
 		InteractiveQueryService interactiveQueryService = new InteractiveQueryService(kafkaStreamsRegistry,
-				binderConfigurationProperties);
+	binderConfigurationProperties);
 
 		QueryableStoreType<ReadOnlyKeyValueStore<Object, Object>> storeType = QueryableStoreTypes.keyValueStore();
 		final StringSerializer serializer = new StringSerializer();
@@ -153,7 +153,7 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 
 		}
 		Mockito.verify(mockKafkaStreams, times(3))
-				.queryMetadataForKey("foo", "foobarApp-key", serializer);
+	.queryMetadataForKey("foo", "foobarApp-key", serializer);
 	}
 
 	@Test
@@ -161,21 +161,21 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 		SpringApplication app = new SpringApplication(ProductCountApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.function.bindings.process-out-0=output",
-				"--spring.cloud.stream.bindings.input.destination=foos",
-				"--spring.cloud.stream.bindings.output.destination=counts-id",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId=ProductCountApplication-abc",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.application.server"
-						+ "=" + embeddedKafka.getBrokersAsString(),
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.function.bindings.process-out-0=output",
+	"--spring.cloud.stream.bindings.input.destination=foos",
+	"--spring.cloud.stream.bindings.output.destination=counts-id",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId=ProductCountApplication-abc",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.application.server"
++ "=" + embeddedKafka.getBrokersAsString(),
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 		try {
 			receiveAndValidateFoo(context);
 		}
@@ -187,53 +187,53 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 	private void receiveAndValidateFoo(ConfigurableApplicationContext context) {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 		template.setDefaultTopic("foos");
 		template.sendDefault("{\"id\":\"123\"}");
 		ConsumerRecord<String, String> cr = KafkaTestUtils.getSingleRecord(consumer,
-				"counts-id");
+	"counts-id");
 		assertThat(cr.value().contains("Count for product with ID 123: 1")).isTrue();
 
 		ProductCountApplication.Foo foo = context
-				.getBean(ProductCountApplication.Foo.class);
+	.getBean(ProductCountApplication.Foo.class);
 		assertThat(foo.getProductStock(123).equals(1L));
 
 		// perform assertions on HostInfo related methods in InteractiveQueryService
 		InteractiveQueryService interactiveQueryService = context
-				.getBean(InteractiveQueryService.class);
+	.getBean(InteractiveQueryService.class);
 		HostInfo currentHostInfo = interactiveQueryService.getCurrentHostInfo();
 
 		assertThat(currentHostInfo.host() + ":" + currentHostInfo.port())
-				.isEqualTo(embeddedKafka.getBrokersAsString());
+	.isEqualTo(embeddedKafka.getBrokersAsString());
 
 		final KeyQueryMetadata keyQueryMetadata = interactiveQueryService.getKeyQueryMetadata("prod-id-count-store",
-				123, new IntegerSerializer());
+	123, new IntegerSerializer());
 		final HostInfo activeHost = keyQueryMetadata.getActiveHost();
 		assertThat(activeHost.host() + ":" + activeHost.port())
-				.isEqualTo(embeddedKafka.getBrokersAsString());
+	.isEqualTo(embeddedKafka.getBrokersAsString());
 
 		final KafkaStreams kafkaStreams = interactiveQueryService.getKafkaStreams("prod-id-count-store",
-				123, new IntegerSerializer());
+	123, new IntegerSerializer());
 		assertThat(kafkaStreams).isNotNull();
 		assertThat(interactiveQueryService.getKafkaStreams("non-existent-store",
-				123, new IntegerSerializer())).isNull();
+	123, new IntegerSerializer())).isNull();
 
 		HostInfo hostInfo = interactiveQueryService.getHostInfo("prod-id-count-store",
-				123, new IntegerSerializer());
+	123, new IntegerSerializer());
 		assertThat(hostInfo.host() + ":" + hostInfo.port())
-				.isEqualTo(embeddedKafka.getBrokersAsString());
+	.isEqualTo(embeddedKafka.getBrokersAsString());
 
 		assertThatThrownBy(() -> interactiveQueryService
-				.getHostInfo("prod-id-count-store-foo", 123, new IntegerSerializer()))
-				.isInstanceOf(IllegalStateException.class)
-				.hasMessageContaining("Error when retrieving state store.");
+	.getHostInfo("prod-id-count-store-foo", 123, new IntegerSerializer()))
+	.isInstanceOf(IllegalStateException.class)
+	.hasMessageContaining("Error when retrieving state store.");
 
 		final List<HostInfo> hostInfos = interactiveQueryService.getAllHostsInfo("prod-id-count-store");
 		assertThat(hostInfos.size()).isEqualTo(1);
 		final HostInfo hostInfo1 = hostInfos.get(0);
 		assertThat(hostInfo1.host() + ":" + hostInfo1.port())
-				.isEqualTo(embeddedKafka.getBrokersAsString());
+	.isEqualTo(embeddedKafka.getBrokersAsString());
 	}
 
 	@EnableAutoConfiguration
@@ -243,12 +243,12 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 		public Function<KStream<Object, Product>, KStream<?, String>> process() {
 
 			return input -> input.filter((key, product) -> product.getId() == 123)
-					.map((key, value) -> new KeyValue<>(value.id, value))
-					.groupByKey(Grouped.with(new Serdes.IntegerSerde(),
-							new JsonSerde<>(Product.class)))
-					.count(Materialized.as("prod-id-count-store")).toStream()
-					.map((key, value) -> new KeyValue<>(null,
-							"Count for product with ID 123: " + value));
+		.map((key, value) -> new KeyValue<>(value.id, value))
+		.groupByKey(Grouped.with(new Serdes.IntegerSerde(),
+	new JsonSerde<>(Product.class)))
+		.count(Materialized.as("prod-id-count-store")).toStream()
+		.map((key, value) -> new KeyValue<>(null,
+	"Count for product with ID 123: " + value));
 		}
 
 		@Bean
@@ -271,8 +271,8 @@ public class KafkaStreamsInteractiveQueryIntegrationTests {
 
 			public Long getProductStock(Integer id) {
 				ReadOnlyKeyValueStore<Object, Object> keyValueStore = interactiveQueryService
-						.getQueryableStore("prod-id-count-store",
-								QueryableStoreTypes.keyValueStore());
+			.getQueryableStore("prod-id-count-store",
+		QueryableStoreTypes.keyValueStore());
 
 				return (Long) keyValueStore.get(id);
 			}

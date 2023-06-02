@@ -62,24 +62,7 @@ import static org.mockito.Mockito.mock;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-		"spring.kafka.consumer.properties.isolation.level=read_committed",
-		"spring.kafka.consumer.enable-auto-commit=false",
-		"spring.kafka.consumer.auto-offset-reset=earliest",
-		"spring.cloud.function.definition=listenIn;listenIn2",
-		"spring.cloud.stream.function.bindings.listenIn-in-0=input",
-		"spring.cloud.stream.function.bindings.listenIn-out-0=output",
-		"spring.cloud.stream.function.bindings.listenIn2-in-0=input2",
-		"spring.cloud.stream.function.bindings.listenIn2-out-0=output2",
-		"spring.cloud.stream.bindings.input.destination=consumer.producer.txIn",
-		"spring.cloud.stream.bindings.input.group=consumer.producer.tx",
-		"spring.cloud.stream.bindings.input.consumer.max-attempts=1",
-		"spring.cloud.stream.kafka.bindings.input2.consumer.transaction-manager=tm",
-		"spring.cloud.stream.kafka.bindings.output2.producer.transaction-manager=tm",
-		"spring.cloud.stream.bindings.output.destination=consumer.producer.txOut",
-		"spring.cloud.stream.kafka.binder.transaction.transaction-id-prefix=tx.",
-		"spring.cloud.stream.kafka.binder.transaction.producer.configuration.retries=99",
-		"spring.cloud.stream.kafka.binder.transaction.producer.configuration.acks=all"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.kafka.consumer.properties.isolation.level=read_committed","spring.kafka.consumer.enable-auto-commit=false","spring.kafka.consumer.auto-offset-reset=earliest","spring.cloud.function.definition=listenIn;listenIn2","spring.cloud.stream.function.bindings.listenIn-in-0=input","spring.cloud.stream.function.bindings.listenIn-out-0=output","spring.cloud.stream.function.bindings.listenIn2-in-0=input2","spring.cloud.stream.function.bindings.listenIn2-out-0=output2","spring.cloud.stream.bindings.input.destination=consumer.producer.txIn","spring.cloud.stream.bindings.input.group=consumer.producer.tx","spring.cloud.stream.bindings.input.consumer.max-attempts=1","spring.cloud.stream.kafka.bindings.input2.consumer.transaction-manager=tm","spring.cloud.stream.kafka.bindings.output2.producer.transaction-manager=tm","spring.cloud.stream.bindings.output.destination=consumer.producer.txOut","spring.cloud.stream.kafka.binder.transaction.transaction-id-prefix=tx.","spring.cloud.stream.kafka.binder.transaction.producer.configuration.retries=99","spring.cloud.stream.kafka.binder.transaction.producer.configuration.acks=all"})
 @DirtiesContext
 public class ConsumerProducerTransactionTests {
 
@@ -87,8 +70,8 @@ public class ConsumerProducerTransactionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, "consumer.producer.txOut")
-			.brokerProperty(KafkaConfig.TransactionsTopicReplicationFactorProp(), "1")
-			.brokerProperty(KafkaConfig.TransactionsTopicMinISRProp(), "1");
+.brokerProperty(KafkaConfig.TransactionsTopicReplicationFactorProp(), "1")
+.brokerProperty(KafkaConfig.TransactionsTopicMinISRProp(), "1");
 
 	@Autowired
 	private Config config;
@@ -99,9 +82,9 @@ public class ConsumerProducerTransactionTests {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 		System.setProperty("spring.kafka.bootstrap-servers",
-				embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass
@@ -119,13 +102,13 @@ public class ConsumerProducerTransactionTests {
 	@Test
 	public void externalTM() {
 		assertThat(this.config.input2Container.getContainerProperties().getTransactionManager())
-				.isSameAs(this.config.tm);
+	.isSameAs(this.config.tm);
 		final MessageChannel output2 = context.getBean("output2", MessageChannel.class);
 
 		Object handler = KafkaTestUtils.getPropertyValue(output2, "dispatcher.handlers", Set.class)
-				.iterator().next();
+	.iterator().next();
 		assertThat(KafkaTestUtils.getPropertyValue(handler, "delegate.kafkaTemplate.producerFactory"))
-				.isSameAs(this.config.pf);
+	.isSameAs(this.config.pf);
 	}
 
 	@EnableAutoConfiguration
@@ -182,7 +165,7 @@ public class ConsumerProducerTransactionTests {
 			};
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public KafkaAwareTransactionManager<byte[], byte[]> tm(ProducerFactory pf) {
 			KafkaAwareTransactionManager mock = mock(KafkaAwareTransactionManager.class);

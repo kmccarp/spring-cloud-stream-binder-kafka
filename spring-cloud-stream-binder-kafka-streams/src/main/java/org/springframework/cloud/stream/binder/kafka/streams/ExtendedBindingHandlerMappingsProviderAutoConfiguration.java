@@ -39,11 +39,11 @@ public class ExtendedBindingHandlerMappingsProviderAutoConfiguration {
 		return () -> {
 			Map<ConfigurationPropertyName, ConfigurationPropertyName> mappings = new HashMap<>();
 			mappings.put(
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams"),
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.default"));
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams"),
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.default"));
 			mappings.put(
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.bindings"),
-					ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.default"));
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.bindings"),
+		ConfigurationPropertyName.of("spring.cloud.stream.kafka.streams.default"));
 			return mappings;
 		};
 	}

@@ -47,7 +47,7 @@ public class KafkaBinderTopicPropertiesUpdateTest extends BaseKafkaBinderTopicPr
 		ConfigResource standardInConfigResource = new ConfigResource(ConfigResource.Type.TOPIC, "standard-in");
 		ConfigResource standardOutConfigResource = new ConfigResource(ConfigResource.Type.TOPIC, "standard-out");
 		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays
-				.asList(standardInConfigResource, standardOutConfigResource));
+	.asList(standardInConfigResource, standardOutConfigResource));
 		KafkaFuture<Map<ConfigResource, Config>> kafkaFuture = describeConfigsResult.all();
 		Map<ConfigResource, Config> configResourceConfigMap = kafkaFuture.get(3, TimeUnit.SECONDS);
 		Config standardInTopicConfig = configResourceConfigMap.get(standardInConfigResource);

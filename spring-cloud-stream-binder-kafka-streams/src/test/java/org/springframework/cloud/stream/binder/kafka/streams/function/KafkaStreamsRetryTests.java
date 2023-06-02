@@ -68,18 +68,18 @@ public class KafkaStreamsRetryTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.function.definition=process",
-				"--spring.cloud.stream.bindings.process-in-0.destination=words",
-				"--spring.cloud.stream.bindings.process-in-0.consumer.max-attempts=2",
-				"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplatePerBindingOnKStream",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.function.definition=process",
+	"--spring.cloud.stream.bindings.process-in-0.destination=words",
+	"--spring.cloud.stream.bindings.process-in-0.consumer.max-attempts=2",
+	"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplatePerBindingOnKStream",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			sendAndValidate(LATCH1);
 		}
 	}
@@ -90,11 +90,11 @@ public class KafkaStreamsRetryTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.function.definition=tableTypes",
-				"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplateOnTableTypes",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.function.definition=tableTypes",
+	"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplateOnTableTypes",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			assertThat(context.getBean("tableTypes-in-0-RetryTemplate", RetryTemplate.class)).isNotNull();
 			assertThat(context.getBean("tableTypes-in-1-RetryTemplate", RetryTemplate.class)).isNotNull();
@@ -107,18 +107,18 @@ public class KafkaStreamsRetryTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.function.definition=process",
-				"--spring.cloud.stream.bindings.process-in-0.destination=words",
-				"--spring.cloud.stream.bindings.process-in-0.consumer.retry-template-name=fooRetryTemplate",
-				"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplateBeanProvidedByTheApp",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.function.definition=process",
+	"--spring.cloud.stream.bindings.process-in-0.destination=words",
+	"--spring.cloud.stream.bindings.process-in-0.consumer.retry-template-name=fooRetryTemplate",
+	"--spring.cloud.stream.kafka.streams.default.consumer.application-id=testRetryTemplateBeanProvidedByTheApp",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			sendAndValidate(LATCH2);
 			assertThatThrownBy(() -> context.getBean("process-in-0-RetryTemplate", RetryTemplate.class)).isInstanceOf(NoSuchBeanDefinitionException.class);
 		}
@@ -145,23 +145,23 @@ public class KafkaStreamsRetryTests {
 		public java.util.function.Consumer<KStream<Object, String>> process(@Lazy @Qualifier("process-in-0-RetryTemplate") RetryTemplate retryTemplate) {
 
 			return input -> input
-					.process(() -> new Processor<Object, String>() {
-						@Override
-						public void init(ProcessorContext processorContext) {
-						}
+		.process(() -> new Processor<Object, String>() {
+			@Override
+			public void init(ProcessorContext processorContext) {
+			}
 
-						@Override
-						public void process(Object o, String s) {
-							retryTemplate.execute(context -> {
-								LATCH1.countDown();
-								throw new RuntimeException();
-							});
-						}
+			@Override
+			public void process(Object o, String s) {
+				retryTemplate.execute(context -> {
+					LATCH1.countDown();
+					throw new RuntimeException();
+				});
+			}
 
-						@Override
-						public void close() {
-						}
-					});
+			@Override
+			public void close() {
+			}
+		});
 		}
 
 		@Bean
@@ -193,24 +193,24 @@ public class KafkaStreamsRetryTests {
 		public java.util.function.Consumer<KStream<Object, String>> process() {
 
 			return input -> input
-					.process(() -> new Processor<Object, String>() {
-						@Override
-						public void init(ProcessorContext processorContext) {
-						}
+		.process(() -> new Processor<Object, String>() {
+			@Override
+			public void init(ProcessorContext processorContext) {
+			}
 
-						@Override
-						public void process(Object o, String s) {
-							fooRetryTemplate().execute(context -> {
-								LATCH2.countDown();
-								throw new RuntimeException();
-							});
+			@Override
+			public void process(Object o, String s) {
+				fooRetryTemplate().execute(context -> {
+					LATCH2.countDown();
+					throw new RuntimeException();
+				});
 
-						}
+			}
 
-						@Override
-						public void close() {
-						}
-					});
+			@Override
+			public void close() {
+			}
+		});
 		}
 	}
 }

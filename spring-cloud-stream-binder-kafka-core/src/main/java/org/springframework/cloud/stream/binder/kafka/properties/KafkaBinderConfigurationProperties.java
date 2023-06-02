@@ -88,11 +88,11 @@ public class KafkaBinderConfigurationProperties {
 	 */
 	private Map<String, String> producerProperties = new HashMap<>();
 
-	private String[] brokers = new String[] { "localhost" };
+	private String[] brokers = new String[]{"localhost"};
 
 	private String defaultBrokerPort = "9092";
 
-	private String[] headers = new String[] {};
+	private String[] headers = new String[]{};
 
 	private boolean autoCreateTopics = true;
 
@@ -208,7 +208,7 @@ public class KafkaBinderConfigurationProperties {
 			final Path path = Paths.get(fileSystemLocation);
 			if (!Files.exists(path) || !Files.isDirectory(path) || !Files.isWritable(path)) {
 				logger.warn("The filesystem location to move the cert files (" + fileSystemLocation + ") " +
-						"is not found or a directory that is writable. The system temp folder (java.io.tmpdir) will be used instead.");
+			"is not found or a directory that is writable. The system temp folder (java.io.tmpdir) will be used instead.");
 				targetFile = new File(Paths.get(tempDir, resource.getFilename()).toString());
 			}
 			else {
@@ -366,7 +366,7 @@ public class KafkaBinderConfigurationProperties {
 				.entrySet()) {
 			if (ConsumerConfig.configNames().contains(configurationEntry.getKey())) {
 				consumerConfiguration.put(configurationEntry.getKey(),
-						configurationEntry.getValue());
+			configurationEntry.getValue());
 			}
 		}
 		consumerConfiguration.putAll(this.consumerProperties);
@@ -374,7 +374,7 @@ public class KafkaBinderConfigurationProperties {
 		// Override Spring Boot bootstrap server setting if left to default with the value
 		// configured in the binder
 		return getConfigurationWithBootstrapServer(consumerConfiguration,
-				ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
+	ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
 	}
 
 	/**
@@ -391,27 +391,27 @@ public class KafkaBinderConfigurationProperties {
 				.entrySet()) {
 			if (ProducerConfig.configNames().contains(configurationEntry.getKey())) {
 				producerConfiguration.put(configurationEntry.getKey(),
-						configurationEntry.getValue());
+			configurationEntry.getValue());
 			}
 		}
 		producerConfiguration.putAll(this.producerProperties);
 		// Override Spring Boot bootstrap server setting if left to default with the value
 		// configured in the binder
 		return getConfigurationWithBootstrapServer(producerConfiguration,
-				ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
+	ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
 	}
 
 	private void filterStreamManagedConfiguration(Map<String, Object> configuration) {
 		if (configuration.containsKey(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG)
-				&& configuration.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG).equals(true)) {
+	&& configuration.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG).equals(true)) {
 			logger.warn(constructIgnoredConfigMessage(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG) +
-					ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG + "=true is not supported by the Kafka binder");
+		ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG + "=true is not supported by the Kafka binder");
 			configuration.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 		}
 		if (configuration.containsKey(ConsumerConfig.GROUP_ID_CONFIG)) {
 			logger.warn(constructIgnoredConfigMessage(ConsumerConfig.GROUP_ID_CONFIG) +
-					"Use spring.cloud.stream.default.group or spring.cloud.stream.binding.<name>.group to specify " +
-					"the group instead of " + ConsumerConfig.GROUP_ID_CONFIG);
+		"Use spring.cloud.stream.default.group or spring.cloud.stream.binding.<name>.group to specify " +
+		"the group instead of " + ConsumerConfig.GROUP_ID_CONFIG);
 			configuration.remove(ConsumerConfig.GROUP_ID_CONFIG);
 		}
 	}
@@ -421,10 +421,10 @@ public class KafkaBinderConfigurationProperties {
 	}
 
 	private Map<String, Object> getConfigurationWithBootstrapServer(
-			Map<String, Object> configuration, String bootstrapServersConfig) {
+Map<String, Object> configuration, String bootstrapServersConfig) {
 		final String kafkaConnectionString = getKafkaConnectionString();
 		if (ObjectUtils.isEmpty(configuration.get(bootstrapServersConfig)) ||
-				!kafkaConnectionString.equals("localhost:9092")) {
+	!kafkaConnectionString.equals("localhost:9092")) {
 			configuration.put(bootstrapServersConfig, kafkaConnectionString);
 		}
 		return Collections.unmodifiableMap(configuration);
@@ -523,9 +523,9 @@ public class KafkaBinderConfigurationProperties {
 		}
 
 		public void setPartitionSelectorExpression(
-				Expression partitionSelectorExpression) {
+	Expression partitionSelectorExpression) {
 			this.producerProperties
-					.setPartitionSelectorExpression(partitionSelectorExpression);
+		.setPartitionSelectorExpression(partitionSelectorExpression);
 		}
 
 		public @Min(value = 1, message = "Partition count should be greater than zero.") int getPartitionCount() {
@@ -545,12 +545,12 @@ public class KafkaBinderConfigurationProperties {
 		}
 
 		public @AssertTrue(message = "Partition key expression and partition key extractor class properties "
-				+ "are mutually exclusive.") boolean isValidPartitionKeyProperty() {
+	+ "are mutually exclusive.") boolean isValidPartitionKeyProperty() {
 			return this.producerProperties.isValidPartitionKeyProperty();
 		}
 
 		public @AssertTrue(message = "Partition selector class and partition selector expression "
-				+ "properties are mutually exclusive.") boolean isValidPartitionSelectorProperty() {
+	+ "properties are mutually exclusive.") boolean isValidPartitionSelectorProperty() {
 			return this.producerProperties.isValidPartitionSelectorProperty();
 		}
 
@@ -584,7 +584,7 @@ public class KafkaBinderConfigurationProperties {
 
 		public void setPartitionKeyExtractorName(String partitionKeyExtractorName) {
 			this.producerProperties
-					.setPartitionKeyExtractorName(partitionKeyExtractorName);
+		.setPartitionKeyExtractorName(partitionKeyExtractorName);
 		}
 
 		public String getPartitionSelectorName() {

@@ -57,11 +57,11 @@ public class DlqDestinationResolverTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"topic1-dlq",
-			"topic2-dlq");
+"topic1-dlq",
+"topic2-dlq");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	@Test
 	public void testDlqDestinationResolverWorks() throws Exception {
@@ -69,19 +69,19 @@ public class DlqDestinationResolverTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.function.definition=process",
-				"--spring.cloud.stream.bindings.process-in-0.destination=word1,word2",
-				"--spring.cloud.stream.bindings.process-out-0.destination=test-output",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=dlq-dest-resolver-test",
-				"--spring.cloud.stream.kafka.streams.binder.serdeError=sendToDlq",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.valueSerde="
-						+ "org.apache.kafka.common.serialization.Serdes$IntegerSerde",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.function.definition=process",
+	"--spring.cloud.stream.bindings.process-in-0.destination=word1,word2",
+	"--spring.cloud.stream.bindings.process-out-0.destination=test-output",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=dlq-dest-resolver-test",
+	"--spring.cloud.stream.kafka.streams.binder.serdeError=sendToDlq",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.valueSerde="
++ "org.apache.kafka.common.serialization.Serdes$IntegerSerde",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-					senderProps);
+		senderProps);
 			try {
 				KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 				template.setDefaultTopic("word1");
@@ -91,19 +91,19 @@ public class DlqDestinationResolverTests {
 				template.sendDefault("foobar");
 
 				Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("some-random-group",
-						"false", embeddedKafka);
+			"false", embeddedKafka);
 				consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 				DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(
-						consumerProps);
+			consumerProps);
 				Consumer<String, String> consumer1 = cf.createConsumer();
 				embeddedKafka.consumeFromEmbeddedTopics(consumer1, "topic1-dlq",
-						"topic2-dlq");
+			"topic2-dlq");
 
 				ConsumerRecord<String, String> cr1 = KafkaTestUtils.getSingleRecord(consumer1,
-						"topic1-dlq");
+			"topic1-dlq");
 				assertThat(cr1.value()).isEqualTo("foobar");
 				ConsumerRecord<String, String> cr2 = KafkaTestUtils.getSingleRecord(consumer1,
-						"topic2-dlq");
+			"topic2-dlq");
 				assertThat(cr2.value()).isEqualTo("foobar");
 
 				final KafkaStreamsBindingInformationCatalogue catalogue = context.getBean(KafkaStreamsBindingInformationCatalogue.class);
@@ -122,13 +122,13 @@ public class DlqDestinationResolverTests {
 		public Function<KStream<Object, String>, KStream<?, String>> process() {
 
 			return input -> input
-					.flatMapValues(
-							value -> Arrays.asList(value.toLowerCase().split("\\W+")))
-					.map((key, value) -> new KeyValue<>(value, value))
-					.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-					.windowedBy(TimeWindows.of(Duration.ofSeconds(5))).count(Materialized.as("foo-WordCounts-x"))
-					.toStream().map((key, value) -> new KeyValue<>(null,
-							"Count for " + key.key() + " : " + value));
+		.flatMapValues(
+	value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+		.map((key, value) -> new KeyValue<>(value, value))
+		.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
+		.windowedBy(TimeWindows.of(Duration.ofSeconds(5))).count(Materialized.as("foo-WordCounts-x"))
+		.toStream().map((key, value) -> new KeyValue<>(null,
+		"Count for " + key.key() + " : " + value));
 		}
 
 		@Bean

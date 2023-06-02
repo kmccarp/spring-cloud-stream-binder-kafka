@@ -64,10 +64,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-		"spring.cloud.stream.kafka.binder.transaction.transaction-id-prefix=tx.",
-		"spring.cloud.stream.kafka.binder.transaction.producer.configuration.retries=99",
-		"spring.cloud.stream.kafka.binder.transaction.producer.configuration.acks=all"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {"spring.cloud.stream.kafka.binder.transaction.transaction-id-prefix=tx.","spring.cloud.stream.kafka.binder.transaction.producer.configuration.retries=99","spring.cloud.stream.kafka.binder.transaction.producer.configuration.acks=all"})
 @DirtiesContext
 public class ProducerOnlyTransactionTests {
 
@@ -75,8 +72,8 @@ public class ProducerOnlyTransactionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, "output")
-			.brokerProperty(KafkaConfig.TransactionsTopicReplicationFactorProp(), "1")
-			.brokerProperty(KafkaConfig.TransactionsTopicMinISRProp(), "1");
+.brokerProperty(KafkaConfig.TransactionsTopicReplicationFactorProp(), "1")
+.brokerProperty(KafkaConfig.TransactionsTopicMinISRProp(), "1");
 
 	@Autowired
 	private Sender sender;
@@ -87,7 +84,7 @@ public class ProducerOnlyTransactionTests {
 	@BeforeClass
 	public static void setup() {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
-				embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 	}
 
 	@AfterClass
@@ -101,7 +98,7 @@ public class ProducerOnlyTransactionTests {
 		this.sender.DoInTransaction(streamBridge);
 		assertThat(this.sender.isInTx()).isTrue();
 		Map<String, Object> props = KafkaTestUtils.consumerProps("consumeTx", "false",
-				embeddedKafka.getEmbeddedKafka());
+	embeddedKafka.getEmbeddedKafka());
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
 		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -121,7 +118,7 @@ public class ProducerOnlyTransactionTests {
 		public PlatformTransactionManager transactionManager(BinderFactory binders) {
 			try {
 				ProducerFactory<byte[], byte[]> pf = ((KafkaMessageChannelBinder) binders.getBinder(null,
-						MessageChannel.class)).getTransactionalProducerFactory();
+			MessageChannel.class)).getTransactionalProducerFactory();
 				KafkaTransactionManager<byte[], byte[]> tm = new KafkaTransactionManager<>(pf);
 				tm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
 				return tm;

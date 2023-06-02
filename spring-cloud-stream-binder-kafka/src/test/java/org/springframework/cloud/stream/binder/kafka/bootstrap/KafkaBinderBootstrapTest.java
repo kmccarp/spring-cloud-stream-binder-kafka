@@ -36,11 +36,11 @@ public class KafkaBinderBootstrapTest {
 	@Test
 	public void testKafkaBinderConfiguration() throws Exception {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				SimpleApplication.class).web(WebApplicationType.NONE).run(
-						"--spring.cloud.stream.kafka.binder.brokers="
-								+ embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
-						"--spring.cloud.stream.kafka.binder.zkNodes=" + embeddedKafka
-								.getEmbeddedKafka().getZookeeperConnectionString());
+	SimpleApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.stream.kafka.binder.brokers="
++ embeddedKafka.getEmbeddedKafka().getBrokersAsString(),
+	"--spring.cloud.stream.kafka.binder.zkNodes=" + embeddedKafka
+.getEmbeddedKafka().getZookeeperConnectionString());
 		applicationContext.close();
 	}
 

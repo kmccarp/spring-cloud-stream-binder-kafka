@@ -60,7 +60,7 @@ public class KafkaExpressionEvaluatingInterceptor implements ChannelInterceptor 
 		MessageBuilder<?> builder = MessageBuilder.fromMessage(message);
 		if (this.messageKeyExpression != null) {
 			builder.setHeader(MESSAGE_KEY_HEADER,
-					this.messageKeyExpression.getValue(this.evaluationContext, message));
+		this.messageKeyExpression.getValue(this.evaluationContext, message));
 		}
 		return builder.build();
 	}

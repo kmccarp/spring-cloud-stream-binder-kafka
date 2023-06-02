@@ -56,7 +56,7 @@ public class KafkaStreamsFunctionCompositionTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"fooFuncanotherFooFunc-out-0", "bar");
+"fooFuncanotherFooFunc-out-0", "bar");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -69,7 +69,7 @@ public class KafkaStreamsFunctionCompositionTests {
 	@BeforeClass
 	public static void setUp() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("fn-composition-group", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
@@ -88,11 +88,11 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=fooFunc|anotherFooFunc;anotherProcess",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=fooFunc|anotherFooFunc;anotherProcess",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -122,14 +122,14 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=fooFunc|anotherFooFunc;anotherProcess",
-				"--spring.cloud.stream.bindings.fooFuncanotherFooFunc-in-0.destination=foo",
-				"--spring.cloud.stream.bindings.fooFuncanotherFooFunc-out-0.destination=bar",
-				"--spring.cloud.stream.bindings.anotherProcess-in-0.destination=buzz",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=fooFunc|anotherFooFunc;anotherProcess",
+	"--spring.cloud.stream.bindings.fooFuncanotherFooFunc-in-0.destination=foo",
+	"--spring.cloud.stream.bindings.fooFuncanotherFooFunc-out-0.destination=bar",
+	"--spring.cloud.stream.bindings.anotherProcess-in-0.destination=buzz",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -158,12 +158,12 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=fooFunc|anotherProcess",
-				"--spring.cloud.stream.bindings.fooFuncanotherProcess-in-0.destination=foo",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=fooFunc|anotherProcess",
+	"--spring.cloud.stream.bindings.fooFuncanotherProcess-in-0.destination=foo",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -188,13 +188,13 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=fooBiFunc|anotherProcess",
-				"--spring.cloud.stream.bindings.fooBiFuncanotherProcess-in-0.destination=foo",
-				"--spring.cloud.stream.bindings.fooBiFuncanotherProcess-in-1.destination=foo-1",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=fooBiFunc|anotherProcess",
+	"--spring.cloud.stream.bindings.fooBiFuncanotherProcess-in-0.destination=foo",
+	"--spring.cloud.stream.bindings.fooBiFuncanotherProcess-in-1.destination=foo-1",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
@@ -222,18 +222,18 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.kafka.streams.binder.applicationId=my-app-id",
-				"--spring.cloud.stream.function.definition=fooBiFunc|anotherFooFunc|yetAnotherFooFunc|lastFunctionInChain",
-				"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-0=input1",
-				"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-1=input2",
-				"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-out-0=output",
-				"--spring.cloud.stream.bindings.input1.destination=my-foo-1",
-				"--spring.cloud.stream.bindings.input2.destination=my-foo-2",
-				"--spring.cloud.stream.bindings.output.destination=bar",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.kafka.streams.binder.applicationId=my-app-id",
+	"--spring.cloud.stream.function.definition=fooBiFunc|anotherFooFunc|yetAnotherFooFunc|lastFunctionInChain",
+	"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-0=input1",
+	"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-1=input2",
+	"--spring.cloud.stream.function.bindings.fooBiFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-out-0=output",
+	"--spring.cloud.stream.bindings.input1.destination=my-foo-1",
+	"--spring.cloud.stream.bindings.input2.destination=my-foo-2",
+	"--spring.cloud.stream.bindings.output.destination=bar",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			senderProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -265,18 +265,18 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.kafka.streams.binder.applicationId=my-app-id-xyz",
-				"--spring.cloud.stream.function.definition=curriedFunc|anotherFooFunc|yetAnotherFooFunc|lastFunctionInChain",
-				"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-0=input1",
-				"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-1=input2",
-				"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-out-0=output",
-				"--spring.cloud.stream.bindings.input1.destination=my-foo-1",
-				"--spring.cloud.stream.bindings.input2.destination=my-foo-2",
-				"--spring.cloud.stream.bindings.output.destination=bar",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.kafka.streams.binder.applicationId=my-app-id-xyz",
+	"--spring.cloud.stream.function.definition=curriedFunc|anotherFooFunc|yetAnotherFooFunc|lastFunctionInChain",
+	"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-0=input1",
+	"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-in-1=input2",
+	"--spring.cloud.stream.function.bindings.curriedFuncanotherFooFuncyetAnotherFooFunclastFunctionInChain-out-0=output",
+	"--spring.cloud.stream.bindings.input1.destination=my-foo-1",
+	"--spring.cloud.stream.bindings.input2.destination=my-foo-2",
+	"--spring.cloud.stream.bindings.output.destination=bar",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			senderProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -310,13 +310,13 @@ public class KafkaStreamsFunctionCompositionTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run(
-				"--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=fooFunc|anotherProcess",
-				"--spring.cloud.stream.bindings.fooFuncanotherProcess-in-0.destination=foo",
-				"--spring.cloud.stream.bindings.fooFuncanotherProcess-out-0.destination=bar",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--server.port=0",
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=fooFunc|anotherProcess",
+	"--spring.cloud.stream.bindings.fooFuncanotherProcess-in-0.destination=foo",
+	"--spring.cloud.stream.bindings.fooFuncanotherProcess-out-0.destination=bar",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 
 			Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 			senderProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -427,7 +427,7 @@ public class KafkaStreamsFunctionCompositionTests {
 		@Bean
 		public Function<KStream<String, String>, Function<KTable<String, String>, KStream<String, String>>> curriedFunc() {
 			return a -> b ->
-					a.join(b, (value1, value2) -> value1 + value2);
+		a.join(b, (value1, value2) -> value1 + value2);
 		}
 
 		@Bean

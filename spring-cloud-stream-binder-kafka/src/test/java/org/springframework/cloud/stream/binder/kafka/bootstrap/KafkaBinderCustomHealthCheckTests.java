@@ -44,9 +44,9 @@ public class KafkaBinderCustomHealthCheckTests {
 	@Test
 	public void testCustomHealthIndicatorIsActivated() {
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(
-				CustomHealthCheckApplication.class).web(WebApplicationType.NONE).run(
-				"--spring.cloud.stream.kafka.binder.brokers="
-						+ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+	CustomHealthCheckApplication.class).web(WebApplicationType.NONE).run(
+	"--spring.cloud.stream.kafka.binder.brokers="
++ embeddedKafka.getEmbeddedKafka().getBrokersAsString());
 		final KafkaBinderHealth kafkaBinderHealth = applicationContext.getBean(KafkaBinderHealth.class);
 		assertThat(kafkaBinderHealth).isInstanceOf(CustomHealthIndicator.class);
 		assertThatThrownBy(() -> applicationContext.getBean(KafkaBinderHealthIndicator.class)).isInstanceOf(NoSuchBeanDefinitionException.class);

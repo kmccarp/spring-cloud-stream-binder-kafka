@@ -65,20 +65,20 @@ public class KafkaStreamsBinderMultipleInputTopicsTest {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts");
+"counts");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(
-				consumerProps);
+	consumerProps);
 		consumer = cf.createConsumer();
 		embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "counts");
 	}
@@ -91,27 +91,27 @@ public class KafkaStreamsBinderMultipleInputTopicsTest {
 	@Test
 	public void testKstreamWordCountWithStringInputAndPojoOuput() throws Exception {
 		SpringApplication app = new SpringApplication(
-				WordCountProcessorApplication.class);
+	WordCountProcessorApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.bindings.process-in-0=input",
-				"--spring.cloud.stream.function.bindings.process-out-0=output",
-				"--spring.cloud.stream.bindings.input.destination=words1,words2",
-				"--spring.cloud.stream.bindings.output.destination=counts",
-				"--spring.cloud.stream.bindings.output.contentType=application/json",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.timeWindow.length=5000",
-				"--spring.cloud.stream.kafka.streams.timeWindow.advanceBy=0",
-				"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId"
-						+ "=WordCountProcessorApplication-xyz",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString());
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.bindings.process-in-0=input",
+	"--spring.cloud.stream.function.bindings.process-out-0=output",
+	"--spring.cloud.stream.bindings.input.destination=words1,words2",
+	"--spring.cloud.stream.bindings.output.destination=counts",
+	"--spring.cloud.stream.bindings.output.contentType=application/json",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.timeWindow.length=5000",
+	"--spring.cloud.stream.kafka.streams.timeWindow.advanceBy=0",
+	"--spring.cloud.stream.kafka.streams.bindings.input.consumer.applicationId"
++ "=WordCountProcessorApplication-xyz",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString());
 		try {
 			receiveAndValidate();
 		}
@@ -121,10 +121,10 @@ public class KafkaStreamsBinderMultipleInputTopicsTest {
 	}
 
 	private void receiveAndValidate()
-			throws Exception {
+throws Exception {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 		template.setDefaultTopic("words1");
 		template.sendDefault("foobar1");
@@ -138,7 +138,7 @@ public class KafkaStreamsBinderMultipleInputTopicsTest {
 		List<String> wordCounts = new ArrayList<>(2);
 
 		received.records("counts")
-				.forEach((consumerRecord) -> wordCounts.add((consumerRecord.value())));
+	.forEach((consumerRecord) -> wordCounts.add((consumerRecord.value())));
 		System.out.println(wordCounts);
 		assertThat(wordCounts.contains("{\"word\":\"foobar1\",\"count\":1}")).isTrue();
 		assertThat(wordCounts.contains("{\"word\":\"foobar2\",\"count\":1}")).isTrue();
@@ -151,12 +151,12 @@ public class KafkaStreamsBinderMultipleInputTopicsTest {
 		public Function<KStream<Object, String>, KStream<?, WordCount>> process() {
 
 			return input -> input
-					.flatMapValues(
-							value -> Arrays.asList(value.toLowerCase().split("\\W+")))
-					.map((key, value) -> new KeyValue<>(value, value))
-					.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-					.count(Materialized.as("WordCounts-tKWCWSIAP0")).toStream()
-					.map((key, value) -> new KeyValue<>(null, new WordCount(key, value)));
+		.flatMapValues(
+	value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+		.map((key, value) -> new KeyValue<>(value, value))
+		.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
+		.count(Materialized.as("WordCounts-tKWCWSIAP0")).toStream()
+		.map((key, value) -> new KeyValue<>(null, new WordCount(key, value)));
 		}
 
 		@Bean

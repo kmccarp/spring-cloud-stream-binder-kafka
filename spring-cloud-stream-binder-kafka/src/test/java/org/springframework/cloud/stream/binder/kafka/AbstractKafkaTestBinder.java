@@ -28,8 +28,7 @@ import org.springframework.context.ApplicationContext;
  * @author Gary Russell
  */
 public abstract class AbstractKafkaTestBinder extends
-		// @checkstyle:off
-		AbstractPollableConsumerTestBinder<KafkaMessageChannelBinder, ExtendedConsumerProperties<KafkaConsumerProperties>, ExtendedProducerProperties<KafkaProducerProperties>> {
+		// @checkstyle:offAbstractPollableConsumerTestBinder<KafkaMessageChannelBinder, ExtendedConsumerProperties<KafkaConsumerProperties>, ExtendedProducerProperties<KafkaProducerProperties>> {
 
 	// @checkstyle:on
 	private ApplicationContext applicationContext;

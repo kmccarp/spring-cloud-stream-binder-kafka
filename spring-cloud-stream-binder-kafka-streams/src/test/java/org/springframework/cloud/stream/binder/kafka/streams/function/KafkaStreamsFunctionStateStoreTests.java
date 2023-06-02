@@ -49,7 +49,7 @@ public class KafkaStreamsFunctionStateStoreTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts");
+"counts");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
@@ -59,18 +59,18 @@ public class KafkaStreamsFunctionStateStoreTests {
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.function.definition=biConsumerBean;hello",
-				"--spring.cloud.stream.bindings.biConsumerBean-in-0.destination=words",
-				"--spring.cloud.stream.bindings.hello-in-0.destination=words",
-				"--spring.cloud.stream.kafka.streams.binder.functions.changed.applicationId=testKafkaStreamsFuncionWithMultipleStateStores-123",
-				"--spring.cloud.stream.kafka.streams.binder.functions.hello.applicationId=testKafkaStreamsFuncionWithMultipleStateStores-456",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
-						"=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.function.definition=biConsumerBean;hello",
+	"--spring.cloud.stream.bindings.biConsumerBean-in-0.destination=words",
+	"--spring.cloud.stream.bindings.hello-in-0.destination=words",
+	"--spring.cloud.stream.kafka.streams.binder.functions.changed.applicationId=testKafkaStreamsFuncionWithMultipleStateStores-123",
+	"--spring.cloud.stream.kafka.streams.binder.functions.hello.applicationId=testKafkaStreamsFuncionWithMultipleStateStores-456",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde" +
+"=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.brokers=" + embeddedKafka.getBrokersAsString())) {
 			receiveAndValidate(context);
 		}
 	}
@@ -84,7 +84,7 @@ public class KafkaStreamsFunctionStateStoreTests {
 			template.sendDefault(1, "foobar");
 			Thread.sleep(2000L);
 			StateStoreTestApplication processorApplication = context
-					.getBean(StateStoreTestApplication.class);
+		.getBean(StateStoreTestApplication.class);
 
 			KeyValueStore<Long, Long> state1 = processorApplication.state1;
 			assertThat(processorApplication.processed1).isTrue();
@@ -124,24 +124,24 @@ public class KafkaStreamsFunctionStateStoreTests {
 		@Bean(name = "biConsumerBean")
 		public java.util.function.BiConsumer<KStream<Object, String>, KStream<Object, String>> process() {
 			return (input0, input1) ->
-					input0.process((ProcessorSupplier<Object, String>) () -> new Processor<Object, String>() {
-						@Override
-						@SuppressWarnings("unchecked")
-						public void init(ProcessorContext context) {
-							state1 = (KeyValueStore<Long, Long>) context.getStateStore("my-store");
-							state2 = (WindowStore<Long, Long>) context.getStateStore("other-store");
-						}
+		input0.process((ProcessorSupplier<Object, String>) () -> new Processor<Object, String>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public void init(ProcessorContext context) {
+				state1 = (KeyValueStore<Long, Long>) context.getStateStore("my-store");
+				state2 = (WindowStore<Long, Long>) context.getStateStore("other-store");
+			}
 
-						@Override
-						public void process(Object key, String value) {
-							processed1 = true;
-						}
+			@Override
+			public void process(Object key, String value) {
+				processed1 = true;
+			}
 
-						@Override
-						public void close() {
+			@Override
+			public void close() {
 
-						}
-					}, "my-store", "other-store");
+			}
+		}, "my-store", "other-store");
 		}
 
 		@Bean
@@ -171,16 +171,16 @@ public class KafkaStreamsFunctionStateStoreTests {
 		@Bean
 		public StoreBuilder myStore() {
 			return Stores.keyValueStoreBuilder(
-					Stores.persistentKeyValueStore("my-store"), Serdes.Long(),
-					Serdes.Long());
+		Stores.persistentKeyValueStore("my-store"), Serdes.Long(),
+		Serdes.Long());
 		}
 
 		@Bean
 		public StoreBuilder otherStore() {
 			return Stores.windowStoreBuilder(
-					Stores.persistentWindowStore("other-store",
-							Duration.ofSeconds(3), Duration.ofSeconds(3),  false), Serdes.Long(),
-					Serdes.Long());
+		Stores.persistentWindowStore("other-store",
+	Duration.ofSeconds(3), Duration.ofSeconds(3), false), Serdes.Long(),
+		Serdes.Long());
 		}
 	}
 

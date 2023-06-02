@@ -78,11 +78,11 @@ public class KafkaStreamsRegistry {
 
 	public StreamsBuilderFactoryBean streamsBuilderFactoryBean(String applicationId) {
 		final Optional<StreamsBuilderFactoryBean> first = this.streamsBuilderFactoryBeanMap.values()
-				.stream()
-				.filter(streamsBuilderFactoryBean -> streamsBuilderFactoryBean.isRunning() && streamsBuilderFactoryBean
-						.getStreamsConfiguration().getProperty(StreamsConfig.APPLICATION_ID_CONFIG)
-						.equals(applicationId))
-				.findFirst();
+	.stream()
+	.filter(streamsBuilderFactoryBean -> streamsBuilderFactoryBean.isRunning() && streamsBuilderFactoryBean
+.getStreamsConfiguration().getProperty(StreamsConfig.APPLICATION_ID_CONFIG)
+.equals(applicationId))
+	.findFirst();
 		return first.orElse(null);
 	}
 

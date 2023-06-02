@@ -45,10 +45,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Soby Chacko
  */
-class KTableBinder extends
-		AbstractBinder<KTable<Object, Object>, ExtendedConsumerProperties<KafkaStreamsConsumerProperties>, ExtendedProducerProperties<KafkaStreamsProducerProperties>>
-		implements
-		ExtendedPropertiesBinder<KTable<Object, Object>, KafkaStreamsConsumerProperties, KafkaStreamsProducerProperties> {
+class KTableBinder extendsAbstractBinder<KTable<Object, Object>, ExtendedConsumerProperties<KafkaStreamsConsumerProperties>, ExtendedProducerProperties<KafkaStreamsProducerProperties>>implementsExtendedPropertiesBinder<KTable<Object, Object>, KafkaStreamsConsumerProperties, KafkaStreamsProducerProperties> {
 
 	private final KafkaStreamsBinderConfigurationProperties binderConfigurationProperties;
 
@@ -64,8 +61,8 @@ class KTableBinder extends
 	private final KafkaStreamsRegistry kafkaStreamsRegistry;
 
 	KTableBinder(KafkaStreamsBinderConfigurationProperties binderConfigurationProperties,
-			KafkaTopicProvisioner kafkaTopicProvisioner,
-			KafkaStreamsBindingInformationCatalogue KafkaStreamsBindingInformationCatalogue, KafkaStreamsRegistry kafkaStreamsRegistry) {
+KafkaTopicProvisioner kafkaTopicProvisioner,
+KafkaStreamsBindingInformationCatalogue KafkaStreamsBindingInformationCatalogue, KafkaStreamsRegistry kafkaStreamsRegistry) {
 		this.binderConfigurationProperties = binderConfigurationProperties;
 		this.kafkaTopicProvisioner = kafkaTopicProvisioner;
 		this.kafkaStreamsBindingInformationCatalogue = KafkaStreamsBindingInformationCatalogue;
@@ -75,9 +72,9 @@ class KTableBinder extends
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Binding<KTable<Object, Object>> doBindConsumer(String name, String group,
-			KTable<Object, Object> inputTarget,
-			// @checkstyle:off
-			ExtendedConsumerProperties<KafkaStreamsConsumerProperties> properties) {
+KTable<Object, Object> inputTarget,
+// @checkstyle:off
+ExtendedConsumerProperties<KafkaStreamsConsumerProperties> properties) {
 		// @checkstyle:on
 		if (!StringUtils.hasText(group)) {
 			group = properties.getExtension().getApplicationId();
@@ -87,13 +84,13 @@ class KTableBinder extends
 
 		final String bindingName = this.kafkaStreamsBindingInformationCatalogue.bindingNamePerTarget(inputTarget);
 		final StreamsBuilderFactoryBean streamsBuilderFactoryBean = this.kafkaStreamsBindingInformationCatalogue
-				.getStreamsBuilderFactoryBeanPerBinding().get(bindingName);
+	.getStreamsBuilderFactoryBeanPerBinding().get(bindingName);
 
 		KafkaStreamsBinderUtils.prepareConsumerBinding(name, group,
-				getApplicationContext(), this.kafkaTopicProvisioner,
-				this.binderConfigurationProperties, properties, retryTemplate, getBeanFactory(),
-				this.kafkaStreamsBindingInformationCatalogue.bindingNamePerTarget(inputTarget),
-				this.kafkaStreamsBindingInformationCatalogue, streamsBuilderFactoryBean);
+	getApplicationContext(), this.kafkaTopicProvisioner,
+	this.binderConfigurationProperties, properties, retryTemplate, getBeanFactory(),
+	this.kafkaStreamsBindingInformationCatalogue.bindingNamePerTarget(inputTarget),
+	this.kafkaStreamsBindingInformationCatalogue, streamsBuilderFactoryBean);
 
 		return new DefaultBinding<KTable<Object, Object>>(bindingName, group, inputTarget, streamsBuilderFactoryBean) {
 
@@ -126,7 +123,7 @@ class KTableBinder extends
 					//Caching the stopped KafkaStreams for health indicator purposes on the underlying processor.
 					//See this issue for more details: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/1165
 					KTableBinder.this.kafkaStreamsBindingInformationCatalogue.addPreviousKafkaStreamsForApplicationId(
-							(String) streamsBuilderFactoryBean.getStreamsConfiguration().get(StreamsConfig.APPLICATION_ID_CONFIG), kafkaStreams);
+				(String) streamsBuilderFactoryBean.getStreamsConfiguration().get(StreamsConfig.APPLICATION_ID_CONFIG), kafkaStreams);
 				}
 			}
 		};
@@ -134,24 +131,24 @@ class KTableBinder extends
 
 	@Override
 	protected Binding<KTable<Object, Object>> doBindProducer(String name,
-			KTable<Object, Object> outboundBindTarget,
-			ExtendedProducerProperties<KafkaStreamsProducerProperties> properties) {
+KTable<Object, Object> outboundBindTarget,
+ExtendedProducerProperties<KafkaStreamsProducerProperties> properties) {
 		throw new UnsupportedOperationException(
-				"No producer level binding is allowed for KTable");
+	"No producer level binding is allowed for KTable");
 	}
 
 	@Override
 	public KafkaStreamsConsumerProperties getExtendedConsumerProperties(
-			String channelName) {
+String channelName) {
 		return this.kafkaStreamsExtendedBindingProperties
-				.getExtendedConsumerProperties(channelName);
+	.getExtendedConsumerProperties(channelName);
 	}
 
 	@Override
 	public KafkaStreamsProducerProperties getExtendedProducerProperties(
-			String channelName) {
+String channelName) {
 		return this.kafkaStreamsExtendedBindingProperties
-				.getExtendedProducerProperties(channelName);
+	.getExtendedProducerProperties(channelName);
 	}
 
 	@Override
@@ -162,11 +159,11 @@ class KTableBinder extends
 	@Override
 	public Class<? extends BinderSpecificPropertiesProvider> getExtendedPropertiesEntryClass() {
 		return this.kafkaStreamsExtendedBindingProperties
-				.getExtendedPropertiesEntryClass();
+	.getExtendedPropertiesEntryClass();
 	}
 
 	public void setKafkaStreamsExtendedBindingProperties(
-			KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties) {
+KafkaStreamsExtendedBindingProperties kafkaStreamsExtendedBindingProperties) {
 		this.kafkaStreamsExtendedBindingProperties = kafkaStreamsExtendedBindingProperties;
 	}
 }

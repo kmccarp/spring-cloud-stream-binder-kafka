@@ -66,20 +66,20 @@ public class KafkaStreamsBinderTombstoneTests {
 
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
-			"counts-1");
+"counts-1");
 
 	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
 	@BeforeClass
 	public static void setUp() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("group", "false",
-				embeddedKafka);
+	embeddedKafka);
 		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(
-				consumerProps);
+	consumerProps);
 		consumer = cf.createConsumer();
 		embeddedKafka.consumeFromEmbeddedTopics(consumer, "counts-1");
 	}
@@ -91,42 +91,42 @@ public class KafkaStreamsBinderTombstoneTests {
 
 	@Test
 	public void testSendToTombstone()
-			throws Exception {
+throws Exception {
 		SpringApplication app = new SpringApplication(
-				WordCountProcessorApplication.class);
+	WordCountProcessorApplication.class);
 		app.setWebApplicationType(WebApplicationType.NONE);
 
 		try (ConfigurableApplicationContext context = app.run("--server.port=0",
-				"--spring.jmx.enabled=false",
-				"--spring.cloud.stream.bindings.process-in-0.destination=words-1",
-				"--spring.cloud.stream.bindings.process-out-0.destination=counts-1",
-				"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=testKstreamWordCountWithInputBindingLevelApplicationId",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
-						+ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
-				"--spring.cloud.stream.kafka.streams.bindings.process-out-0.producer.valueSerde=org.springframework.kafka.support.serializer.JsonSerde",
-				"--spring.cloud.stream.bindings.process-in-0.consumer.concurrency=2",
-				"--spring.cloud.stream.kafka.streams.binder.brokers="
-						+ embeddedKafka.getBrokersAsString())) {
+	"--spring.jmx.enabled=false",
+	"--spring.cloud.stream.bindings.process-in-0.destination=words-1",
+	"--spring.cloud.stream.bindings.process-out-0.destination=counts-1",
+	"--spring.cloud.stream.kafka.streams.bindings.process-in-0.consumer.application-id=testKstreamWordCountWithInputBindingLevelApplicationId",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.key.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.binder.configuration.default.value.serde"
++ "=org.apache.kafka.common.serialization.Serdes$StringSerde",
+	"--spring.cloud.stream.kafka.streams.bindings.process-out-0.producer.valueSerde=org.springframework.kafka.support.serializer.JsonSerde",
+	"--spring.cloud.stream.bindings.process-in-0.consumer.concurrency=2",
+	"--spring.cloud.stream.kafka.streams.binder.brokers="
++ embeddedKafka.getBrokersAsString())) {
 			receiveAndValidate("words-1", "counts-1");
 			// Assertions on StreamBuilderFactoryBean
 			StreamsBuilderFactoryBean streamsBuilderFactoryBean = context
-					.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
+		.getBean("&stream-builder-process", StreamsBuilderFactoryBean.class);
 			KafkaStreams kafkaStreams = streamsBuilderFactoryBean.getKafkaStreams();
 			assertThat(kafkaStreams).isNotNull();
 			// Ensure that concurrency settings are mapped to number of stream task
 			// threads in Kafka Streams.
 			final Properties streamsConfiguration = streamsBuilderFactoryBean.getStreamsConfiguration();
 			final Integer concurrency = (Integer) streamsConfiguration
-					.get(StreamsConfig.NUM_STREAM_THREADS_CONFIG);
+		.get(StreamsConfig.NUM_STREAM_THREADS_CONFIG);
 			assertThat(concurrency).isEqualTo(2);
 
 			sendTombStoneRecordsAndVerifyGracefulHandling();
 
 			CleanupConfig cleanup = TestUtils.getPropertyValue(streamsBuilderFactoryBean,
-					"cleanupConfig", CleanupConfig.class);
+		"cleanupConfig", CleanupConfig.class);
 			assertThat(cleanup.cleanupOnStart()).isTrue();
 			assertThat(cleanup.cleanupOnStop()).isFalse();
 		}
@@ -135,13 +135,13 @@ public class KafkaStreamsBinderTombstoneTests {
 	private void receiveAndValidate(String in, String out) {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		try {
 			KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 			template.setDefaultTopic(in);
 			template.sendDefault("foobar");
 			ConsumerRecord<String, String> cr = KafkaTestUtils.getSingleRecord(consumer,
-					out);
+		out);
 			assertThat(cr.value().contains("\"word\":\"foobar\",\"count\":1")).isTrue();
 		}
 		finally {
@@ -152,13 +152,13 @@ public class KafkaStreamsBinderTombstoneTests {
 	private void sendTombStoneRecordsAndVerifyGracefulHandling() throws Exception {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(
-				senderProps);
+	senderProps);
 		try {
 			KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 			template.setDefaultTopic("words-1");
 			template.sendDefault(null);
 			ConsumerRecords<String, String> received = consumer
-					.poll(Duration.ofMillis(5000));
+		.poll(Duration.ofMillis(5000));
 			// By asserting that the received record is empty, we are ensuring that the
 			// tombstone record
 			// was handled by the binder gracefully.
@@ -176,14 +176,14 @@ public class KafkaStreamsBinderTombstoneTests {
 		public Function<KStream<Object, String>, KStream<String, WordCount>> process() {
 
 			return input -> input
-					.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
-					.map((key, value) -> new KeyValue<>(value, value))
-					.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-					.windowedBy(TimeWindows.of(Duration.ofMillis(5000)))
-					.count(Materialized.as("foo-WordCounts"))
-					.toStream()
-					.map((key, value) -> new KeyValue<>(null, new WordCount(key.key(), value,
-							new Date(key.window().start()), new Date(key.window().end()))));
+		.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+		.map((key, value) -> new KeyValue<>(value, value))
+		.groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
+		.windowedBy(TimeWindows.of(Duration.ofMillis(5000)))
+		.count(Materialized.as("foo-WordCounts"))
+		.toStream()
+		.map((key, value) -> new KeyValue<>(null, new WordCount(key.key(), value,
+	new Date(key.window().start()), new Date(key.window().end()))));
 		}
 
 		@Bean
