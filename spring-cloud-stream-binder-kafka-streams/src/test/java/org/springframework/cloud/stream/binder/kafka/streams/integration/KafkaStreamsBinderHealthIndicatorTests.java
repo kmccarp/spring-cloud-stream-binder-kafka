@@ -43,7 +43,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.stream.binder.kafka.streams.KafkaStreamsBinderHealthIndicator;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.config.KafkaStreamsCustomizer;
 import org.springframework.kafka.config.StreamsBuilderFactoryBeanConfigurer;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -66,8 +65,8 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"out", "out2");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+.getEmbeddedKafka();
 
 	@BeforeClass
 	public static void setUp() {
@@ -132,8 +131,8 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 			String threadState = (String) details.get("threadState");
 			return threadState != null
 					&& (threadState.equalsIgnoreCase(KafkaStreams.State.REBALANCING.name())
-							|| threadState.equalsIgnoreCase("PARTITIONS_REVOKED")
-							|| threadState.equalsIgnoreCase("PARTITIONS_ASSIGNED")
+							|| "PARTITIONS_REVOKED".equalsIgnoreCase(threadState)
+							|| "PARTITIONS_ASSIGNED".equalsIgnoreCase(threadState)
 							|| threadState.equalsIgnoreCase(
 									KafkaStreams.State.PENDING_SHUTDOWN.name()));
 		}
@@ -285,12 +284,9 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 		@Bean
 		public StreamsBuilderFactoryBeanConfigurer customizer() {
 			return factoryBean -> {
-				factoryBean.setKafkaStreamsCustomizer(new KafkaStreamsCustomizer() {
-					@Override
-					public void customize(KafkaStreams kafkaStreams) {
-						kafkaStreams.setUncaughtExceptionHandler(exception ->
-								StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
-					}
+				factoryBean.setKafkaStreamsCustomizer(kafkaStreams -> {
+					kafkaStreams.setUncaughtExceptionHandler(exception ->
+				StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
 				});
 			};
 		}
