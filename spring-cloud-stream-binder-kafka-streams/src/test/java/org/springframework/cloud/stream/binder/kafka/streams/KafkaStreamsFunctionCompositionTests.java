@@ -29,7 +29,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.junit.AfterClass;
@@ -58,7 +57,7 @@ public class KafkaStreamsFunctionCompositionTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"fooFuncanotherFooFunc-out-0", "bar");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
@@ -251,7 +250,7 @@ public class KafkaStreamsFunctionCompositionTests {
 
 				final ConsumerRecords<String, String> records = KafkaTestUtils.getRecords(consumer);
 				assertThat(records.iterator().hasNext()).isTrue();
-				assertThat(records.iterator().next().value().equals("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain")).isTrue();
+				assertThat("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain".equals(records.iterator().next().value())).isTrue();
 			}
 			finally {
 				pf.destroy();
@@ -296,7 +295,7 @@ public class KafkaStreamsFunctionCompositionTests {
 
 				final ConsumerRecords<String, String> records = KafkaTestUtils.getRecords(consumer);
 				assertThat(records.iterator().hasNext()).isTrue();
-				assertThat(records.iterator().next().value().equals("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain")).isTrue();
+				assertThat("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain".equals(records.iterator().next().value())).isTrue();
 			}
 			finally {
 				pf.destroy();
@@ -452,11 +451,8 @@ public class KafkaStreamsFunctionCompositionTests {
 		@Bean
 		public Function<KStream<String, String>, KTable<String, String>> fooFunc() {
 			return ks -> {
-				ks.foreach(new ForeachAction<String, String>() {
-					@Override
-					public void apply(String key, String value) {
-						System.out.println();
-					}
+				ks.foreach((key, value) -> {
+					System.out.println();
 				});
 				return ks.toTable();
 			};
