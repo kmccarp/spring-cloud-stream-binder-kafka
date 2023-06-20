@@ -123,7 +123,7 @@ class KStreamBinder extends
 				this.kafkaStreamsBindingInformationCatalogue, streamsBuilderFactoryBean);
 
 
-		return new DefaultBinding<KStream<Object, Object>>(bindingName, group,
+		return new DefaultBinding<>(bindingName, group,
 				inputTarget, streamsBuilderFactoryBean) {
 
 			@Override
@@ -198,7 +198,7 @@ class KStreamBinder extends
 		final Properties streamsConfiguration = streamsBuilderFactoryBean.getStreamsConfiguration();
 		final String applicationId = streamsConfiguration != null ? (String) streamsConfiguration.get("application.id") : bindingName;
 
-		return new DefaultBinding<KStream<Object, Object>>(bindingName,
+		return new DefaultBinding<>(bindingName,
 				applicationId, outboundBindTarget, streamsBuilderFactoryBean) {
 
 			@Override
