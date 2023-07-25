@@ -418,7 +418,7 @@ public class KafkaMessageChannelBinder extends
 			}
 			List<ChannelInterceptor> interceptors = ((InterceptableChannel) channel)
 					.getInterceptors();
-			interceptors.forEach((interceptor) -> {
+			interceptors.forEach(interceptor -> {
 				if (interceptor instanceof PartitioningInterceptor) {
 					((PartitioningInterceptor) interceptor)
 							.setPartitionCount(partitions.size());
@@ -539,7 +539,7 @@ public class KafkaMessageChannelBinder extends
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
 				ByteArraySerializer.class);
 		props.put(ProducerConfig.ACKS_CONFIG,
-				String.valueOf(this.configurationProperties.getRequiredAcks()));
+                this.configurationProperties.getRequiredAcks());
 		Map<String, Object> mergedConfig = this.configurationProperties
 				.mergedProducerConfiguration();
 		if (!ObjectUtils.isEmpty(mergedConfig)) {
@@ -969,7 +969,7 @@ public class KafkaMessageChannelBinder extends
 									return shouldSeek;
 								})
 								.collect(Collectors.toList());
-							if (toSeek.size() > 0) {
+							if (!toSeek.isEmpty()) {
 								if ("earliest".equals(resetTo)) {
 									consumer.seekToBeginning(toSeek);
 								}
@@ -1206,7 +1206,7 @@ public class KafkaMessageChannelBinder extends
 			@SuppressWarnings("rawtypes")
 			DlqSender<?, ?> dlqSender = new DlqSender(kafkaTemplate, sendTimeout);
 
-			return (message) -> {
+			return message -> {
 
 				ConsumerRecord<Object, Object> record = StaticMessageHeaderAccessor.getSourceData(message);
 
@@ -1307,7 +1307,7 @@ public class KafkaMessageChannelBinder extends
 							byte[] payload = EmbeddedHeaderUtils.embedHeaders(
 									messageValues,
 									EmbeddedHeaderUtils.headersToEmbed(headersToEmbed));
-							recordToSend.set(new ConsumerRecord<Object, Object>(
+							recordToSend.set(new ConsumerRecord<>(
 									record.topic(), record.partition(), record.offset(),
 									record.key(), payload));
 						}
@@ -1379,7 +1379,7 @@ public class KafkaMessageChannelBinder extends
 		}
 		final MessageHandler superHandler = super.getErrorMessageHandler(destination,
 				group, properties);
-		return (message) -> {
+		return message -> {
 			ConsumerRecord<?, ?> record = (ConsumerRecord<?, ?>) message.getHeaders()
 					.get(KafkaHeaders.RAW_DATA);
 			if (!(message instanceof ErrorMessage)) {
