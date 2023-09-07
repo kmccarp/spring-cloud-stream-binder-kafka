@@ -59,8 +59,8 @@ public class KafkaStreamsBinderPojoInputAndPrimitiveTypeOutputTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts-id");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
-			.getEmbeddedKafka();
+    private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+            .getEmbeddedKafka();
 
 	private static Consumer<Integer, Long> consumer;
 
