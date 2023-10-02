@@ -66,7 +66,7 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"out", "out2");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
 			.getEmbeddedKafka();
 
 	@BeforeClass
@@ -132,8 +132,8 @@ public class KafkaStreamsBinderHealthIndicatorTests {
 			String threadState = (String) details.get("threadState");
 			return threadState != null
 					&& (threadState.equalsIgnoreCase(KafkaStreams.State.REBALANCING.name())
-							|| threadState.equalsIgnoreCase("PARTITIONS_REVOKED")
-							|| threadState.equalsIgnoreCase("PARTITIONS_ASSIGNED")
+							|| "PARTITIONS_REVOKED".equalsIgnoreCase(threadState)
+							|| "PARTITIONS_ASSIGNED".equalsIgnoreCase(threadState)
 							|| threadState.equalsIgnoreCase(
 									KafkaStreams.State.PENDING_SHUTDOWN.name()));
 		}
